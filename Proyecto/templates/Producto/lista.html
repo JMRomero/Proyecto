@@ -1,0 +1,130 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/Proyecto/public/css/misestilos.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-wrapper  blue">
+            <a href="#" class="brand-logo center">Ingreso de Producto</a>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="sass.html"><i class="material-icons">search</i></a></li>
+            <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
+            <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
+            <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
+          </ul>
+        </div>
+      </nav>
+      
+      
+    <div class="container">
+        <br><br>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Codigo </th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Precio Compra</th>
+                    <th>Precio Venta</th>
+                    <th>Gramo/Litro </th>
+                    <th>Cantidad</th>
+                    <th>Fecha Modificacion</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Lote</th>
+                    <th>Cantidad Maxima</th>
+                    <th>Cantidad Minima</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productoA%}
+                <tr>
+                    <td>{{p.0}}</td>
+                    <td>{{p.1}}</td>
+                    <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
+                    <td>{{p.3}}</td>
+                    <td>{{p.4}}</td>
+                    <td>{{p.5}}</td>
+                    <td>{{p.6}}</td>
+                    <td>{{p.7}}</td>
+                    <td>{{p.11}}</td>
+                    <td>{{p.8}}</td>
+                    <td>{{p.9}}</td>
+                    <td>{{p.10}}</td>
+                    <td> 
+                        <a href="/Producto/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
+                    </td>
+                {%endfor%}
+                </tr>
+            </tbody>
+        </table>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Codigo </th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Precio Compra</th>
+                    <th>Precio Venta</th>
+                    <th>Gramo/Litro </th>
+                    <th>Cantidad</th>
+                    <th>Fecha Modificacion</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Lote</th>
+                    <th>Cantidad Maxima</th>
+                    <th>Cantidad Minima</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productoI%}
+                <tr>
+                    <td>{{p.0}}</td>
+                    <td>{{p.1}}</td>
+                    <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                    <td>{{p.3}}</td>
+                    <td>{{p.4}}</td>
+                    <td>{{p.5}}</td>
+                    <td>{{p.6}}</td>
+                    <td>{{p.7}}</td>
+                    <td>{{p.11}}</td>
+                    <td>{{p.8}}</td>
+                    <td>{{p.9}}</td>
+                    <td>{{p.10}}</td>
+                    <td> 
+                        <a href="/Producto/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
+                    </td>
+                {%endfor%}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <div class="center">
+    <a href="insert" class="waves-effect waves-light btn-small">Regresar Ingreso de Productos</a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    function estadoA(id,name){
+        respuesta=confirm("desea Cambiar el estado del Producto "+name+" ?");
+        if (respuesta){
+            location.href="/Producto/EI/"+id;
+        }
+    }
+    function estadoI(id,name){
+        respuesta=confirm("desea Cambiar el estado del Producto "+name+" ?");
+        if (respuesta){
+            location.href="/Producto/EA/"+id;
+        }
+    }
+    
+</script>
+</body>
+</html>

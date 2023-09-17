@@ -1,0 +1,68 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/semantic.css'%}">
+    <script src="{% static 'js/jquery.js'%}"></script>
+    <script src="{% static 'js/semantic.js'%}"></script>
+
+</head>
+<body>
+    {% for p in datos %}
+    <div class="container">
+        <h1 class="center">Ingreso de Producto</h1>
+        <form method='POST'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s6">
+                    <label>Codigo de barras</label>  <input type="text" name='codigo' required value="{{p.0}}"><br>
+                </div>
+                <div class="input-field col s6">
+                    <label>Nombre</label>  <input type='text' name='nombre' required value="{{p.1}}"><br>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="input-field col s6">
+                    <label>Precio de Compra</label> <input type="number" name="precioC" required value="{{p.3}}"><br>
+                </div>
+                <div class="input-field col s6">
+                    <label>Precio de Venta</label> <input type="number" name="precioT" required value="{{p.4}}"><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <label>Gramo/Litro</label>  <input type='text' name='gramo_litro' required value="{{p.5}}"><br>
+                </div>
+                <div class="input-field col s6">
+                    <label>Cantidad</label>  <input type='number' name='cantidad' required value="{{p.6}}"><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <label>Vencimiento</label><br><input type='date' name='vencimiento'  value="{{p.11|date:'Y-m-d'}}"><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <label>Lote</label>  <input type='text' name='lote' required value="{{p.8}}"><br>
+                </div>
+                <div class="input-field col s4">
+                    <label for="">Cantidad Maxima</label> <input type='number' name='Max' value="{{p.9}}"><br>
+                </div>
+                <div class="input-field col s4">
+                    <label for="">Cantidad Minima</label> <input type='number' name='Min' value="{{p.10}}">
+                </div>
+            </div>
+            {%endfor%}
+            <div class="center">
+                <input type='submit' values='Subir' class="btn waves-effect waves-light"><br><br><br><br><br>
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>
