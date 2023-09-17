@@ -5,55 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/semantic.css'%}">
-    <script src="{% static 'js/jquery.js'%}"></script>
-    <script src="{% static 'js/semantic.js'%}"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
 </head>
 <body>
+
+    <nav>
+        <div class="nav-wrapper  blue">
+            <a href="#" class="brand-logo center">Ingreso de Producto</a>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="#"><i class="material-icons">search</i></a></li>
+            <li><a href="#"><i class="material-icons">view_module</i></a></li>
+            <li><a href="#"><i class="material-icons">refresh</i></a></li>
+            <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+          </ul>
+        </div>
+      </nav>
+
     {% for p in datos %}
     <div class="container">
-        <h1 class="center">Ingreso de ProductoSSSSSS</h1>
+        <br><br>
         <form method='POST'>
             {% csrf_token %}
             <div class="row">
                 <div class="input-field col s6">
-                    <label>Codigo de barras</label>  <input type="text" name='codigo' required value="{{p.0}}"><br>
+                    <i class="material-icons prefix">money</i>
+                    <label>Codigo de barras</label>  <input type="text" name='codigo' required value="{{p.0}}">
                 </div>
                 <div class="input-field col s6">
-                    <label>Nombre</label>  <input type='text' name='nombre' required value="{{p.1}}"><br>
+                    <i class="material-icons prefix">add_shopping_cart</i>
+                    <label>Nombre Del Producto</label> <input type='text' name='nombre' required value="{{p.1}}">
                 </div>
             </div>
             
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">monetization_on</i>
                     <label>Precio de Compra</label> <input type="number" name="precioC" required value="{{p.3}}"><br>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">monetization_on</i>
                     <label>Precio de Venta</label> <input type="number" name="precioT" required value="{{p.4}}"><br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">invert_colors</i>
                     <label>Gramo/Litro</label>  <input type='text' name='gramo_litro' required value="{{p.5}}"><br>
                 </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">add_to_queue</i>
+                        <label>Cantidad</label><input type='number' name='cantidad' required value="{{p.6}}">
+                    </div>
                 <div class="input-field col s6">
-                    <label>Cantidad</label>  <input type='number' name='cantidad' required value="{{p.6}}"><br>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <label>Vencimiento</label><br><input type='date' name='vencimiento'  value="{{p.11|date:'Y-m-d'}}"><br>
+                    <i class="material-icons prefix">today</i>
+                    <label>Vencimiento</label><input type='date' name='vencimiento'  value="{{p.11|date:'Y-m-d'}}">
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s4">
+                    <i class="material-icons prefix">border_color</i>
                     <label>Lote</label>  <input type='text' name='lote' required value="{{p.8}}"><br>
                 </div>
                 <div class="input-field col s4">
+                    <i class="material-icons prefix">add_circle_outline</i>
                     <label for="">Cantidad Maxima</label> <input type='number' name='Max' value="{{p.9}}"><br>
                 </div>
                 <div class="input-field col s4">
+                    <i class="material-icons prefix">remove_circle_outline</i>
                     <label for="">Cantidad Minima</label> <input type='number' name='Min' value="{{p.10}}">
                 </div>
             </div>
@@ -64,5 +83,6 @@
             
         </form>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
