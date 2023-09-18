@@ -17,7 +17,7 @@
     <nav>
         <div class="nav-wrapper  blue">
              
-            <a href="#" class="brand-logo center">Ingreso de Producto</a>
+            <a href="#" class="brand-logo center">Ingreso de Proveedor</a>
           <ul class="right hide-on-med-and-down">
            
            
@@ -38,50 +38,33 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">money</i>
-                    <label>Codigo de barras</label>  <input type="text" name='codigo' required value="{{p.0}}">
+                    <label>NIT</label> <input type="text" name='nit' required value="{{p.0}}">
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">add_shopping_cart</i>
-                    <label>Nombre Del Producto</label> <input type='text' name='nombre' required value="{{p.1}}">
+                    <label>Nombre</label> <input type='text' name='nombre' required value="{{p.1}}">
                 </div>
             </div>
             
             <div class="row">
                 <div class="input-field col s4">
                     <i class="material-icons prefix">monetization_on</i>
-                    <label>Precio de Compra</label> <input type="number" name="precioC" required value="{{p.3}}"><br>
+                    <label>Telefono</label> <input type="number" name="telefono" required value="{{p.3}}"><br>
                 </div>
                 <div class="input-field col s4">
                     <i class="material-icons prefix">monetization_on</i>
-                    <label>Precio de Venta</label> <input type="number" name="precioT" required value="{{p.4}}"><br>
+                    <label>Categoria de Productos</label> <input type="text" name="categoria_productos" required value="{{p.4}}"><br>
                 </div>
                 <div class="input-field col s4">
                     <i class="material-icons prefix">invert_colors</i>
-                    <label>Gramo/Litro</label>  <input type='text' name='gramo_litro' required value="{{p.5}}"><br>
+                    <label>Horario de Atencion</label>  <input type='text' name='horario_atencion' required value="{{p.5}}"><br>
                 </div>
                 <div class="row">
-                    <div class="input-field col s6">
+                    <div class="input-field col s12">
                         <i class="material-icons prefix">add_to_queue</i>
-                        <label>Cantidad</label><input type='number' name='cantidad' required value="{{p.6}}">
+                        <label>Politica de Devolucion</label><input type='text' name='politica_devolucion' required value="{{p.6}}">
                     </div>
-                <div class="input-field col s6">
-                    <i class="material-icons prefix">today</i>
-                    <label>Vencimiento</label><input type='date' name='vencimiento'  value="{{p.11|date:'Y-m-d'}}">
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">border_color</i>
-                    <label>Lote</label>  <input type='text' name='lote' required value="{{p.8}}"><br>
-                </div>
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">add_circle_outline</i>
-                    <label for="">Cantidad Maxima</label> <input type='number' name='Max' value="{{p.9}}"><br>
-                </div>
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">remove_circle_outline</i>
-                    <label for="">Cantidad Minima</label> <input type='number' name='Min' value="{{p.10}}">
-                </div>
+                
             </div>
             {%endfor%}
             <div class="center">
@@ -91,23 +74,8 @@
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-     <!-- Dropdown Trigger -->
-  <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Drop Me!</a>
-
-  <!-- Dropdown Structure -->
-  <ul id='dropdown1' class='dropdown-content'>
-    <li><a href="#!">one</a></li>
-    <li><a href="#!">two</a></li>
-    <li class="divider" tabindex="-1"></li>
-    <li><a href="#!">three</a></li>
-    <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
-    <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
-  </ul>
-   
     
-      
-    <h1>olaaaaaaaaaaaa</h1>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script type="text/javascript" src="/Proyecto/public/js/"></script>
+
+  
 </body>
 </html>

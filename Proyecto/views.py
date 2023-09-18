@@ -47,7 +47,7 @@ def menu(request):
 def Stock(request):
     if request.method=="POST":
         if request.POST.get('codigo') and  request.POST.get('precioC') and request.POST.get('precioT')  and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote'):
-            ##Captura la infromacion, conecte a la base de datos y ejecute el insert
+            
             insert=connection.cursor()
             insert.execute("UPDATE producto SET PrecioC="+request.POST.get('precioC')+",PrecioT="+request.POST.get('precioT')+",Fecha_Modificacion=now() where id_producto="+request.POST.get('codigo')+";")
             insert2=connection.cursor()
@@ -58,3 +58,39 @@ def Stock(request):
 
 def menu(request):
     return render(request,'Menu/menu.html')
+
+def viewProveedor(request):
+    viewA=connection.cursor()
+    viewA.execute("select * from proveedor where Estado=1;")
+    viewI=connection.cursor()
+    viewI.execute("select * from proveedor where Estado=0;")
+    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI})
+
+def updateProveedor(request,id):
+    if request.method=="POST":
+        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
+            insert=connection.cursor()
+            insert.execute("UPDATE proveedor SET NIT="+request.POST.get('nit')+",Nombre='"+request.POST.get('nombre')+"',Telefono="+request.POST.get('telefono')+",Categoria_Productos='"+request.POST.get('categoria_productos')+"',Politica_Devolucion='"+request.POST.get('politica_devolucion')+"' where NIT="+str(id)+";")
+            return redirect('/Proveedor/lista')
+    else:
+        consulta=connection.cursor()
+        consulta.execute("select * from proveedor where NIT="+str(id)+";")
+        return render(request,'Proveedor/actualizar.html',{'datos':consulta})
+    
+def proveedorInsert(request):
+    if request.method=="POST":
+        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
+            insert=connection.cursor()
+            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Categoria_Productos,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('categoria_productos')+"','"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
+            return redirect('/Proveedor/lista')
+    else:
+        return render(request,'Proveedor/insertar.html')
+    
+def proveedorEstadoI(request,id):
+    estadoI=connection.cursor()
+    estadoI.execute("UPDATE proveedor SET Estado=0 where NIT="+str(id)+"")
+    return redirect('/Proveedor/lista')
+def proveedorEstadoA(request,id):
+    estadoA=connection.cursor()
+    estadoA.execute("UPDATE proveedor SET Estado=1 where NIT="+str(id)+"")
+    return redirect('/Proveedor/lista')

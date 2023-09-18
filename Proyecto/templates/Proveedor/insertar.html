@@ -40,65 +40,36 @@
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">money</i>
-                    <label>Codigo de barras</label><input type="text" name='codigo' required class="validate">
+                    <label>NIT</label> <input type="text" name='nit' required>
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">add_shopping_cart</i>
-                    <label>Nombre del Producto</label>  <input type='text' name='nombre' required class="validate">
+                    <label>Nombre</label> <input type='text' name='nombre' required>
                 </div>
             </div>
-
             
             <div class="row">
-                <div class="input-field col s6">
-                    <label for="">ESTADO</label>
-                    <select name="estado" >
-                        <option value="0">Activo</option>
-                        <option value="1">Inactivo</option>
-                    </select>  
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="input-field col s4">
                     <i class="material-icons prefix">monetization_on</i>
-                    <label>Precio de Compra</label> <input type="number" name="precioC" required class="validate">
+                    <label>Telefono</label> <input type="number" name="telefono" required><br>
                 </div>
                 <div class="input-field col s4">
                     <i class="material-icons prefix">monetization_on</i>
-                    <label>Precio de Venta</label> <input type="number" name="precioT" required class="validate">
+                    <label>Categoria de Productos</label> <input type="text" name="categoria_productos" required ><br>
                 </div>
                 <div class="input-field col s4">
                     <i class="material-icons prefix">invert_colors</i>
-                    <label>Gramo/Litro</label>  <input type='text' name='gramo_litro' required class="validate">
+                    <label>Horario de Atencion</label>  <input type='text' name='horario_atencion' required ><br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s6">
-                    <i class="material-icons prefix">add_to_queue</i>
-                    <label>Cantidad</label> <br> <input type='number' name='cantidad' required class="validate">
-                </div>
-                <div class="input-field col s6">
-                    <i class="material-icons prefix">today</i>
-                    <label>Vencimiento</label><br><input type='date' name='vencimiento' required class="validate">
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">border_color</i>
-                    <label>Lote</label><input type='text' name='lote' required class="validate">
-                </div>
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">add_circle_outline</i>
-                    <label for="">Cantidad Maxima</label> <input type='number' name='Max' required class="validate">
-                </div>
-                <div class="input-field col s4">
-                    <i class="material-icons prefix">remove_circle_outline</i>
-                    <label for="">Cantidad Minima</label> <input type='number' name='Min' required class="validate">
-                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">add_to_queue</i>
+                        <label>Politica de Devolucion</label><input type='text' name='politica_devolucion' required >
+                    </div>
+                
             </div>
             <div class="center">
-                <input type='submit' values='Subir' class="btn waves-effect waves-light  light-blue lighten-1">
+                <input type='submit' values='Subir' class="btn waves-effect waves-light"><br><br><br><br><br>
             </div>
             
         </form>
