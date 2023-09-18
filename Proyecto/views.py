@@ -41,3 +41,6 @@ def esatdoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE producto SET Estado=0 where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
+
+def menu(request):
+    return render(request,'Menu/menu.html')

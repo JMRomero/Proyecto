@@ -1,0 +1,98 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/Proyecto/public/css/misestilos.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-wrapper  blue">
+            <a href="#" class="brand-logo center">Proveedor</a>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="/menu"><i class="material-icons">home</i></a></li>
+            <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
+            <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
+            <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
+          </ul>
+        </div>
+      </nav>
+      
+      
+    
+        <br><br>
+        <table class="centered">
+            <thead>
+                <tr>
+                    <th>NIT</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Categoria de Productos</th>
+                    <th>Horario de Atencion</th>
+                    <th>Politica de Devolucion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in ProveedorA%}
+                <tr>
+                    <td>{{p.0}}</td>
+                    <td>{{p.1}}</td>
+                    <td><a href="#"><i onclick="ProveedorEstadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
+                    <td>{{p.3}}</td>
+                    <td>{{p.4}}</td>
+                    <td>{{p.5}}</td>
+                    <td>{{p.6}}</td>
+                    <td> 
+                        <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
+
+                    </td>
+                {%endfor%}
+                </tr>
+            </tbody>
+        </table>
+        <table class="centered">
+            <thead>
+                <tr>
+                    <th>NIT</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Categoria de Productos</th>
+                    <th>Horario de Atencion</th>
+                    <th>Politica de Devolucion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in ProveedorI%}
+                <tr>
+                    <td>{{p.0}}</td>
+                    <td>{{p.1}}</td>
+                    <td><a href="#"><i onclick="ProveedorEstadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                    <td>{{p.3}}</td>
+                    <td>{{p.4}}</td>
+                    <td>{{p.5}}</td>
+                    <td>{{p.6}}</td>
+                    <td> 
+                        <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
+                    </td>
+                {%endfor%}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <div class="center">
+    <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Ingresar Proveedor</a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+   
+    
+</script>
+</body>
+</html>

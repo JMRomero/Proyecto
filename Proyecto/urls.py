@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import producto,viewP,update,esatdoI,esatdoA
+from .views import producto,viewP,update,esatdoI,esatdoA,menu
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,8 @@ urlpatterns = [
     path('Producto/actualizar/<int:id>',update),
     path('Producto/EI/<int:id>',esatdoI),
     path('Producto/EA/<int:id>',esatdoA),
+    path('menu',menu),
+    
+
+
 ]
