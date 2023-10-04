@@ -13,86 +13,106 @@
 
     <nav>
         <div class="nav-wrapper  blue">
-            <a href="#" class="brand-logo center">Proveedores</a>
+            <a href="#" class="brand-logo center">Listado de Proveedores</a>
           <ul class="right hide-on-med-and-down">
             <li><a href="/menu"><i class="material-icons">home</i></a></li>
-            <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
-            <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
-            <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
+            <li><a href="#!"><i class="material-icons">view_module</i></a></li>
+            <li><a href="#!"><i class="material-icons">refresh</i></a></li>
+            <li><a href="#!"><i class="material-icons">more_vert</i></a></li>
           </ul>
         </div>
       </nav>
       
-      
+      <ul id="slide-out" class="sidenav">
+        <li><div class="user-view">
+          <div class="background">
+            <img class="materialboxed" width="650" src="{%static 'img/farmacia.jpg'%}">
+          </div>
+          <a href="#user"><img class="circle" src="{%static 'img/logo.png'%}"></a>
+          <a href="#name"><span class="black-text name">John Doe</span></a>
+          <a href="#email"><span class="black-text email">jdandturk@gmail.com</span></a>
+        </div></li>
+        <li><a href="/menu"><i class="material-icons">home</i>Página Principal</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/insert">Insertar Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/lista">Mostrar Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/stock">Aumentar Productos</a></li>
+        <li><a class="subheader">Proveedores</a></li>
+        <li><a class="waves-effect" href="/Proveedor/insert">Insertar Proveedores</a></li>
+        <li><a class="light-blue lighten-5" href="#!">Mostrar Proveedores</a></li>
+      </ul>
+      <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     
+        <br>
+        <div class="container">
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th>NIT</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Telefono</th>
+                        <th>Categoria de Productos</th>
+                        <th>Horario de Atencion</th>
+                        <th>Politica de Devolucion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in proveedorA%}
+                    <tr>
+                        <td>{{p.0}}</td>
+                        <td>{{p.1}}</td>
+                        <td><a href="#"><i onclick="proveedorEstadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
+                        <td>{{p.3}}</td>
+                        <td>{{p.4}}</td>
+                        <td>{{p.5}}</td>
+                        <td>{{p.6}}</td>
+                        <td> 
+                            <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
+
+                        </td>
+                    {%endfor%}
+                    </tr>
+                </tbody>
+            </table>
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th>NIT</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Telefono</th>
+                        <th>Categoria de Productos</th>
+                        <th>Horario de Atencion</th>
+                        <th>Politica de Devolucion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in proveedorI%}
+                    <tr>
+                        <td>{{p.0}}</td>
+                        <td>{{p.1}}</td>
+                        <td><a href="#"><i onclick="proveedorEstadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                        <td>{{p.3}}</td>
+                        <td>{{p.4}}</td>
+                        <td>{{p.5}}</td>
+                        <td>{{p.6}}</td>
+                        <td> 
+                            <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
+                        </td>
+                    {%endfor%}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <br><br>
-        <table class="centered">
-            <thead>
-                <tr>
-                    <th>NIT</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Telefono</th>
-                    <th>Categoria de Productos</th>
-                    <th>Horario de Atencion</th>
-                    <th>Politica de Devolucion</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in proveedorA%}
-                <tr>
-                    <td>{{p.0}}</td>
-                    <td>{{p.1}}</td>
-                    <td><a href="#"><i onclick="proveedorEstadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
-                    <td>{{p.3}}</td>
-                    <td>{{p.4}}</td>
-                    <td>{{p.5}}</td>
-                    <td>{{p.6}}</td>
-                    <td> 
-                        <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
-
-                    </td>
-                {%endfor%}
-                </tr>
-            </tbody>
-        </table>
-        <table class="centered">
-            <thead>
-                <tr>
-                    <th>NIT</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Telefono</th>
-                    <th>Categoria de Productos</th>
-                    <th>Horario de Atencion</th>
-                    <th>Politica de Devolucion</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in proveedorI%}
-                <tr>
-                    <td>{{p.0}}</td>
-                    <td>{{p.1}}</td>
-                    <td><a href="#"><i onclick="proveedorEstadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
-                    <td>{{p.3}}</td>
-                    <td>{{p.4}}</td>
-                    <td>{{p.5}}</td>
-                    <td>{{p.6}}</td>
-                    <td> 
-                        <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
-                    </td>
-                {%endfor%}
-                </tr>
-            </tbody>
-        </table>
+        <div class="center">
+        <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Ingresar Proveedor</a>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </div>
-    <br><br>
-    <div class="center">
-    <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Ingresar Proveedor</a>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
    <script>
     function proveedorEstadoA(id,name){
         respuesta=confirm("Desea cambiar el estado del Proveedor "+name+" ?");
@@ -106,7 +126,10 @@
             location.href="/Proveedor/EA/"+id;
         }
     }
-    
+      document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+    });
 </script>
     
 

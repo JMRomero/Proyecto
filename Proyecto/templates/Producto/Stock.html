@@ -21,16 +21,35 @@
 
     <nav>
         <div class="nav-wrapper  blue">
-            <a href="#" class="brand-logo center">Ingreso de Producto</a>
+            <a href="#" class="brand-logo center">Aumentar Producto</a>
           <ul class="right hide-on-med-and-down">
-            <li><a href="#"><i class="material-icons">search</i></a></li>
-            <li><a href="#"><i class="material-icons">view_module</i></a></li>
-            <li><a href="#"><i class="material-icons">refresh</i></a></li>
-            <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+            <li><a href="#!"><i class="material-icons">search</i></a></li>
+            <li><a href="#!"><i class="material-icons">view_module</i></a></li>
+            <li><a href="#!"><i class="material-icons">refresh</i></a></li>
+            <li><a href="#!"><i class="material-icons">more_vert</i></a></li>
           </ul>
         </div>
       </nav>
-
+      <ul id="slide-out" class="sidenav">
+        <li><div class="user-view">
+          <div class="background">
+            <img class="materialboxed" width="650" src="{%static 'img/farmacia.jpg'%}">
+          </div>
+          <a href="#user"><img class="circle" src="{%static 'img/logo.png'%}"></a>
+          <a href="#name"><span class="black-text name">John Doe</span></a>
+          <a href="#email"><span class="black-text email">jdandturk@gmail.com</span></a>
+        </div></li>
+        <li><a href="/menu"><i class="material-icons">home</i>Página Principal</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="subheader">Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/insert">Insertar Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/lista">Mostrar Productos</a></li>
+        <li><a class="waves-effect light-blue lighten-5" href="#!">Aumentar Productos</a></li>
+        <li><a class="subheader">Proveedores</a></li>
+        <li><a class="waves-effect" href="/Proveedor/insert">Insertar Proveedores</a></li>
+        <li><a class="waves-effect" href="/Proveedor/lista">Mostrar Proveedores</a></li>
+      </ul>
+      <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       
 
     <div class="container">
@@ -76,5 +95,9 @@
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>  document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+    });</script>
 </body>
 </html>
