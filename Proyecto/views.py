@@ -4,42 +4,46 @@ from django.db import connection
 
 def producto(request):
     if request.method=="POST":
-        if request.POST.get('codigo') and request.POST.get('nombre') and request.POST.get('estado') and  request.POST.get('precioC') and request.POST.get('precioT') and request.POST.get('gramo_litro') and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote') and request.POST.get('Max') and request.POST.get('Min'):
+        if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
             ##Captura la infromacion, conecte a la base de datos y ejecute el insert
             insert=connection.cursor()
-            insert.execute("INSERT INTO producto VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('estado')+"',"+request.POST.get('precioC')+","+request.POST.get('precioT')+",'"+request.POST.get('gramo_litro')+"',"+request.POST.get('cantidad')+",now(),'"+request.POST.get('lote')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
-            insert2=connection.cursor()
-            insert2.execute("INSERT INTO vencimiento (fechaV,id_producto,LoteP) VALUES('"+request.POST.get('vencimiento')+"',"+request.POST.get('codigo')+",'"+request.POST.get('lote')+"')")
+            insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
             return redirect('/Producto/lista')
     else:
         return render(request,'Producto/insertar.html')
 def viewP(request):
     viewA=connection.cursor()
-    viewA.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=0;")
+    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=0;")
     viewI=connection.cursor()
-    viewI.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=1;")
+    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=1;")
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
+def viewL(request,id):
+    viewLA=connection.cursor()
+    viewLA.execute("select * from Lote where id_producto="+str(id)+" and Estado=1")
+    viewLI=connection.cursor()
+    viewLI.execute("select * from Lote where id_producto="+str(id)+" and Estado=0")
+    return render(request,'Producto/listaL.html',{'LoteA':viewLA,'LoteI':viewLI})
 
-def update(request,id,lote):
+
+
+def update(request,id):
     if request.method=="POST":
-        if request.POST.get('codigo') and request.POST.get('nombre') and  request.POST.get('precioC') and request.POST.get('precioT') and request.POST.get('gramo_litro') and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote') and request.POST.get('Max') and request.POST.get('Min'):
+        if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
             ##Captura la infromacion, conecte a la base de datos y ejecute el insert
             insert=connection.cursor()
-            insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',PrecioC="+request.POST.get('precioC')+",PrecioT="+request.POST.get('precioT')+",GramoLitro='"+request.POST.get('gramo_litro')+"',Cantidad="+request.POST.get('cantidad')+",Fecha_Modificacion=now(),Lote='"+request.POST.get('lote')+"',Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+" where id_producto="+str(id)+" and Lote='"+str(lote)+"';")
-            insert2=connection.cursor()
-            insert2.execute("UPDATE vencimiento SET  fechaV='"+request.POST.get('vencimiento')+"',id_producto="+request.POST.get('codigo')+",LoteP='"+request.POST.get('lote')+"',Cantidad="+request.POST.get('cantidad')+" where id_producto="+str(id)+" and LoteP='"+str(lote)+"';")
+            insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+" where id_producto="+str(id)+";")
             return redirect('/Producto/lista')
     else:
         consulta=connection.cursor()
-        consulta.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.id_producto="+str(id)+" and vencimiento.LoteP='"+str(lote)+"';")
+        consulta.execute("select *from producto where id_producto="+str(id)+";")
         return render(request,'Producto/actualizar.html',{'datos':consulta})
 def esatdoI(request,id):
     estadoI=connection.cursor()
-    estadoI.execute("UPDATE producto SET Estado=1 where id_producto="+str(id)+"")
+    estadoI.execute("UPDATE producto SET Estado=0 where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
 def esatdoA(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE producto SET Estado=0 where id_producto="+str(id)+"")
+    estadoA.execute("UPDATE producto SET Estado=1 where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
 
 def menu(request):
