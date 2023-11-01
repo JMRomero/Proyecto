@@ -1,11 +1,10 @@
 from django.shortcuts import render,redirect
 from django.db import connection
 
-
+#producto
 def producto(request):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre') and request.POST.get('estado') and  request.POST.get('precioC') and request.POST.get('precioT') and request.POST.get('gramo_litro') and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote') and request.POST.get('Max') and request.POST.get('Min'):
-            ##Captura la infromacion, conecte a la base de datos y ejecute el insert
             insert=connection.cursor()
             insert.execute("INSERT INTO producto VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('estado')+"',"+request.POST.get('precioC')+","+request.POST.get('precioT')+",'"+request.POST.get('gramo_litro')+"',"+request.POST.get('cantidad')+",now(),'"+request.POST.get('lote')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
             insert2=connection.cursor()
@@ -44,21 +43,12 @@ def esatdoA(request,id):
 
 def menu(request):
     return render(request,'Menu/menu.html')
-def Stock(request):
-    if request.method=="POST":
-        if request.POST.get('codigo') and  request.POST.get('precioC') and request.POST.get('precioT')  and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote'):
-            
-            insert=connection.cursor()
-            insert.execute("UPDATE producto SET PrecioC="+request.POST.get('precioC')+",PrecioT="+request.POST.get('precioT')+",Fecha_Modificacion=now() where id_producto="+request.POST.get('codigo')+";")
-            insert2=connection.cursor()
-            insert2.execute("Insert into vencimiento (fechaV,id_producto,LoteP,Cantidad) VALUES('"+request.POST.get('vencimiento')+"',"+request.POST.get('codigo')+",'"+request.POST.get('lote')+"',"+request.POST.get('cantidad')+");")
-            return redirect('/Producto/lista')
-    else:
-       return render(request,'Producto/Stock.html')
+
 
 def menu(request):
     return render(request,'Menu/menu.html')
 
+#proveedor
 def viewProveedor(request):
     viewA=connection.cursor()
     viewA.execute("select * from proveedor where Estado=1;")
@@ -94,3 +84,49 @@ def proveedorEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE proveedor SET Estado=1 where NIT="+str(id)+"")
     return redirect('/Proveedor/lista')
+
+#lote
+def Stock(request):
+    if request.method=="POST":
+        if request.POST.get('codigo') and  request.POST.get('precioC') and request.POST.get('precioT')  and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote'):
+            
+            insert=connection.cursor()
+            insert.execute("UPDATE producto SET PrecioC="+request.POST.get('precioC')+",PrecioT="+request.POST.get('precioT')+",Fecha_Modificacion=now() where id_producto="+request.POST.get('codigo')+";")
+            insert2=connection.cursor()
+            insert2.execute("Insert into vencimiento (fechaV,id_producto,LoteP,Cantidad) VALUES('"+request.POST.get('vencimiento')+"',"+request.POST.get('codigo')+",'"+request.POST.get('lote')+"',"+request.POST.get('cantidad')+");")
+            return redirect('/Producto/lista')
+    else:
+       return render(request,'Producto/Stock.html')
+
+def viewLote(request,id):
+    viewA=connection.cursor()
+    viewA.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=0; and producto.id")
+    viewI=connection.cursor()
+    viewI.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=1;")
+    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
+
+#pedidos especiales
+def viewPedidos(request):
+    viewA=connection.cursor()
+    viewA.execute("select * from pedidos_especiales where estadoPe=1;")
+    viewI=connection.cursor()
+    viewI.execute("select * from pedidos_especiales where estadoPe=0;")
+    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI})
+
+def pedidosInsert(request):
+    if request.method=="POST":
+        if request.POST.get('cedula') and request.POST.get('nombreClie') and  request.POST.get('celularClie') and request.POST.get('descripcion'):
+            insert=connection.cursor()
+            insert.execute("INSERT INTO pedidos_especiales (Cedula,nombreClie,celularClie,descripcion,fechaP) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombreClie')+"',"+request.POST.get('celularClie')+",'"+request.POST.get('descripcion')+"',now())")
+            return redirect('/Pedidos/lista')
+    else:
+        return render(request,'Pedidos/insertar.html')
+    
+def pedidosEstadoI(request,id):
+    estadoI=connection.cursor()
+    estadoI.execute("UPDATE pedidos_especiales SET estadoPe=0 where id_pedido="+str(id)+"")
+    return redirect('/Pedidos/lista')
+def pedidosEstadoA(request,id):
+    estadoA=connection.cursor()
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1 where id_pedido="+str(id)+"")
+    return redirect('/Pedidos/lista')
