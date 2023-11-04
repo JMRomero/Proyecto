@@ -3,64 +3,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="/Proyecto/public/css/misestilos.css">
+    <title>Document</title>
 </head>
 <body>
+<div class="bg-image" 
+    style="background-image: url('{%static 'img/descarga.jfif'%}');
+    width: auto; height: % auto;">
 
-    <nav>
-        <div class="nav-wrapper  blue">
-            <a href="#" class="brand-logo center">Listado de Productos</a>
-          <ul class="right hide-on-med-and-down">
-            <li><a href="/menu"><i class="material-icons">home</i></a></li>
-            <li><a href="#!"><i class="material-icons">view_module</i></a></li>
-            <li><a href="#!"><i class="material-icons">refresh</i></a></li>
-            <li><a href="#!"><i class="material-icons">more_vert</i></a></li>
-          </ul>
-        </div>
-      </nav>
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" ><i class="material-icons prefix">dehaze</i></button>
+            <div class="container-fluid">
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Lista De Productos</a>
+            </div>
+          </nav>
+          <br>
 
-      <ul id="slide-out" class="sidenav">
-        <li><div class="user-view">
-          <div class="background">
-            <img class="materialboxed" width="650" src="{%static 'img/farmacia.jpg'%}">
-          </div>
-          <a href="#user"><img class="circle" src="{%static 'img/logo.png'%}"></a>
-          <a href="#name"><span class="black-text name">John Doe</span></a>
-          <a href="#email"><span class="black-text email">jdandturk@gmail.com</span></a>
-        </div></li>
-        <li><a href="/menu"><i class="material-icons">home</i>Página Principal</a></li>
-        <li><div class="divider"></div></li>
-        <li><a class="subheader">Productos</a></li>
-        <li><a class="waves-effect" href="/Producto/insert">Insertar Productos</a></li>
-        <li><a class="waves-effect light-blue lighten-5" href="#!">Mostrar Productos</a></li>
-        <li><a class="waves-effect" href="/Producto/stock">Aumentar Productos</a></li>
-        <li><a class="subheader">Proveedores</a></li>
-        <li><a class="waves-effect" href="/Proveedor/insert">Insertar Proveedores</a></li>
-        <li><a class="waves-effect" href="/Proveedor/lista">Mostrar Proveedores</a></li>
-      </ul>
-      <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      
-      
- 
-        <br>
+          <div class="offcanvas offcanvas-start text-bg-dark" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdrop with scrolling</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <hr>
+            <div class="offcanvas-body">
+                <h5 class="text-decoration-underline text-white-50 bg-dark" id="offcanvasWithBothOptionsLabel">Productos</h5><br>
+                <p><a href="/Producto/insert" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Insertar Productos</a></p>
+                <p><a href="#" class="link-opacity-50 link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-0-hover" >Mostrar Productos</a></p>
+                <p><a href="/Producto/stock" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Aumentar Proveedores</a></p>
+                <h5 class="text-decoration-underline text-white-50 bg-dark" id="offcanvasWithBothOptionsLabel">Proveedores</h5><br>
+                <p><a href="/Proveedor/insert" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Insertar Proveedores</a></p>
+                <p><a href="/Proveedor/lista" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Mostrar Proveedores</a></p>
+                <p><a href="/Proveedor/actualizar" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Actualizar Proveedores</a></p>
+            </div>
+</div>
+
         <div class="container">
-            <table class="centered">
+        <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br>
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Codigo </th>
+                        <th>Código </th>
                         <th>Nombre</th>
                         <th>Estado</th>
-                        <th>Precio Compra</th>
-                        <th>Precio Venta</th>
-                        <th>Gramo/Litro </th>
-                        <th>Cantidad</th>
-                        <th>Fecha Modificacion</th>
-                        <th>Ver lotes</th>
-                        <th>Acciones</th>
+                        <th>Gramo/Litro</th>
+                        <th>Fecha Modificación</th>
+                        <th>Cantidad Máxima</th>
+                        <th>Cantidad Mínima</th>
+                        <th></th>
+                        <th>Ver Lotes</th>
+                        <th>Editar Producto</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,19 +77,19 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="centered">
+            <table class="table table-dark table-hover">
                 <thead>
                     <tr>
-                        <th>Codigo </th>
+                        <th>Código </th>
                         <th>Nombre</th>
                         <th>Estado</th>
-                        <th>Precio Compra</th>
-                        <th>Precio Venta</th>
-                        <th>Gramo/Litro </th>
-                        <th>Cantidad</th>
-                        <th>Fecha Modificacion</th>
-                        <th>VER lotes</th>
-                        <th>Acciones</th>
+                        <th>Gramo/Litro</th>
+                        <th>Fecha Modificación</th>
+                        <th>Cantidad Máxima</th>
+                        <th>Cantidad Mínima</th>
+                        <th></th>
+                        <th>Ver Lotes</th>
+                        <th>Editar Producto</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -117,30 +112,26 @@
                 </tbody>
             </table>
         </div>
-        <br><br>
+        </div>
         <div class="center">
         <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Regresar Ingreso de Productos</a>
     </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    function estadoI(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
-        if (respuesta){
-            location.href="/Producto/EI/"+id;
-        }
-    }
-    function estadoA(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
-        if (respuesta){
-            location.href="/Producto/EA/"+id;
-        }
-    }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+ (() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('.sidenav');
-        var instances = M.Sidenav.init(elems);
-    });
-    
-</script>
+      form.classList.add('was-validated')
+    }, false)
+  })
+ })()
+    </script>
 </body>
 </html>
