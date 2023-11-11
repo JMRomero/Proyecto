@@ -13,16 +13,16 @@ def producto(request):
         return render(request,'Producto/insertar.html')
 def viewP(request):
     viewA=connection.cursor()
-    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=0;")
+    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=1;")
     viewI=connection.cursor()
-    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=1;")
+    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=0;")
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
 def viewL(request,id):
     viewLA=connection.cursor()
     viewLA.execute("select * from Lote where id_producto="+str(id)+" and Estado=1")
     viewLI=connection.cursor()
     viewLI.execute("select * from Lote where id_producto="+str(id)+" and Estado=0")
-    return render(request,'Producto/listaL.html',{'LoteA':viewLA,'LoteI':viewLI})
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'LoteI':viewLI})
 
 
 
@@ -39,19 +39,23 @@ def update(request,id):
         return render(request,'Producto/actualizar.html',{'datos':consulta})
 def esatdoI(request,id):
     estadoI=connection.cursor()
-    estadoI.execute("UPDATE producto SET Estado=0 where id_producto="+str(id)+"")
+    estadoI.execute("UPDATE producto SET Estado=True where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
 def esatdoA(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE producto SET Estado=1 where id_producto="+str(id)+"")
+    estadoA.execute("UPDATE producto SET Estado=False where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
-
+def estadoiL(request,id,lote):
+    estadoiL=connection.cursor()
+    estadoiL.execute(f"UPDATE Lote SET Estado=True WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
+    return redirect(f'/Producto/listal/{str(id)}')
+def estadoaL(request,id,lote):
+    estadoiL=connection.cursor()
+    estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
+    return redirect(f'/Producto/listal/{str(id)}')
 def menu(request):
     return render(request,'Menu/menu.html')
 
-
-def menu(request):
-    return render(request,'Menu/menu.html')
 
 #proveedor
 def viewProveedor(request):

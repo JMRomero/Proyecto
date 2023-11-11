@@ -52,9 +52,9 @@
                 <thead>
                     <tr>
                         <th>Codigo Producto </th>
-                        <th>Nombre Producto</th>
                         <th>Codigo Lote</th>
                         <th>Cantidad</th>
+                        <th>Estado</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
                         <th>Fecha Vencimiento</th>
@@ -68,15 +68,13 @@
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
+                        <td>{{p.2}}</td>
                         <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
+                        <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
                         <td>{{p.8}}</td>
-                        <td>{{p.9}}</td>
-                        
-                        <td></td>
                         <td> 
                             <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix ">border_color</i></a>
                         </td>
@@ -87,30 +85,30 @@
             <table class="centered">
                 <thead>
                     <tr>
-                        <th>Codigo </th>
-                        <th>Nombre</th>
+                        <th>Codigo Producto </th>
+                        <th>Codigo Lote</th>
+                        <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
-                        <th>Gramo/Litro </th>
-                        <th>Cantidad</th>
+                        <th>Fecha Vencimiento</th>
                         <th>Fecha Modificacion</th>
-                        <th>VER lotes</th>
+                        <th>Fecha Creacion</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in productoI%}
+                    {% for p in LoteI%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
+                        <td>{{p.2}}</td>
                         <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
-                        <td><a href="/Producto/listal/{{p.0}}"><i class="material-icons prefix">border_color</i></a></td>
+                        <td>{{p.8}}</td>
                         <td> 
                             <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix">border_color</i></a>
                         </td>
@@ -125,16 +123,16 @@
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    function estadoI(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
+    function estadoI(id,lote){
+        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
         if (respuesta){
-            location.href="/Producto/EI/"+id;
+            location.href="/Producto/LEI/"+id+"/"+lote;
         }
     }
-    function estadoA(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
+    function estadoA(id,lote){
+        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
         if (respuesta){
-            location.href="/Producto/EA/"+id;
+            location.href="/Producto/LEA/"+id+"/"+lote;
         }
     }
 
