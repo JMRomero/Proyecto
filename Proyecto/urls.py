@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,UpdateLote
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,UpdateLote
 
 
 urlpatterns = [
@@ -40,6 +40,7 @@ urlpatterns = [
     path('Pedidos/EA/<int:id>',pedidosEstadoA),
     path('Pedidos/insert',pedidosInsert),
     path('Producto/actualizar/<int:id><str:lote>',UpdateLote),
+    path('Usuario/lista',viewUsuario),
 
 
 
