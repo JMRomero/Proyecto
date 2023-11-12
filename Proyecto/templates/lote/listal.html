@@ -13,7 +13,7 @@
 
     <nav>
         <div class="nav-wrapper  blue">
-            <a href="#" class="brand-logo center">Listado de Productos</a>
+            <a href="#" class="brand-logo center">Listado de Lotes</a>
           <ul class="right hide-on-med-and-down">
             <li><a href="/menu"><i class="material-icons">home</i></a></li>
             <li><a href="#!"><i class="material-icons">view_module</i></a></li>
@@ -48,41 +48,37 @@
  
         <br>
         <div class="container">
+            {%if activos%}
             <table class="centered">
                 <thead>
                     <tr>
-                        <th>Codigo </th>
-                        <th>Nombre</th>
+                        <th>Codigo Producto </th>
+                        <th>Codigo Lote</th>
+                        <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
-                        <th>Gramo/Litro </th>
-                        <th>Cantidad</th>
-                        <th>Fecha Modificacion</th>
                         <th>Fecha Vencimiento</th>
-                        <th>Lote</th>
-                        <th>Cantidad Lote</th>
-                        <th>Cantidad Maxima</th>
-                        <th>Cantidad Minima</th>
+                        <th>Fecha Modificacion</th>
+                        <th>Fecha Creacion</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun lote activo</p>
+                {%endif%}
                 <tbody>
-                    {% for p in productoA%}
+                    {% for p in LoteA%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
+                        <td>{{p.2}}</td>
                         <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
-                        <td>{{p.11}}</td>
-                        <td>{{p.12}}</td>
-                        <td>{{p.13}}</td>
-                        <td>{{p.9}}</td>
-                        <td>{{p.10}}</td>
+                        <td>{{p.8}}</td>
                         <td> 
                             <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix ">border_color</i></a>
                         </td>
@@ -90,41 +86,45 @@
                     </tr>
                 </tbody>
             </table>
+            {%if inactivos%}
             <table class="centered">
                 <thead>
                     <tr>
-                        <th>Codigo </th>
-                        <th>Nombre</th>
+                        <th>Codigo Producto </th>
+                        <th>Codigo Lote</th>
+                        <th>Cantidad</th>
                         <th>Estado</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
-                        <th>Gramo/Litro </th>
-                        <th>Cantidad</th>
-                        <th>Fecha Modificacion</th>
                         <th>Fecha Vencimiento</th>
-                        <th>Lote</th>
-                        <th>Cantidad Lote</th>
-                        <th>Cantidad Maxima</th>
-                        <th>Cantidad Minima</th>
+                        <th>Fecha Modificacion</th>
+                        <th>Fecha Creacion</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun lote inactivo</p>
+                {%endif%}
                 <tbody>
-                    {% for p in productoI%}
+                    {% for p,v in Diff_L%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
-                        <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                        <td>{{p.2}}</td>
+                        {%if v%}
+                            {% if estado%}
+                                <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                            {%else%}
+                                <td><a href="#"><i onclick="mensaje()">Inactivo</i></a></td>
+                            {%endif%}
+                        {%else%}
+                            <td><a href="#"><i onclick="mensaje2()">Inactivo</i></a></td>
+                        {%endif%}
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
-                        <td>{{p.11}}</td>
-                        <td>{{p.12}}</td>
-                        <td>{{p.13}}</td>
-                        <td>{{p.9}}</td>
-                        <td>{{p.10}}</td>
+                        <td>{{p.8}}</td>
                         <td> 
                             <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix">border_color</i></a>
                         </td>
@@ -135,21 +135,27 @@
         </div>
         <br><br>
         <div class="center">
-        <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Regresar Ingreso de Productos</a>
+        <a href="/Producto/lista" class="waves-effect waves-light btn-small light-blue lighten-1">Regresar Lista Productos</a>
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    function estadoA(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
+    function estadoI(id,lote){
+        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
         if (respuesta){
-            location.href="/Producto/EI/"+id;
+            location.href="/Producto/LEI/"+id+"/"+lote;
         }
     }
-    function estadoI(id,name){
-        respuesta=confirm("Desea cambiar el estado del Producto "+name+" ?");
+    function estadoA(id,lote){
+        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
         if (respuesta){
-            location.href="/Producto/EA/"+id;
+            location.href="/Producto/LEA/"+id+"/"+lote;
         }
+    }
+    function mensaje(){
+        alert("No se puede realizar el cambio, Producto inactivo!")
+    }
+    function mensaje2(){
+        alert("No se puede realizar el cambio, Lote Vencido!")
     }
 
     document.addEventListener('DOMContentLoaded', function() {

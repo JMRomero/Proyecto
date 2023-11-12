@@ -46,6 +46,7 @@
     
         <br>
         <div class="container">
+            {%if activos%}
             <table class="centered">
                 <thead>
                     <tr>
@@ -59,6 +60,9 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun proveedor activo</p>
+                {%endif%}
                 <tbody>
                     {% for p in proveedorA%}
                     <tr>
@@ -77,6 +81,7 @@
                     </tr>
                 </tbody>
             </table>
+            {%if inactivos%}
             <table class="centered">
                 <thead>
                     <tr>
@@ -90,6 +95,9 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun proveedor inactivo</p>
+                {%endif%}
                 <tbody>
                     {% for p in proveedorI%}
                     <tr>

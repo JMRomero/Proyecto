@@ -13,16 +13,28 @@ def producto(request):
         return render(request,'Producto/insertar.html')
 def viewP(request):
     viewA=connection.cursor()
-    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=0;")
+    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True;")
+    activos=viewA.fetchall()
     viewI=connection.cursor()
-    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=1;")
-    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
+    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
+    inactivos=viewI.fetchall()
+    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos})
 def viewL(request,id):
     viewLA=connection.cursor()
     viewLA.execute("select * from Lote where id_producto="+str(id)+" and Estado=1")
+    activos=viewLA.fetchall()   
     viewLI=connection.cursor()
     viewLI.execute("select * from Lote where id_producto="+str(id)+" and Estado=0")
-    return render(request,'Producto/listaL.html',{'LoteA':viewLA,'LoteI':viewLI})
+    inactivos=viewLI.fetchall()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT Estado FROM producto WHERE id_producto="+str(id)+";")  # Me consulta a la hora de cambiar un lote, si el producto al que esta asignado el lote esta activo, para hacer la validacion en el html y dejar o no activar
+        impEA = cursor.fetchone()[0]#guarda el booleano
+    with connection.cursor() as cursor:
+        cursor.execute("select timestampdiff(day,now(),fechaVenci) from lote where id_producto="+str(id)+" and Estado=False;") 
+        dias = [row[0] for row in cursor.fetchall()]
+        Lvenci=[valor>0 for valor in dias]
+    Listaconbinada=list(zip(viewLI,Lvenci))
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos})
 
 
 
@@ -39,27 +51,33 @@ def update(request,id):
         return render(request,'Producto/actualizar.html',{'datos':consulta})
 def esatdoI(request,id):
     estadoI=connection.cursor()
-    estadoI.execute("UPDATE producto SET Estado=0 where id_producto="+str(id)+"")
+    estadoI.execute("UPDATE producto SET Estado=True where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
 def esatdoA(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE producto SET Estado=1 where id_producto="+str(id)+"")
+    estadoA.execute("UPDATE producto SET Estado=False where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
-
+def estadoiL(request,id,lote):
+    estadoiL=connection.cursor()
+    estadoiL.execute(f"UPDATE Lote SET Estado=True WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
+    return redirect(f'/Producto/listal/{str(id)}')
+def estadoaL(request,id,lote):
+    estadoiL=connection.cursor()
+    estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
+    return redirect(f'/Producto/listal/{str(id)}')
 def menu(request):
     return render(request,'Menu/menu.html')
 
-
-def menu(request):
-    return render(request,'Menu/menu.html')
 
 #proveedor
 def viewProveedor(request):
     viewA=connection.cursor()
     viewA.execute("select * from proveedor where Estado=1;")
+    activos=viewA.fetchall()
     viewI=connection.cursor()
     viewI.execute("select * from proveedor where Estado=0;")
-    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI})
+    inactivos=viewI.fetchall()
+    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos})
 
 def updateProveedor(request,id):
     if request.method=="POST":
@@ -114,9 +132,11 @@ def viewLote(request,id):
 def viewPedidos(request):
     viewA=connection.cursor()
     viewA.execute("select * from pedidos_especiales where estadoPe=1;")
+    activos=viewA.fetchall()
     viewI=connection.cursor()
     viewI.execute("select * from pedidos_especiales where estadoPe=0;")
-    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI})
+    inactivos=viewI.fetchall()
+    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos})
 
 def pedidosInsert(request):
     if request.method=="POST":
@@ -135,3 +155,38 @@ def pedidosEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1 where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
+#usuarios
+def viewUsuario(request):
+    viewA=connection.cursor()
+    viewA.execute("select * from usuario where estado=1;")
+    activos=viewA.fetchall()
+    viewI=connection.cursor()
+    viewI.execute("select * from usuario where estado=0;")
+    inactivos=viewI.fetchall()
+    return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos})
+def usuarioEstadoI(request,id):
+    estadoI=connection.cursor()
+    estadoI.execute("UPDATE usuario SET Estado=0 where Cedula="+str(id)+"")
+    return redirect('/Usuario/lista')
+def usuarioEstadoA(request,id):
+    estadoA=connection.cursor()
+    estadoA.execute("UPDATE usuario SET Estado=1 where Cedula="+str(id)+"")
+    return redirect('/Usuario/lista')
+def usuarioInsert(request):
+    if request.method=="POST":
+        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
+            insert=connection.cursor()
+            insert.execute("INSERT INTO usuario (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
+            return redirect('/Usuario/lista')
+    else:
+        return render(request,'Usuario/insertar.html')
+def updateUsuario(request,id):
+    if request.method=="POST":
+        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento') and request.POST.get('Id_rol'):
+            insert=connection.cursor()
+            insert.execute("UPDATE usuario SET Cedula="+request.POST.get('cedula')+",Nombre='"+request.POST.get('nombre')+"',Apellido='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",Correo='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',Fecha_Nacimiento='"+request.POST.get('fecha_nacimiento')+"',id_rol='"+request.POST.get('Id_rol')+"' where Cedula="+str(id)+";")
+            return redirect('/Usuario/lista')
+    else:
+        consulta=connection.cursor()
+        consulta.execute("select * from usuario where Cedula="+str(id)+";")
+        return render(request,'Usuario/actualizar.html',{'datos':consulta})

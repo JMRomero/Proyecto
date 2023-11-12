@@ -1,0 +1,90 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+   
+
+
+</head>
+<body>
+   
+    <nav>
+        <div class="nav-wrapper  blue">
+             
+            <a href="#" class="brand-logo center">Ingreso de Usuario</a>
+          <ul class="right hide-on-med-and-down">
+           
+           
+                  
+            <li><a href="/menu"><i class="material-icons">home</i></a></li>
+            <li><a href="#"><i class="material-icons">view_module</i></a></li>
+            <li><a href="#"><i class="material-icons">refresh</i></a></li>
+            <li><a href="#"><i class="material-icons">more_vert</i></a></li>
+          </ul>
+        </div>
+      </nav>
+
+    {% for p in datos %}
+    <div class="container">
+        <br><br>
+        <form method='POST'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">money</i>
+                    <label>Cedula</label> <input type="number" name='cedula' required value="{{p.0}}">
+                </div>
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">add_shopping_cart</i>
+                    <label>Nombre</label> <input type='text' name='nombre' required value="{{p.1}}">
+                </div>
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">add_shopping_cart</i>
+                    <label>Apellido</label> <input type='text' name='apellido' required value="{{p.2}}">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">monetization_on</i>
+                    <label>Telefono</label> <input type="number" name="telefono" required value="{{p.3}}"><br>
+                </div>
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">monetization_on</i>
+                    <label>Correo Electronico</label> <input type="text" name="correo" required value="{{p.4}}" ><br>
+                </div>
+                <div class="input-field col s4">
+                    <i class="material-icons prefix">invert_colors</i>
+                    <label>Direccion</label>  <input type='text' name='direccion' required  value="{{p.5}}"><br>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">add_to_queue</i>
+                        <label>Fecha de nacimiento</label><input type='date' name='fecha_nacimiento' required value="{{p.6|date:'Y-m-d'}}">
+                        <p>{{p.10}}</p>
+                    </div>
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">add_to_queue</i>
+                        <label>Rol</label><input type='number' name='Id_rol' required  value="{{p.8}}">
+                    </div>
+            </div>       
+            </div>
+            {%endfor%}
+            <div class="center">
+                <input type='submit' values='Subir' class="btn waves-effect waves-light"><br><br><br><br><br>
+            </div>
+            
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+
+  
+</body>
+</html>

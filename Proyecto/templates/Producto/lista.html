@@ -41,8 +41,9 @@
 </div>
 
         <div class="container">
-        <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <div style="background-color:rgb(226, 225, 225) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br>
+        {%if activos%}
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -53,11 +54,14 @@
                         <th>Fecha Modificación</th>
                         <th>Cantidad Máxima</th>
                         <th>Cantidad Mínima</th>
-                        <th></th>
+                        <th>Unidades</th>
                         <th>Ver Lotes</th>
                         <th>Editar Producto</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun producto activo</p>
+                {%endif%}
                 <tbody>
                     {% for p in productoA%}
                     <tr>
@@ -77,6 +81,7 @@
                     </tr>
                 </tbody>
             </table>
+            {%if inactivos%}
             <table class="table table-dark table-hover">
                 <thead>
                     <tr>
@@ -87,11 +92,14 @@
                         <th>Fecha Modificación</th>
                         <th>Cantidad Máxima</th>
                         <th>Cantidad Mínima</th>
-                        <th></th>
+                        <th>Unidades</th>
                         <th>Ver Lotes</th>
                         <th>Editar Producto</th>
                     </tr>
                 </thead>
+                {%else%}
+                <p>No hay ningun producto inactivo</p>
+                {%endif%}
                 <tbody>
                     {% for p in productoI%}
                     <tr>
@@ -132,6 +140,20 @@
     }, false)
   })
  })()
+    </script>
+    <script>
+            function estadoI(id,nom){
+        respuesta=confirm("Desea cambiar el estado del Producto "+nom+" ?");
+        if (respuesta){
+            location.href="/Producto/EI/"+id;
+        }
+    }
+    function estadoA(id,nom){
+        respuesta=confirm("Desea cambiar el estado del Producto "+nom+" ?");
+        if (respuesta){
+            location.href="/Producto/EA/"+id;
+        }
+    }
     </script>
 </body>
 </html>
