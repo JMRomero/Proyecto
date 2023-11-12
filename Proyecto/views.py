@@ -13,10 +13,9 @@ def producto(request):
         return render(request,'Producto/insertar.html')
 def viewP(request):
     viewA=connection.cursor()
-    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=1;")
-    activos=viewA.fetchall()
+    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True;")
     viewI=connection.cursor()
-    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto ) else 0 End as cantidad from producto where estado=0;")
+    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
     inactivos=viewI.fetchall()
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos})
 def viewL(request,id):
@@ -26,7 +25,15 @@ def viewL(request,id):
     viewLI=connection.cursor()
     viewLI.execute("select * from Lote where id_producto="+str(id)+" and Estado=0")
     inactivos=viewLI.fetchall()
-    return render(request,'lote/listaL.html',{'LoteA':viewLA,'LoteI':viewLI,'activos':activos,'inactivos':inactivos})
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT Estado FROM producto WHERE id_producto="+str(id)+";")  # Me consulta a la hora de cambiar un lote, si el producto al que esta asignado el lote esta activo, para hacer la validacion en el html y dejar o no activar
+        impEA = cursor.fetchone()[0]#guarda el booleano
+    with connection.cursor() as cursor:
+        cursor.execute("select timestampdiff(day,now(),fechaVenci) from lote where id_producto="+str(id)+" and Estado=False;") 
+        dias = [row[0] for row in cursor.fetchall()]
+        Lvenci=[valor>0 for valor in dias]
+    Listaconbinada=list(zip(viewLI,Lvenci))
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos})
 
 
 
