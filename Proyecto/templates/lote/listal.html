@@ -98,12 +98,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in LoteI%}
+                    {% for p,v in Diff_L%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
                         <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                        {%if v%}
+                            {% if estado%}
+                                <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                            {%else%}
+                                <td><a href="#"><i onclick="mensaje()">Inactivo</i></a></td>
+                            {%endif%}
+                        {%else%}
+                            <td><a href="#"><i onclick="mensaje2()">Inactivo</i></a></td>
+                        {%endif%}
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
                         <td>{{p.6}}</td>
@@ -134,6 +142,12 @@
         if (respuesta){
             location.href="/Producto/LEA/"+id+"/"+lote;
         }
+    }
+    function mensaje(){
+        alert("No se puede realizar el cambio, Producto inactivo!")
+    }
+    function mensaje2(){
+        alert("No se puede realizar el cambio, Lote Vencido!")
     }
 
     document.addEventListener('DOMContentLoaded', function() {
