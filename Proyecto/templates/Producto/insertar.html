@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,46 +7,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'
+    rel='stylesheet'>
+    <title>Insertar Proveedores</title>
 </head>
-
 <body>
-  <div class="bg-image" 
-  style="background-image: url('{%static 'img/descarga.jfif'%}');
-  width: auto; height: % auto;">
-
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
-        <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" ><i class="material-icons prefix">dehaze</i></button>
+        
             <div class="container-fluid">
               <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Insertar Productos</a>
             </div>
             <ul class="right hide-on-med-and-down">
-            <i class="material-icons-white">home</i>
             </ul>
           </nav>
           <br>
 
-          <div class="offcanvas offcanvas-start text-bg-dark" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdrop with scrolling</h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <div class="sidebar close">
+            <div class="logo-details">
+              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
+              <span class="logo_name"style='color:#080808'>Sistemas</span>
             </div>
-            <hr>
-            <div class="offcanvas-body">
-                <h5 class="text-decoration-underline text-white-50 bg-dark" id="offcanvasWithBothOptionsLabel">Productos</h5><br>
-                <p><a href="#" class="link-opacity-50 link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-0-hover" >Insertar Productos</a></p>
-                <p><a href="/Producto/lista" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Mostrar Productos</a></p>
-                <p><a href="/Producto/stock" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Aumentar Proveedores</a></p>
-                <h5 class="text-decoration-underline text-white-50 bg-dark" id="offcanvasWithBothOptionsLabel">Proveedores</h5><br>
-                <p><a href="/Proveedor/insert" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Insertar Proveedores</a></p>
-                <p><a href="/Proveedor/lista" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Mostrar Proveedores</a></p>
-                <p><a href="/Proveedor/actualizar" class="link-light link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" >Actualizar Proveedores</a></p>
+            <ul class="nav-links">
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">home</i>
+                  <span class="link_name">Menú</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Menú</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">rate_review</i>
+                  <span class="link_name">Listado Pedidos</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Listado Pedidos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">laptop_windows</i>
+                  <span class="link_name">Listado Productos</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Listado Productos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">supervisor_account</i>
+                  <span class="link_name">Listado Proveedores</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Listado Proveedores</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">input</i>
+                  <span class="link_name">Cerrar Sesión</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
+                </ul>
+              </li>
+            <div class="profile-details">
+              <div class="profile-content">
+                <img src="{%static 'img/foto.png'%}" alt="profileImg">
+              </div>
+              <div class="name-job">
+                <div class="profile_name">Administrador</div>
+              </div>
+              <i class='bx bx-log-out'></i>
             </div>
-
+          </li>
+        </ul>
+        
+          </div>
+          <section class="home-section">
+            <div class="home-content">
+              <i class='bx bx-menu' ></i>
+            </div>
+          </section>
+        
 </div>
     <div class="container">
-    <br>
-    <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+      <br>
+      <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
@@ -58,7 +108,7 @@
                 <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div>
             </div>
                 <div class="col-6">
-                    <i class="material-icons prefix">add_shopping_cart</i>
+                    <i class="material-icons prefix">laptop_windows</i>
                     <label class="form-label">Nombre del Producto</label>  
                     <input type='text' class="form-control" name='nombre' required>
                     <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -95,22 +145,21 @@
         </form></div><br><br>
     
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
-(() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
+      let arrow = document.querySelectorAll(".arrow");
+for (var i = 0; i < arrow.length; i++) {
+  arrow[i].addEventListener("click", (e)=>{
+ let arrowParent = e.target.parentElement.parentElement;
+ arrowParent.classList.toggle("showMenu");
+  });
+}
 
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
+let sidebar = document.querySelector(".sidebar");
+let sidebarBtn = document.querySelector(".bx-menu");
+console.log(sidebarBtn);
+sidebarBtn.addEventListener("click", ()=>{
+  sidebar.classList.toggle("close");
+});
     </script>
      
 </body>
