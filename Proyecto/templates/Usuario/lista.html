@@ -13,7 +13,7 @@
 
     <nav>
         <div class="nav-wrapper  blue">
-            <a href="#" class="brand-logo center">Listado de Lotes</a>
+            <a href="#" class="brand-logo center">Listado de Usuarios</a>
           <ul class="right hide-on-med-and-down">
             <li><a href="/menu"><i class="material-icons">home</i></a></li>
             <li><a href="#!"><i class="material-icons">view_module</i></a></li>
@@ -22,7 +22,7 @@
           </ul>
         </div>
       </nav>
-
+      
       <ul id="slide-out" class="sidenav">
         <li><div class="user-view">
           <div class="background">
@@ -36,89 +36,105 @@
         <li><div class="divider"></div></li>
         <li><a class="subheader">Productos</a></li>
         <li><a class="waves-effect" href="/Producto/insert">Insertar Productos</a></li>
-        <li><a class="waves-effect light-blue lighten-5" href="#!">Mostrar Productos</a></li>
+        <li><a class="waves-effect" href="/Producto/lista">Mostrar Productos</a></li>
         <li><a class="waves-effect" href="/Producto/stock">Aumentar Productos</a></li>
         <li><a class="subheader">Proveedores</a></li>
         <li><a class="waves-effect" href="/Proveedor/insert">Insertar Proveedores</a></li>
-        <li><a class="waves-effect" href="/Proveedor/lista">Mostrar Proveedores</a></li>
+        <li><a class="light-blue lighten-5" href="#!">Mostrar Proveedores</a></li>
       </ul>
       <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      
-      
- 
+    
         <br>
         <div class="container">
+            
             {%if activos%}
+            
+            
             <table class="centered">
                 <thead>
                     <tr>
-                        <th>Codigo Producto </th>
-                        <th>Codigo Lote</th>
-                        <th>Cantidad</th>
+                        <th>Cedula</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
                         <th>Estado</th>
-                        <th>Precio Compra</th>
-                        <th>Precio Venta</th>
-                        <th>Fecha Vencimiento</th>
-                        <th>Fecha Modificacion</th>
-                        <th>Fecha Creacion</th>
+                        <th>Telefono</th>
+                        <th>Correo Electronico</th>
+                        <th>Direccion</th>
+                        <th>Fecha de nacimiento</th>
+                        <th>Fecha de creacion</th>
+                        <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun lote activo</p>
+                <p>No hay ningun usuario activo</p>
                 {%endif%}
                 <tbody>
-                    {% for p in LoteA%}
+                    {% for p in usuarioA%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
                         <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.1}}')">Activo</i></a></td>
+                        <td><a href="#"><i onclick="usuarioEstadoA('{{p.0}}','{{p.1}}','{{p.2}}')">Activo</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
+                        <td>{{p.5}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
-                        <td>{{p.8}}</td>
+                        <td>{%if p.8 == 2 %}
+                                Regente
+                                {%elif p.8 == 1 %}
+                                Administrador
+                            {%endif%}
+                        </td>
                         <td> 
-                            <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix ">border_color</i></a>
+                            <a href="/Usuario/actualizar/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
                         </td>
                     {%endfor%}
                     </tr>
                 </tbody>
+                
             </table>
             {%if inactivos%}
             <table class="centered">
                 <thead>
                     <tr>
-                        <th>Codigo Producto </th>
-                        <th>Codigo Lote</th>
-                        <th>Cantidad</th>
+                        <th>Cedula</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
                         <th>Estado</th>
-                        <th>Precio Compra</th>
-                        <th>Precio Venta</th>
-                        <th>Fecha Vencimiento</th>
-                        <th>Fecha Modificacion</th>
-                        <th>Fecha Creacion</th>
+                        <th>Telefono</th>
+                        <th>Correo Electronico</th>
+                        <th>Direccion</th>
+                        <th>Fecha de nacimiento</th>
+                        <th>Fecha de creacion</th>
+                        <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun lote inactivo</p>
+                <p>No hay ningun usuario inactivo</p>
                 {%endif%}
                 <tbody>
-                    {% for p in LoteI%}
+                    {% for p in usuarioI%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>
                         <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.1}}')">Inactivo</i></a></td>
+                        <td><a href="#"><i onclick="usuarioEstadoI('{{p.0}}','{{p.1}}','{{p.2}}')">Inactivo</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
+                        <td>{{p.5}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.7}}</td>
-                        <td>{{p.8}}</td>
+                        <td>{%if p.8 == 2 %}
+                            Regente
+                            {%elif p.8 == 1 %}
+                            Administrador
+                            {%endif%}
+                        </td>
                         <td> 
-                            <a href="/Producto/actualizar/{{p.0}},{{p.12}}"><i class="material-icons prefix">border_color</i></a>
+                            <a href="/Usuario/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
                         </td>
                     {%endfor%}
                     </tr>
@@ -127,28 +143,28 @@
         </div>
         <br><br>
         <div class="center">
-        <a href="/Producto/lista" class="waves-effect waves-light btn-small light-blue lighten-1">Regresar Lista Productos</a>
+        <a href="insert" class="waves-effect waves-light btn-small light-blue lighten-1">Ingresar Usuario</a>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    function estadoI(id,lote){
-        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
+   <script>
+    function usuarioEstadoA(id,name,lastname){
+        respuesta=confirm("Desea cambiar el estado del usuario "+name+" "+lastname+" ?");
         if (respuesta){
-            location.href="/Producto/LEI/"+id+"/"+lote;
+            location.href="/Usuario/EI/"+id;
         }
     }
-    function estadoA(id,lote){
-        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
+    function usuarioEstadoI(id,name,lastname){
+        respuesta=confirm("Desea cambiar el estado del usuario "+name+" "+lastname+" ?");
         if (respuesta){
-            location.href="/Producto/LEA/"+id+"/"+lote;
+            location.href="/Usuario/EA/"+id;
         }
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
     });
-    
 </script>
+    
+
 </body>
 </html>
