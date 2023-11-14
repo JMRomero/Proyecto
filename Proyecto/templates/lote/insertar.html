@@ -9,12 +9,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Insertar Pedido Especial</title>
+    <title>Insertar Producto</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Lista Pedidos Especiales</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Insertar Productos</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -38,7 +38,7 @@
               <li>
                 <a href="/Pedidos/lista">
                   <i class="material-icons prefix">rate_review</i>
-                  <span class="link_name">Listado Pedidos Especiales</span>
+                  <span class="link_name">Listado Pedidos Pedidos Especiales</span>
                 </a>
                 <ul class="sub-menu blank">
                   <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
@@ -87,90 +87,52 @@
             <div class="home-content">
               <i class='bx bx-menu'></i>
             </div>
-          </section>    
+          </section>     
 </div>
-<div class="d-grid gap-2 col-6 mx-auto">
-        <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Pedido Especial</a>
-        </div>
-        <br>
-        <div class="container">
-        <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        <br>
-            {%if activos%}
-            <table class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th>Cedula del cajero</th>
-                        <th>Nombre del cliente</th>
-                        <th>Estado</th>
-                        <th>Celular del cliente</th>
-                        <th>Descripcion</th>
-                        <th>Fecha de creacion</th>
-                    </tr>
-                </thead>
-                {%else%}
-                <p>No hay ningun pedido activo</p>
-                {%endif%}
-                <tbody>
-                    {% for p in pedidosA%}
-                    <tr>
-                        <td>{{p.1}}</td>
-                        <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.2}}')">Pedido En Espera</i></a></td>
-                        <td>{{p.3}}</td>
-                        <td>{{p.4}}</td>
-                        <td>{{p.6}}</td>
-                    {%endfor%}
-                    </tr>
-                </tbody>
-            </table>
-            {%if inactivos%}
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Cedula del cajero</th>
-                        <th>Nombre del cliente</th>
-                        <th>Estado</th>
-                        <th>Celular del cliente</th>
-                        <th>Descripcion</th>
-                        <th>Fecha de creacion</th>
-                    </tr>
-                </thead>
-                {%else%}
-                <p>No hay ningun pedido inactivo</p>
-                {%endif%}
-                <tbody>
-                    {% for p in pedidosI%}
-                    <tr>
-                        <td>{{p.1}}</td>
-                        <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.2}}')">Pedido Concluido</i></a></td>
-                        <td>{{p.3}}</td>
-                        <td>{{p.4}}</td>
-                        <td>{{p.6}}</td>
-                    {%endfor%}
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <br><br>
-        
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    function estadoA(id,name){
-        respuesta=confirm("Desea cambiar el estado del pedido del señor@ "+name+" ?");
-        if (respuesta){
-            location.href="/Pedidos/EI/"+id;
-        }
-    }
-    function estadoI(id,name){
-        respuesta=confirm("Desea cambiar el estado del pedido del señor@ "+name+" ?");
-        if (respuesta){
-            location.href="/Pedidos/EA/"+id;
-        }
-    }
-
-    (() => {
+<div class="container">
+    <br>
+    <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+      <br><br>
+      <form class="row g-3 needs-validation" novalidate method='POST'>
+            {% csrf_token %}
+            <div class="col-6">
+                <i class="material-icons prefix">queue_play_next</i>
+                <label class="form-label">Cantidad</label>
+                <input type="text" class="form-control" name="Cantidad" required>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+            </div>
+            <div class="col-6">
+                <i class="material-icons prefix">attach_money</i>
+                <label class="form-label">Precio Compra</label>
+                <input type="text" class="form-control" name="PrecioC" required>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
+            </div>
+            <div class="col-6">
+                <i class="material-icons prefix">attach_money</i>
+                <label class="form-label">Precio Venta</label>
+                <input type="text" class="form-control" name="precioV" required>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Precio De Venta</h6></div>
+            </div>
+            <div class="col-6">
+                <i class="material-icons prefix">today</i>
+                <label class="form-label">Fecha De Vencimiento</label>
+                <input type="text" class="form-control" name="fechaVenci" required>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <input type='submit' values='Subir' class="btn btn-primary" type="button">
+                <a href="/Producto/stock" class="btn btn-primary" type="button">Cancelar</a>
+            </div>
+           
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        (() => {
   'use strict'
   const forms = document.querySelectorAll('.needs-validation')
   Array.from(forms).forEach(form => {
@@ -198,7 +160,6 @@ console.log(sidebarBtn);
 sidebarBtn.addEventListener("click", ()=>{
   sidebar.classList.toggle("close");
 });
-    
-</script>
+    </script>
 </body>
 </html>
