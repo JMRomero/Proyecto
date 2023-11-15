@@ -63,6 +63,15 @@
                 </ul>
               </li>
               <li>
+                <a href="/Usuario/lista">
+                  <i class="material-icons prefix">person_add</i>
+                  <span class="link_name">Lista Usuarios</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
+                </ul>
+              </li>
+              <li>
                 <a href="#">
                   <i class="material-icons prefix">input</i>
                   <span class="link_name">Cerrar Sesión</span>
@@ -98,7 +107,7 @@
             {% csrf_token %}
             <div class="col-6">
                 <i class="material-icons prefix">closed_caption</i>
-                <label class="form-label">Cédula</label>
+                <label class="form-label">No De Cédula</label>
                 <input type="text" class="form-control" name="cedula" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Cédula</h6></div>
@@ -127,6 +136,7 @@
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
+                <a href="/Pedidos/lista" class="btn btn-primary" type="button">Cancelar</a>
             </div>
         </form><br><br>
     </div>
