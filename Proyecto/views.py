@@ -1,7 +1,10 @@
 from django.shortcuts import render,redirect
 from django.db import connection
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 #producto
+@login_required
 def producto(request):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
@@ -11,6 +14,7 @@ def producto(request):
             return redirect('/Producto/lista')
     else:
         return render(request,'Producto/insertar.html')
+@login_required
 def viewP(request):
     viewA=connection.cursor()
     viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True;")
@@ -19,6 +23,7 @@ def viewP(request):
     viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
     inactivos=viewI.fetchall()
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos})
+@login_required
 def viewL(request,id):
     viewLA=connection.cursor()
     viewLA.execute("select * from Lote where id_producto="+str(id)+" and Estado=1")
@@ -37,7 +42,7 @@ def viewL(request,id):
     return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos})
 
 
-
+@login_required
 def update(request,id):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
@@ -49,27 +54,34 @@ def update(request,id):
         consulta=connection.cursor()
         consulta.execute("select *from producto where id_producto="+str(id)+";")
         return render(request,'Producto/actualizar.html',{'datos':consulta})
+@login_required
 def esatdoI(request,id):
     estadoI=connection.cursor()
     estadoI.execute("UPDATE producto SET Estado=True where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
+@login_required
 def esatdoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE producto SET Estado=False where id_producto="+str(id)+"")
     return redirect('/Producto/lista')
+@login_required
 def estadoiL(request,id,lote):
     estadoiL=connection.cursor()
     estadoiL.execute(f"UPDATE Lote SET Estado=True WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
     return redirect(f'/Producto/listal/{str(id)}')
+@login_required
 def estadoaL(request,id,lote):
     estadoiL=connection.cursor()
     estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
     return redirect(f'/Producto/listal/{str(id)}')
+#login
+@login_required
 def menu(request):
     return render(request,'Menu/menu.html')
 
 
 #proveedor
+@login_required
 def viewProveedor(request):
     viewA=connection.cursor()
     viewA.execute("select * from proveedor where Estado=1;")
@@ -78,7 +90,7 @@ def viewProveedor(request):
     viewI.execute("select * from proveedor where Estado=0;")
     inactivos=viewI.fetchall()
     return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos})
-
+@login_required
 def updateProveedor(request,id):
     if request.method=="POST":
         if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
@@ -89,7 +101,7 @@ def updateProveedor(request,id):
         consulta=connection.cursor()
         consulta.execute("select * from proveedor where NIT="+str(id)+";")
         return render(request,'Proveedor/actualizar.html',{'datos':consulta})
-    
+@login_required    
 def proveedorInsert(request):
     if request.method=="POST":
         if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
@@ -98,17 +110,19 @@ def proveedorInsert(request):
             return redirect('/Proveedor/lista')
     else:
         return render(request,'Proveedor/insertar.html')
-    
+@login_required    
 def proveedorEstadoI(request,id):
     estadoI=connection.cursor()
     estadoI.execute("UPDATE proveedor SET Estado=0 where NIT="+str(id)+"")
     return redirect('/Proveedor/lista')
+@login_required
 def proveedorEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE proveedor SET Estado=1 where NIT="+str(id)+"")
     return redirect('/Proveedor/lista')
 
 #lote
+@login_required
 def Stock(request):
     if request.method=="POST":
         if request.POST.get('codigo') and  request.POST.get('precioC') and request.POST.get('precioT')  and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote'):
@@ -120,7 +134,7 @@ def Stock(request):
             return redirect('/Producto/lista')
     else:
        return render(request,'Producto/Stock.html')
-
+@login_required
 def viewLote(request,id):
     viewA=connection.cursor()
     viewA.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=0; and producto.id")
@@ -129,6 +143,7 @@ def viewLote(request,id):
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
 
 #pedidos especiales
+@login_required
 def viewPedidos(request):
     viewA=connection.cursor()
     viewA.execute("select * from pedidos_especiales where estadoPe=1;")
@@ -137,7 +152,7 @@ def viewPedidos(request):
     viewI.execute("select * from pedidos_especiales where estadoPe=0;")
     inactivos=viewI.fetchall()
     return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos})
-
+@login_required
 def pedidosInsert(request):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombreClie') and  request.POST.get('celularClie') and request.POST.get('descripcion'):
@@ -146,16 +161,18 @@ def pedidosInsert(request):
             return redirect('/Pedidos/lista')
     else:
         return render(request,'Pedidos/insertar.html')
-    
+@login_required    
 def pedidosEstadoI(request,id):
     estadoI=connection.cursor()
     estadoI.execute("UPDATE pedidos_especiales SET estadoPe=0 where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
+@login_required
 def pedidosEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1 where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
 #usuarios
+@login_required
 def viewUsuario(request):
     viewA=connection.cursor()
     viewA.execute("select * from usuario where estado=1;")
@@ -164,14 +181,17 @@ def viewUsuario(request):
     viewI.execute("select * from usuario where estado=0;")
     inactivos=viewI.fetchall()
     return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos})
+@login_required
 def usuarioEstadoI(request,id):
     estadoI=connection.cursor()
     estadoI.execute("UPDATE usuario SET Estado=0 where Cedula="+str(id)+"")
     return redirect('/Usuario/lista')
+@login_required
 def usuarioEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE usuario SET Estado=1 where Cedula="+str(id)+"")
     return redirect('/Usuario/lista')
+@login_required
 def usuarioInsert(request):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
@@ -180,6 +200,7 @@ def usuarioInsert(request):
             return redirect('/Usuario/lista')
     else:
         return render(request,'Usuario/insertar.html')
+@login_required
 def updateUsuario(request,id):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento') and request.POST.get('Id_rol'):
@@ -190,3 +211,7 @@ def updateUsuario(request,id):
         consulta=connection.cursor()
         consulta.execute("select * from usuario where Cedula="+str(id)+";")
         return render(request,'Usuario/actualizar.html',{'datos':consulta})
+    #login
+def salir(request):
+    logout(request)
+    return redirect('/')
