@@ -100,7 +100,9 @@
 </div>
 <div class="d-grid gap-2 col-6 mx-auto">
         <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Pedido Especial</a>
+        <a href="listaC" class="btn btn-primary" type="button">Lista de Pedidos Concluidos</a>
         </div>
+        
         <br>
         <div class="container">
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
@@ -110,25 +112,33 @@
                 <thead>
                     <tr>
                         <th>Cedula del cajero</th>
+                        <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
                         <th>Estado</th>
                         <th>Celular del cliente</th>
                         <th>Descripcion</th>
+                        <th>Cantidad</th>
                         <th>Fecha de creacion</th>
+                        <th>Fecha de Modificacion</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun pedido activo</p>
+                <p>No hay ningun pedido por pedir</p>
                 {%endif%}
                 <tbody>
                     {% for p in pedidosA%}
                     <tr>
                         <td>{{p.1}}</td>
+                        <td>{{p.9}}</td>
                         <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoA('{{p.0}}','{{p.2}}')">Pedido En Espera</i></a></td>
+                        <td>Pedido por pedir <a href="#">  <i class="material-icons prefix" onclick="estadoA('{{p.0}}','{{p.2}}')">beenhere</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
+                        <td>{{p.7}}</td>
                         <td>{{p.6}}</td>
+                        <td>{{p.8}}</td>
+                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a></td>
                     {%endfor%}
                     </tr>
                 </tbody>
@@ -138,25 +148,33 @@
                 <thead>
                     <tr>
                         <th>Cedula del cajero</th>
+                        <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
                         <th>Estado</th>
                         <th>Celular del cliente</th>
                         <th>Descripcion</th>
+                        <th>Cantidad</th>
                         <th>Fecha de creacion</th>
+                        <th>Fecha de Modificacion</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun pedido inactivo</p>
+                <p>No hay ningun pedido realizado</p>
                 {%endif%}
                 <tbody>
                     {% for p in pedidosI%}
                     <tr>
                         <td>{{p.1}}</td>
+                        <td>{{p.9}}</td>
                         <td>{{p.2}}</td>
-                        <td><a href="#"><i onclick="estadoI('{{p.0}}','{{p.2}}')">Pedido Concluido</i></a></td>
+                        <td>Pedido Realizado<a  href="#"><i class="material-icons prefix" onclick="estadoI('{{p.0}}','{{p.2}}')">undo</i></a> <a href="#"><i class="material-icons prefix" onclick="estadoC('{{p.0}}','{{p.2}}')">check</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
+                        <td>{{p.7}}</td>
                         <td>{{p.6}}</td>
+                        <td>{{p.8}}</td>
+                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a></td>
                     {%endfor%}
                     </tr>
                 </tbody>
@@ -167,17 +185,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     function estadoA(id,name){
-        respuesta=confirm("Desea cambiar el estado del pedido del señor@ "+name+" ?");
+        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
         if (respuesta){
             location.href="/Pedidos/EI/"+id;
         }
     }
     function estadoI(id,name){
-        respuesta=confirm("Desea cambiar el estado del pedido del señor@ "+name+" ?");
+        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido por pedir?");
         if (respuesta){
             location.href="/Pedidos/EA/"+id;
         }
     }
+    function estadoC(id,name){
+        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido concluido?");
+        if (respuesta){
+            location.href="/Pedidos/EC/"+id;
+        }
+    }
+
 
     (() => {
   'use strict'

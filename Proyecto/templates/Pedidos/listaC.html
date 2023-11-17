@@ -9,12 +9,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Insertar Proveedores</title>
+    <title>Insertar Pedido Especial</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Listado De Usuarios</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Lista Pedidos Especiales Concluidos</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -36,12 +36,12 @@
                 </ul>
               </li>
               <li>
-                <a href="/Pedidos/lista">
+                <a href="#">
                   <i class="material-icons prefix">rate_review</i>
                   <span class="link_name">Listado Pedidos Especiales</span>
                 </a>
                 <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
+                  <li><a class="link_name" href="#">Listado Pedidos Especiales</a></li>
                 </ul>
               </li>
               <li>
@@ -96,112 +96,66 @@
             <div class="home-content">
               <i class='bx bx-menu'></i>
             </div>
-          </section>  
+          </section>    
 </div>
 <div class="d-grid gap-2 col-6 mx-auto">
-    <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Usuario</a>
-    </div>
+        <a href="lista" class="btn btn-primary" type="button">Lista de Pedidos Por Pedir Y Realizados</a>
+        </div>
         <br>
         <div class="container">
-            <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-            <br>
-            {%if activos%}  
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Cedula</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Estado</th>
-                        <th>Telefono</th>
-                        <th>Correo Electronico</th>
-                        <th>Direccion</th>
-                        <th>Fecha de nacimiento</th>
-                        <th>Fecha de creacion</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                {%else%}
-                <p>No hay ningun usuario activo</p>
-                {%endif%}
-                <tbody>
-                    {% for p in usuarioA%}
-                    <tr>
-                        <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
-                        <td>{{p.6}}</td>
-                        <td><a href="#"><i onclick="usuarioEstadoA('{{p.4}}','{{p.5}}','{{p.6}}')">Activo</i></a></td>
-                        <td>{{p.13}}</td>
-                        <td>{{p.7}}</td>
-                        <td>{{p.12}}</td>
-                        <td>{{p.11}}</td>
-                        <td>{{p.10}}</td>
-                        <td>{{p.14}}</td>
-                        <td> 
-                            <a href="/Usuario/actualizar/{{p.4}}"><i class="material-icons prefix ">border_color</i></a>
-                        </td>
-                    {%endfor%}
-                    </tr>
-                </tbody>
-                
-            </table>
-            {%if inactivos%}
+        <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br>
+            {%if concluidos%}
             <table class="table table-dark table-hover">
                 <thead>
                     <tr>
-                        <th>Cedula</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
+                      <th>Cedula del cajero</th>
+                        <th>Nombre del cajero</th>
+                        <th>Nombre del cliente</th>
                         <th>Estado</th>
-                        <th>Telefono</th>
-                        <th>Correo Electronico</th>
-                        <th>Direccion</th>
-                        <th>Fecha de nacimiento</th>
+                        <th>Celular del cliente</th>
+                        <th>Descripcion</th>
+                        <th>Cantidad</th>
                         <th>Fecha de creacion</th>
-                        <th>Rol</th>
+                        <th>Fecha de Modificacion</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun usuario inactivo</p>
+                <p>No hay ningun pedido concluido</p>
                 {%endif%}
                 <tbody>
-                    {% for p in usuarioI%}
+                    {% for p in pedidosC%}
                     <tr>
+                      <td>{{p.1}}</td>
+                      <td>{{p.9}}</td>
+                      <td>{{p.2}}</td>
+                        <td>Pedido Concluido <a href="#">  <i class="material-icons prefix" onclick="estadoC('{{p.0}}','{{p.2}}','2')">cancel</i></a></td>
+                        <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
-                        <td>{{p.5}}</td>
-                        <td>{{p.6}}</td>
-                        <td><a href="#"><i onclick="usuarioEstadoI('{{p.4}}','{{p.5}}','{{p.6}}')">Inactivo</i></a></td>
-                        <td>{{p.13}}</td>
                         <td>{{p.7}}</td>
-                        <td>{{p.12}}</td>
-                        <td>{{p.11}}</td>
-                        <td>{{p.10}}</td>
-                        <td>{{p.14}}</td>
-                        <td> 
-                            <a href="/Usuario/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
-                        </td>
+                        <td>{{p.6}}</td>
+                        <td>{{p.8}}</td>
+                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a></td>
                     {%endfor%}
                     </tr>
                 </tbody>
             </table>
+
+            
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    </div>
-   <script>
-    function usuarioEstadoA(id,name,lastname){
-        respuesta=confirm("Desea cambiar el estado del usuario "+name+" "+lastname+" ?");
+        <br><br>
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    function estadoC(id,name){
+        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
         if (respuesta){
-            location.href="/Usuario/EI/"+id;
+            location.href="/Pedidos/ER/"+id;
         }
     }
-    function usuarioEstadoI(id,name,lastname){
-        respuesta=confirm("Desea cambiar el estado del usuario "+name+" "+lastname+" ?");
-        if (respuesta){
-            location.href="/Usuario/EA/"+id;
-        }
-    }
+
+
     (() => {
   'use strict'
   const forms = document.querySelectorAll('.needs-validation')
@@ -230,8 +184,7 @@ console.log(sidebarBtn);
 sidebarBtn.addEventListener("click", ()=>{
   sidebar.classList.toggle("close");
 });
-</script>
     
-
+</script>
 </body>
 </html>

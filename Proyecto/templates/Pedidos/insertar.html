@@ -105,13 +105,7 @@
         <br><br>
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-6">
-                <i class="material-icons prefix">closed_caption</i>
-                <label class="form-label">No De Cédula</label>
-                <input type="text" class="form-control" name="cedula" required>
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Cédula</h6></div>
-                </div>
+            
                 <div class="col-6">
                 <i class="material-icons prefix">person</i>
                 <label class="form-label">Nombre del cliente</label> 
@@ -127,10 +121,17 @@
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Celular Del Cliente</h6></div>
                 </div>
-                <div class="col-6">
+                <div class="col-12">
+                  <i class="material-icons prefix">phone_in_talk</i>
+                  <label class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" name="cantidad" required>
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite Celular Del Cliente</h6></div>
+                  </div>
+                <div class="col-12">
                 <i class="material-icons prefix">mode_edit</i>
                 <label for="descripcion" class="form-label">Descripción</label>
-                <textarea type="text" class="form-control" id="descripcion" rows="3" required></textarea>
+                <textarea type="text" class="form-control" name="descripcion" rows="3" required></textarea>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Una Descripción</h6></div>
             </div>

@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.contrib.auth.models import User,Group
+from django.contrib.auth.hashers import make_password
 
 #producto
 @login_required
@@ -157,21 +159,27 @@ def updateLote(request,id,lote):
 @login_required
 def viewPedidos(request):
     viewA=connection.cursor()
-    viewA.execute("select * from pedidos_especiales where estadoPe=1;")
+    viewA.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=1;")
     activos=viewA.fetchall()
     viewI=connection.cursor()
-    viewI.execute("select * from pedidos_especiales where estadoPe=0;")
+    viewI.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=0;")
     inactivos=viewI.fetchall()
     return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos})
 @login_required
 def pedidosInsert(request):
     if request.method=="POST":
-        if request.POST.get('cedula') and request.POST.get('nombreClie') and  request.POST.get('celularClie') and request.POST.get('descripcion'):
+        if request.POST.get('nombreClie') and  request.POST.get('celularClie') and request.POST.get('descripcion') and request.POST.get('cantidad'):
+            nombre_usuario = request.user.username
             insert=connection.cursor()
-            insert.execute("INSERT INTO pedidos_especiales (Cedula,nombreClie,celularClie,descripcion,fechaP) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombreClie')+"',"+request.POST.get('celularClie')+",'"+request.POST.get('descripcion')+"',now())")
+            insert.execute("INSERT INTO pedidos_especiales (Cedula,nombreClie,celularClie,descripcion,fechaP,Cantidad,fechaM) VALUES("+str(nombre_usuario)+",'"+request.POST.get('nombreClie')+"',"+request.POST.get('celularClie')+",'"+request.POST.get('descripcion')+"',now(),"+request.POST.get('cantidad')+",now())")
             return redirect('/Pedidos/lista')
     else:
-        return render(request,'Pedidos/insertar.html')
+        grupos_usuario = request.user.groups.all()
+        ced=connection.cursor()
+        ced.execute("select username from auth_user")
+        for grupo in grupos_usuario:
+            grupoA=grupo.name
+            return render(request,'Pedidos/insertar.html',{'group':grupoA,'cedula':ced})
 @login_required    
 def pedidosEstadoI(request,id):
     estadoI=connection.cursor()
@@ -182,32 +190,69 @@ def pedidosEstadoA(request,id):
     estadoA=connection.cursor()
     estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1 where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
+@login_required
+def pedidosEstadoC(request,id):
+    estadoA=connection.cursor()
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=2 where id_pedido="+str(id)+"")
+    return redirect('/Pedidos/lista')
+@login_required
+def pedidosEstadoR(request,id):
+    estadoA=connection.cursor()
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=0 where id_pedido="+str(id)+"")
+    return redirect('/Pedidos/listaC')
+@login_required
+def viewPedidosC(request):
+    viewC=connection.cursor()
+    viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2;")
+    Concluidos=viewC.fetchall()
+    return render(request,'Pedidos/listaC.html',{'pedidosC':viewC,'concluidos':Concluidos})
+@login_required
+def updatePedidos(request,id):
+    if request.method=="POST":
+        if request.POST.get('celularClie') and request.POST.get('cantidad') and  request.POST.get('descripcion'):
+            insert=connection.cursor()
+            insert.execute("UPDATE pedidos_especiales SET celularClie='"+request.POST.get('celularClie')+"',fechaM=now(),descripcion='"+request.POST.get('descripcion')+"',Cantidad="+request.POST.get('cantidad')+" where id_pedido="+str(id)+";")
+            estado=connection.cursor()
+            estado.execute("select estadoPe from pedidos_especiales where id_pedido="+str(id)+";")
+            Es=estado.fetchone()
+            for E in Es:
+                if E == 2:
+                    return redirect('/Pedidos/listaC')
+                else:
+                    return redirect('/Pedidos/lista')
+    else:
+        consulta=connection.cursor()
+        consulta.execute("select * from pedidos_especiales where id_pedido="+str(id)+";")
+        return render(request,'Pedidos/actualizar.html',{'datos':consulta})
 #usuarios
 @login_required
 def viewUsuario(request):
     viewA=connection.cursor()
-    viewA.execute("select * from usuario where estado=1;")
+    viewA.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=True;")
     activos=viewA.fetchall()
     viewI=connection.cursor()
-    viewI.execute("select * from usuario where estado=0;")
+    viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False;")
     inactivos=viewI.fetchall()
+    
     return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos})
 @login_required
 def usuarioEstadoI(request,id):
     estadoI=connection.cursor()
-    estadoI.execute("UPDATE usuario SET Estado=0 where Cedula="+str(id)+"")
+    estadoI.execute("UPDATE auth_user SET is_active=0 where username="+str(id)+"")
     return redirect('/Usuario/lista')
 @login_required
 def usuarioEstadoA(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE usuario SET Estado=1 where Cedula="+str(id)+"")
+    estadoA.execute("UPDATE auth_user SET is_active=1 where username="+str(id)+"")
     return redirect('/Usuario/lista')
 @login_required
 def usuarioInsert(request):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
+            password = 'contrasena'
+            hashed_password = make_password(contrasena)
             insert=connection.cursor()
-            insert.execute("INSERT INTO usuario (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
+            insert.execute("INSERT INTO auth_user (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
             return redirect('/Usuario/lista')
     else:
         return render(request,'Usuario/insertar.html')
@@ -216,13 +261,13 @@ def updateUsuario(request,id):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento') and request.POST.get('Id_rol'):
             insert=connection.cursor()
-            insert.execute("UPDATE usuario SET Cedula="+request.POST.get('cedula')+",Nombre='"+request.POST.get('nombre')+"',Apellido='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",Correo='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',Fecha_Nacimiento='"+request.POST.get('fecha_nacimiento')+"',id_rol='"+request.POST.get('Id_rol')+"' where Cedula="+str(id)+";")
+            insert.execute("UPDATE auth_user SET Cedula="+request.POST.get('cedula')+",Nombre='"+request.POST.get('nombre')+"',Apellido='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",Correo='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',Fecha_Nacimiento='"+request.POST.get('fecha_nacimiento')+"',id_rol='"+request.POST.get('Id_rol')+"' where Cedula="+str(id)+";")
             return redirect('/Usuario/lista')
     else:
         consulta=connection.cursor()
-        consulta.execute("select * from usuario where Cedula="+str(id)+";")
+        consulta.execute("select * from auth_user where Cedula="+str(id)+";")
         return render(request,'Usuario/actualizar.html',{'datos':consulta})
     #login
 def salir(request):
     logout(request)
-    return redirect('/')
+    return redirect('/menu')

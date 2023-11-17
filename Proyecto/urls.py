@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos
 
 
 urlpatterns = [
@@ -38,8 +38,13 @@ urlpatterns = [
     path('Proveedor/EA/<int:id>',proveedorEstadoA),
     #pedidos
     path('Pedidos/lista',viewPedidos),
+    path('Pedidos/listaC',viewPedidosC),
+    path('Pedidos/actualizar/<int:id>',updatePedidos),
     path('Pedidos/EI/<int:id>',pedidosEstadoI),
     path('Pedidos/EA/<int:id>',pedidosEstadoA),
+    path('Pedidos/EC/<int:id>',pedidosEstadoC),
+    path('Pedidos/ER/<int:id>',pedidosEstadoR),
+
     path('Pedidos/insert',pedidosInsert),
     #usuario
     path('Usuario/lista',viewUsuario),
