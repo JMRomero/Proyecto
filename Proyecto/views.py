@@ -141,7 +141,18 @@ def viewLote(request,id):
     viewI=connection.cursor()
     viewI.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=1;")
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
-
+@login_required
+def updateLote(request,id,lote):
+    if request.method=="POST":
+        if request.POST.get('codigo') and request.POST.get('cantidad') and  request.POST.get('precioC') and request.POST.get('precioV') and request.POST.get('fechaVenci'):
+            insert=connection.cursor()
+            insert.execute("UPDATE lote SET Loteid='"+request.POST.get('codigo')+"',Cantidad='"+request.POST.get('cantidad')+"',PrecioC="+request.POST.get('precioC')+",PrecioV='"+request.POST.get('precioV')+"',fechaVenci='"+request.POST.get('fechaVenci')+"' where Loteid='"+str(lote)+"'")
+            return redirect('/Producto/listal/'+str(id)+'')
+    else:
+        consulta=connection.cursor()
+        consulta.execute("select * from lote where Loteid='"+str(lote)+"';")
+        return render(request,'lote/actualizar.html',{'datos':consulta})
+               
 #pedidos especiales
 @login_required
 def viewPedidos(request):
