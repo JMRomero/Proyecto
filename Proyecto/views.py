@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User,Group
 from django.contrib.auth.hashers import make_password
+#menu
+@login_required
+def Menu(request):
+    return render(request,'layout/Menu.html')
 
 #producto
 @login_required
