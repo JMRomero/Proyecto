@@ -28,22 +28,34 @@
       <span class="logo_name"style='color:#080808'>Sistemas</span>
     </div>
     <ul class="nav-links">
-      <li>
+      <li class=''>
+        <section>
         <a href="#">
+          <i class='bx bx-menu'>
+        </i>
+        <span class="link_name">Menu desplegable</span>
+        </section>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" >Menu desplegable</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="/menu">
           <i class="material-icons prefix">home</i>
           <span class="link_name">Menú</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Menú</a></li>
+          <li><a class="link_name" href="/menu">Menú</a></li>
         </ul>
       </li>
       <li>
         <a href="/Pedidos/lista">
           <i class="material-icons prefix">rate_review</i>
-          <span class="link_name">Listado Pedidos</span>
+          <span class="link_name">Listado Pedidos Especiales</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos</a></li>
+          <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
         </ul>
       </li>
       <li>
@@ -96,10 +108,6 @@
   </div>
   <section class="home-section">
     <div class="home-content">
-      <i class='bx bx-menu'></i>
-    </div>
-  </section>
-
 </div>
 
 </div>
@@ -153,9 +161,10 @@
         
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
-                <a href="/Producto/lista" class="btn btn-primary" type="button">Cancelar</a>
+                <a href="/Producto/lista" type="button" class="btn btn-outline-danger">Cancelar</a>
         </form></div><br><br>
-    
+      </div>
+    </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>

@@ -26,13 +26,25 @@
               <span class="logo_name"style='color:#080808'>Sistemas</span>
             </div>
             <ul class="nav-links">
-              <li>
+              <li class=''>
+                <section>
                 <a href="#">
+                  <i class='bx bx-menu'>
+                </i>
+                <span class="link_name">Menu desplegable</span>
+                </section>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" >Menu desplegable</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/menu">
                   <i class="material-icons prefix">home</i>
                   <span class="link_name">Menú</span>
                 </a>
                 <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Menú</a></li>
+                  <li><a class="link_name" href="/menu">Menú</a></li>
                 </ul>
               </li>
               <li>
@@ -93,10 +105,7 @@
         </ul>
           </div>
           <section class="home-section">
-            <div class="home-content">
-              <i class='bx bx-menu'></i>
-            </div>
-          </section>  
+            <div class="home-content">  
 </div>
 
     {% for p in datos %}
@@ -142,10 +151,11 @@
             {%endfor%}
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
-                <a href="/Proveedor/lista" class="btn btn-primary" type="button">Cancelar</a><br>
+                <a href="/Proveedor/lista" type="button" class="btn btn-outline-danger">Cancelar</a><br>
             </div>
-            
         </form>
+      </div>
+    </section>  
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
