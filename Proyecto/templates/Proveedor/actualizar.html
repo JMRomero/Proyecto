@@ -19,94 +19,7 @@
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-          <br>
-          <div class="sidebar close">
-            <div class="logo-details">
-              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
-              <span class="logo_name"style='color:#080808'>Sistemas</span>
-            </div>
-            <ul class="nav-links">
-              <li class=''>
-                <section>
-                <a href="#">
-                  <i class='bx bx-menu'>
-                </i>
-                <span class="link_name">Menu desplegable</span>
-                </section>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" >Menu desplegable</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/menu">
-                  <i class="material-icons prefix">home</i>
-                  <span class="link_name">Menú</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/menu">Menú</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Pedidos/lista">
-                  <i class="material-icons prefix">rate_review</i>
-                  <span class="link_name">Listado Pedidos Pedidos Especiales</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Producto/lista">
-                  <i class="material-icons prefix">laptop_windows</i>
-                  <span class="link_name">Listado Productos</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Proveedor/lista">
-                  <i class="material-icons prefix">supervisor_account</i>
-                  <span class="link_name">Listado Proveedores</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Usuario/lista">
-                  <i class="material-icons prefix">person_add</i>
-                  <span class="link_name">Lista Usuarios</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">input</i>
-                  <span class="link_name">Cerrar Sesión</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
-                </ul>
-              </li>
-            <div class="profile-details">
-              <div class="profile-content">
-                <img src="{%static 'img/foto.png'%}" alt="profileImg">
-              </div>
-              <div class="name-job">
-                <div class="profile_name">Administrador</div>
-              </div>
-              <i class='bx bx-log-out'></i>
-            </div>
-          </li>
-        </ul>
-          </div>
-          <section class="home-section">
-            <div class="home-content">  
-</div>
+{%include 'Layout/Menu.html' %}
 
     {% for p in datos %}
     <div class="container">
@@ -158,36 +71,7 @@
     </section>  
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-         (() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-      let arrow = document.querySelectorAll(".arrow");
-for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e)=>{
- let arrowParent = e.target.parentElement.parentElement;
- arrowParent.classList.toggle("showMenu");
-  });
-}
-
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".bx-menu");
-console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
-});
-    </script>
+    
 
   
 </body>

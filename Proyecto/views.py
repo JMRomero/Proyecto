@@ -2,6 +2,10 @@ from django.shortcuts import render,redirect
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+#menu
+@login_required
+def Menu(request):
+    return render(request,'layout/Menu.html')
 
 #producto
 @login_required
@@ -225,4 +229,4 @@ def updateUsuario(request,id):
     #login
 def salir(request):
     logout(request)
-    return redirect('/')
+    return redirect('/menu')
