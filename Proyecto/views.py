@@ -4,6 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User,Group
 from django.contrib.auth.hashers import make_password
+
+def group_iden(request):
+    grupos_usuario = request.user.groups.all()
+    for grupo in grupos_usuario:
+        grupoA=grupo.name
+        return grupoA
+
 #menu
 @login_required
 def Menu(request):
@@ -28,7 +35,8 @@ def viewP(request):
     viewI=connection.cursor()
     viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
     inactivos=viewI.fetchall()
-    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos})
+    grupo_actual= group_iden(request)
+    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()
@@ -253,8 +261,8 @@ def usuarioEstadoA(request,id):
 def usuarioInsert(request):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
-            password = 'contrasena'
-            hashed_password = make_password(contrasena)
+            password = (request.POST.get('contrasena'))
+            hashed_password = make_password(password)
             insert=connection.cursor()
             insert.execute("INSERT INTO auth_user (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
             return redirect('/Usuario/lista')
