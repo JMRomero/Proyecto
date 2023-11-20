@@ -26,7 +26,8 @@ def producto(request):
             insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
             return redirect('/Producto/lista')
     else:
-        return render(request,'Producto/insertar.html')
+        grupo_actual= group_iden(request)
+        return render(request,'Producto/insertar.html',{'group':grupo_actual})
 @login_required
 def viewP(request):
     viewA=connection.cursor()
@@ -53,7 +54,8 @@ def viewL(request,id):
         dias = [row[0] for row in cursor.fetchall()]
         Lvenci=[valor>0 for valor in dias]
     Listaconbinada=list(zip(viewLI,Lvenci))
-    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos})
+    grupo_actual= group_iden(request)
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 
 
 @login_required
@@ -67,7 +69,8 @@ def update(request,id):
     else:
         consulta=connection.cursor()
         consulta.execute("select *from producto where id_producto="+str(id)+";")
-        return render(request,'Producto/actualizar.html',{'datos':consulta})
+        grupo_actual= group_iden(request)
+        return render(request,'Producto/actualizar.html',{'datos':consulta,'group':grupo_actual})
 @login_required
 def esatdoI(request,id):
     estadoI=connection.cursor()
@@ -103,7 +106,8 @@ def viewProveedor(request):
     viewI=connection.cursor()
     viewI.execute("select * from proveedor where Estado=0;")
     inactivos=viewI.fetchall()
-    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos})
+    grupo_actual= group_iden(request)
+    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def updateProveedor(request,id):
     if request.method=="POST":
@@ -114,7 +118,8 @@ def updateProveedor(request,id):
     else:
         consulta=connection.cursor()
         consulta.execute("select * from proveedor where NIT="+str(id)+";")
-        return render(request,'Proveedor/actualizar.html',{'datos':consulta})
+        grupo_actual= group_iden(request)
+        return render(request,'Proveedor/actualizar.html',{'datos':consulta,'group':grupo_actual})
 @login_required    
 def proveedorInsert(request):
     if request.method=="POST":
@@ -123,7 +128,8 @@ def proveedorInsert(request):
             insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Categoria_Productos,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('categoria_productos')+"','"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
             return redirect('/Proveedor/lista')
     else:
-        return render(request,'Proveedor/insertar.html')
+        grupo_actual= group_iden(request)
+        return render(request,'Proveedor/insertar.html',{'group':grupo_actual})
 @login_required    
 def proveedorEstadoI(request,id):
     estadoI=connection.cursor()
@@ -147,14 +153,16 @@ def Stock(request):
             insert2.execute("Insert into vencimiento (fechaV,id_producto,LoteP,Cantidad) VALUES('"+request.POST.get('vencimiento')+"',"+request.POST.get('codigo')+",'"+request.POST.get('lote')+"',"+request.POST.get('cantidad')+");")
             return redirect('/Producto/lista')
     else:
-       return render(request,'Producto/Stock.html')
+       grupo_actual= group_iden(request)
+       return render(request,'Producto/Stock.html',{'group':grupo_actual})
 @login_required
 def viewLote(request,id):
     viewA=connection.cursor()
     viewA.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=0; and producto.id")
     viewI=connection.cursor()
     viewI.execute("select producto.*, vencimiento.fechaV,vencimiento.LoteP,vencimiento.Cantidad from producto inner join vencimiento on vencimiento.id_producto=producto.id_producto where producto.Estado=1;")
-    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI})
+    grupo_actual= group_iden(request)
+    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'group':grupo_actual})
 @login_required
 def updateLote(request,id,lote):
     if request.method=="POST":
@@ -165,7 +173,8 @@ def updateLote(request,id,lote):
     else:
         consulta=connection.cursor()
         consulta.execute("select * from lote where Loteid='"+str(lote)+"';")
-        return render(request,'lote/actualizar.html',{'datos':consulta})
+        grupo_actual= group_iden(request)
+        return render(request,'lote/actualizar.html',{'datos':consulta,'group':grupo_actual})
                
 #pedidos especiales
 @login_required
@@ -176,22 +185,19 @@ def viewPedidos(request):
     viewI=connection.cursor()
     viewI.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=0;")
     inactivos=viewI.fetchall()
-    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos})
+    grupo_actual= group_iden(request)
+    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def pedidosInsert(request):
     if request.method=="POST":
         if request.POST.get('nombreClie') and  request.POST.get('celularClie') and request.POST.get('descripcion') and request.POST.get('cantidad'):
-            nombre_usuario = request.user.username
+            cedu = request.user.username
             insert=connection.cursor()
-            insert.execute("INSERT INTO pedidos_especiales (Cedula,nombreClie,celularClie,descripcion,fechaP,Cantidad,fechaM) VALUES("+str(nombre_usuario)+",'"+request.POST.get('nombreClie')+"',"+request.POST.get('celularClie')+",'"+request.POST.get('descripcion')+"',now(),"+request.POST.get('cantidad')+",now())")
+            insert.execute("INSERT INTO pedidos_especiales (Cedula,nombreClie,celularClie,descripcion,fechaP,Cantidad,fechaM) VALUES("+str(cedu)+",'"+request.POST.get('nombreClie')+"',"+request.POST.get('celularClie')+",'"+request.POST.get('descripcion')+"',now(),"+request.POST.get('cantidad')+",now())")
             return redirect('/Pedidos/lista')
     else:
-        grupos_usuario = request.user.groups.all()
-        ced=connection.cursor()
-        ced.execute("select username from auth_user")
-        for grupo in grupos_usuario:
-            grupoA=grupo.name
-            return render(request,'Pedidos/insertar.html',{'group':grupoA,'cedula':ced})
+        grupo_actual= group_iden(request)
+        return render(request,'Pedidos/insertar.html',{'group':grupo_actual})
 @login_required    
 def pedidosEstadoI(request,id):
     estadoI=connection.cursor()
@@ -217,7 +223,8 @@ def viewPedidosC(request):
     viewC=connection.cursor()
     viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2;")
     Concluidos=viewC.fetchall()
-    return render(request,'Pedidos/listaC.html',{'pedidosC':viewC,'concluidos':Concluidos})
+    grupo_actual= group_iden(request)
+    return render(request,'Pedidos/listaC.html',{'pedidosC':viewC,'concluidos':Concluidos,'group':grupo_actual})
 @login_required
 def updatePedidos(request,id):
     if request.method=="POST":
@@ -235,7 +242,8 @@ def updatePedidos(request,id):
     else:
         consulta=connection.cursor()
         consulta.execute("select * from pedidos_especiales where id_pedido="+str(id)+";")
-        return render(request,'Pedidos/actualizar.html',{'datos':consulta})
+        grupo_actual= group_iden(request)
+        return render(request,'Pedidos/actualizar.html',{'datos':consulta,'group':grupo_actual})
 #usuarios
 @login_required
 def viewUsuario(request):
@@ -245,8 +253,8 @@ def viewUsuario(request):
     viewI=connection.cursor()
     viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False;")
     inactivos=viewI.fetchall()
-    
-    return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos})
+    grupo_actual= group_iden(request)
+    return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def usuarioEstadoI(request,id):
     estadoI=connection.cursor()
@@ -267,7 +275,8 @@ def usuarioInsert(request):
             insert.execute("INSERT INTO auth_user (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
             return redirect('/Usuario/lista')
     else:
-        return render(request,'Usuario/insertar.html')
+        grupo_actual= group_iden(request)
+        return render(request,'Usuario/insertar.html',{'group':grupo_actual})
 @login_required
 def updateUsuario(request,id):
     if request.method=="POST":
@@ -278,7 +287,8 @@ def updateUsuario(request,id):
     else:
         consulta=connection.cursor()
         consulta.execute("select * from auth_user where Cedula="+str(id)+";")
-        return render(request,'Usuario/actualizar.html',{'datos':consulta})
+        grupo_actual= group_iden(request)
+        return render(request,'Usuario/actualizar.html',{'datos':consulta,'group':grupo_actual})
     #login
 def salir(request):
     logout(request)
