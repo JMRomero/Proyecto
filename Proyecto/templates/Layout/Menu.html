@@ -6,16 +6,13 @@
       <span class="logo_name"style='color:#080808'>Sistemas</span>
     </div>
     <ul class="nav-links">
-      <li class=''>
+      <br><li>
         <section>
-        <a href="#">
-          <i class='bx bx-menu'></i>
-          
-          <span class="link_name">Menu desplegable</span>
-        </section>
-        </a>
+        <a href="#" >
+          <i class='bx bx-menu position-absolute start-50 top-1 translate-middle'></i>
+      </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" >Menu desplegable</a></li>
+          <li><a class="link_name" >Desplegar Menu</a></li>
         </ul>
       </li>
       <li>
@@ -65,12 +62,12 @@
         </ul>
       </li>
       <li>
-        <a href="/salir">
-          <i class="material-icons prefix">input</i>
-          <span class="link_name">Cerrar Sesión</span>
+        <a href=#>
+          <i class="material-icons prefix" onclick="cerrar()">input</i>
+          <span class="link_name" onclick="cerrar()">Cerrar Sesión</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/salir">Cerrar Sesión</a></li>
+          <li><a class="link_name" href=# onclick="cerrar()">Cerrar Sesión</a></li>
         </ul>
       </li>
     <div class="profile-details">
@@ -119,4 +116,9 @@
   console.log(sidebarBtn);
   sidebarBtn.addEventListener("click", ()=>{
     sidebar.classList.toggle("close");
-  });</script>
+  });
+  function cerrar(){
+        respuesta=confirm("Desea cerrar sesion?");
+        if (respuesta){
+            location.href="/salir";}
+    }</script>
