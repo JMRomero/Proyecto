@@ -11,11 +11,6 @@ def group_iden(request):
         grupoA=grupo.name
         return grupoA
 
-#menu
-@login_required
-def Menu(request):
-    return render(request,'layout/Menu.html')
-
 #producto
 @login_required
 def producto(request):
