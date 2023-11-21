@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,103 +9,184 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Menú</title>
+    <title>Insertar Producto</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Menú Principal</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Bienvenido a SIFHO</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
           <br>
-          <H1><p class="text-center">BIENVENIDOS A SIFHO</p></H1>
-          <div class="container text-center">
-            <div class="row justify-content-center">
-              <div class="col">
-                <button type="button" class="btn btn-primary btn-square">Botón 1</button>
-                <span class="mx-5"></span> <!-- Espacio entre los botones -->
-                <button type="button" class="btn btn-secondary btn-square">Botón 2</button>
-              </div>
+          <div class="sidebar close">
+            <div class="logo-details">
+              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
+              <span class="logo_name"style='color:#080808'>Sistemas</span>
             </div>
+            <ul class="nav-links">
+              <li class=''>
+                <section>
+                <a href="#">
+                  <i class='bx bx-menu'>
+                </i>
+                <span class="link_name">Menu desplegable</span>
+                </section>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" >Menu desplegable</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/menu">
+                  <i class="material-icons prefix">home</i>
+                  <span class="link_name">Menú</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/menu">Menú</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/Pedidos/lista">
+                  <i class="material-icons prefix">rate_review</i>
+                  <span class="link_name">Listado Pedidos Especiales</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/Producto/lista">
+                  <i class="material-icons prefix">laptop_windows</i>
+                  <span class="link_name">Listado Productos</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/Proveedor/lista">
+                  <i class="material-icons prefix">supervisor_account</i>
+                  <span class="link_name">Listado Proveedores</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/Usuario/lista">
+                  <i class="material-icons prefix">person_add</i>
+                  <span class="link_name">Lista Usuarios</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="material-icons prefix">input</i>
+                  <span class="link_name">Cerrar Sesión</span>
+                </a>
+                <ul class="sub-menu blank">
+                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
+                </ul>
+              </li>
+            <div class="profile-details">
+              <div class="profile-content">
+                <img src="{%static 'img/foto.png'%}" alt="profileImg">
+              </div>
+              <div class="name-job">
+                <div class="profile_name">Administrador</div>
+              </div>
+              <i class='bx bx-log-out'></i>
+            </div>
+          </li>
+        </ul>
           </div>
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+          <section class="home-section">
+            <div class="home-content">
+</div>
 
-<<<<<<< HEAD
 <style>
-  /* Estilo para el botón cuadrado */
-  .btn-square {
-    width: 100px; /* Ancho deseado */
-    height: 100px; /* Alto deseado */
-    border-radius: 0; /* Sin bordes redondeados */
+  .btn-long {
+    width: 300px; /* Ancho deseado */
+    height: 100px; /* Altura deseada */
+    margin: 5px;
+    overflow: hidden;
   }
+  
+  
 </style>
-=======
-    <nav>
-        <div class="nav-wrapper  blue">
-          <a href="{% url 'salir' %}" class="btn waves-effect waves-light" >Salir</a>
-            <a href="#" class="brand-logo center">Menu Principal</a>
-          <ul class="right hide-on-med-and-down">
-            <li><a href="sass.html"><i class="material-icons">search</i></a></li>
-            <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
-            <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
-            <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
-          </ul>
-        </div>
-      </nav>
+</head>
+<body>
 
-<div>
-    <h1>Productos</h1>
-    <a href="Producto/lista"><button class="btn waves-effect waves-light">Mostrar Productos</button></a>
-   <a href="Producto/insert"><button href="" class="btn waves-effect waves-light">Insertar Producto</button></a> 
+<div class="container text-center">
+  <div class="row justify-content-center">
+    <div class="col">
+      <button type="button" class="btn btn-info btn-long "><img src="{%static 'img/proveedor.png'%}" alt="profileImg" height="50px" width="50">Número De Proveedores</button>
+      <span class="mx-2"></span>
+      <button type="button" class="btn btn-danger btn-long"><img src="{%static 'img/porrealizar.png'%}" alt="profileImg" height="50px" width="50">Pedidos Por Realizar</button>
+      <span class="mx-2"></span>
+      <button type="button" class="btn btn-success btn-long"><img src="{%static 'img/realizados.png'%}" alt="profileImg" height="50px" width="50">Pedidos Realizados</button>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col">
+      <button type="button" class="btn btn-secondary btn-long "><img src="{%static 'img/numerop.png'%}" alt="profileImg" height="50px" width="50">Número De Productos</button>
+      <span class="mx-2"></span>
+      <button type="button" class="btn btn-warning btn-long"><img src="{%static 'img/usuarios.png'%}" alt="profileImg" height="50px" width="50">Número De Usuarios</button>
+      <span class="mx-2"></span>
+      <button type="button" class="btn btn-primary btn-long"><img src="{%static 'img/s.jpg'%}" alt="profileImg" height="50px" width="50">Estadisticas</button>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col">
+        <button type="button" class="btn btn-danger btn-long ">Botón 1</button>
+        <span class="mx-2"></span>
+        <button type="button" class="btn btn-success btn-long">Botón 2</button>
+        <span class="mx-2"></span>
+        <button type="button" class="btn btn-secondary btn-long">Botón 2</button>
+      </div>
+    </div>
+  </div>
 </div>
-<div>
-  <h1>Proveedor</h1>
-  <a href="Proveedor/lista"><button class="btn waves-effect waves-light">Mostrar Proveedores</button></a>
- <a href="Proveedor/insert"><button href="" class="btn waves-effect waves-light">Insertar Proveedores</button></a> 
+<br><br><br><br><br>
+<hr>
+<p class="text-secondary text-center"><small><small>Sebastian Quintero Correa - Jose Miguel Romero Castro - Samuel Montoya Montoya - SENA - ADSO - No Ficha 2697890 - Centro textil y de Gestion Industrial</small></small> </p></marquee>
+</section>
 </div>
->>>>>>> 64a6dee0ca18c167fbca634672a48ff1d9919a31
 
-
-
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
-    (() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
+  (() => {
+'use strict'
+const forms = document.querySelectorAll('.needs-validation')
+Array.from(forms).forEach(form => {
+form.addEventListener('submit', event => {
+  if (!form.checkValidity()) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
-      form.classList.add('was-validated')
-    }, false)
-  })
+  form.classList.add('was-validated')
+}, false)
+})
 })()
-      let arrow = document.querySelectorAll(".arrow");
+  let arrow = document.querySelectorAll(".arrow");
 for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e)=>{
- let arrowParent = e.target.parentElement.parentElement;
- arrowParent.classList.toggle("showMenu");
-  });
+arrow[i].addEventListener("click", (e)=>{
+let arrowParent = e.target.parentElement.parentElement;
+arrowParent.classList.toggle("showMenu");
+});
 }
 
 let sidebar = document.querySelector(".sidebar");
 let sidebarBtn = document.querySelector(".bx-menu");
 console.log(sidebarBtn);
 sidebarBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
+sidebar.classList.toggle("close");
 });
-    
 </script>
+ 
 </body>
+</div>
 </html>
