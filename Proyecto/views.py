@@ -110,6 +110,7 @@ def estadoaL(request,id,lote):
 
 
 
+
 #proveedor
 @login_required
 def viewProveedor(request):
@@ -281,11 +282,12 @@ def usuarioEstadoA(request,id):
 @login_required
 def usuarioInsert(request):
     if request.method=="POST":
-        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
+
+        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol')and request.POST.get('contrasena'):
             password = (request.POST.get('contrasena'))
             hashed_password = make_password(password)
             insert=connection.cursor()
-            insert.execute("INSERT INTO auth_user (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
+            insert.execute("INSERT INTO auth_user (username,first_name,last_name,Telefono,email,Direccion,fechaNacimiento,date_joined,password) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),'"+str(hashed_password)+"';")
             return redirect('/Usuario/lista')
     else:
         grupo_actual= group_iden(request)

@@ -34,6 +34,7 @@
           <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
         </ul>
       </li>
+      {%if group == "Admin"%}
       <li>
         <a href="/Producto/lista">
           <i class="material-icons prefix">laptop_windows</i>
@@ -43,6 +44,7 @@
           <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
         </ul>
       </li>
+
       <li>
         <a href="/Proveedor/lista">
           <i class="material-icons prefix">supervisor_account</i>
@@ -61,6 +63,7 @@
           <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
         </ul>
       </li>
+      {%endif%}
       <li>
         <a href=#>
           <i class="material-icons prefix" onclick="cerrar()">input</i>
