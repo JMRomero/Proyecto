@@ -17,19 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #producto
     path('Producto/insert', producto),
     path('Producto/lista',viewP),
     path('Producto/actualizar/<int:id>',update),
     path('Producto/EI/<int:id>',esatdoI),
     path('Producto/EA/<int:id>',esatdoA),
     #menu
-    path('menu',menu),
+    path('',menu),
     #proveedor
     path('Proveedor/lista',viewProveedor),
     path('Proveedor/actualizar/<int:id>',updateProveedor),
@@ -38,8 +37,13 @@ urlpatterns = [
     path('Proveedor/EA/<int:id>',proveedorEstadoA),
     #pedidos
     path('Pedidos/lista',viewPedidos),
+    path('Pedidos/listaC',viewPedidosC),
+    path('Pedidos/actualizar/<int:id>',updatePedidos),
     path('Pedidos/EI/<int:id>',pedidosEstadoI),
     path('Pedidos/EA/<int:id>',pedidosEstadoA),
+    path('Pedidos/EC/<int:id>',pedidosEstadoC),
+    path('Pedidos/ER/<int:id>',pedidosEstadoR),
+
     path('Pedidos/insert',pedidosInsert),
     #usuario
     path('Usuario/lista',viewUsuario),
@@ -54,6 +58,7 @@ urlpatterns = [
     path('Producto/LEA/<int:id>/<str:lote>',estadoaL),
     path('Producto/actualizarL/<int:id>/<str:lote>',updateLote),
     #dos lineas de login
+    path('accounts/login/',inicio, name='login'),
     path('accounts/',include('django.contrib.auth.urls')),
     path('salir/', views.salir, name="salir"),
 ]

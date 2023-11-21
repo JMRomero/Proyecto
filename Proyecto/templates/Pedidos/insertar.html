@@ -18,109 +18,15 @@
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
-          </nav>
-          <br>
-          <div class="sidebar close">
-            <div class="logo-details">
-              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
-              <span class="logo_name"style='color:#080808'>Sistemas</span>
-            </div>
-            <ul class="nav-links">
-              <li class=''>
-                <section>
-                <a href="#">
-                  <i class='bx bx-menu'>
-                </i>
-                <span class="link_name">Menu desplegable</span>
-                </section>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" >Menu desplegable</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/menu">
-                  <i class="material-icons prefix">home</i>
-                  <span class="link_name">Menú</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/menu">Menú</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Pedidos/lista">
-                  <i class="material-icons prefix">rate_review</i>
-                  <span class="link_name">Listado Pedidos Especiales</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Producto/lista">
-                  <i class="material-icons prefix">laptop_windows</i>
-                  <span class="link_name">Listado Productos</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Proveedor/lista">
-                  <i class="material-icons prefix">supervisor_account</i>
-                  <span class="link_name">Listado Proveedores</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Usuario/lista">
-                  <i class="material-icons prefix">person_add</i>
-                  <span class="link_name">Lista Usuarios</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">input</i>
-                  <span class="link_name">Cerrar Sesión</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
-                </ul>
-              </li>
-            <div class="profile-details">
-              <div class="profile-content">
-                <img src="{%static 'img/foto.png'%}" alt="profileImg">
-              </div>
-              <div class="name-job">
-                <div class="profile_name">Administrador</div>
-              </div>
-              <i class='bx bx-log-out'></i>
-            </div>
-          </li>
-        </ul>
-          </div>
-          <section class="home-section">
-            <div class="home-content">
-        
-</div>
+          </nav>    
+ {%include 'Layout/Menu.html' %}
     <div class="container">
         <br>
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-6">
-                <i class="material-icons prefix">closed_caption</i>
-                <label class="form-label">No De Cédula</label>
-                <input type="text" class="form-control" name="cedula" required>
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Cédula</h6></div>
-                </div>
+            
                 <div class="col-6">
                 <i class="material-icons prefix">person</i>
                 <label class="form-label">Nombre del cliente</label> 
@@ -136,10 +42,17 @@
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Celular Del Cliente</h6></div>
                 </div>
-                <div class="col-6">
+                <div class="col-12">
+                  <i class="material-icons prefix">phone_in_talk</i>
+                  <label class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" name="cantidad" required>
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite Celular Del Cliente</h6></div>
+                  </div>
+                <div class="col-12">
                 <i class="material-icons prefix">mode_edit</i>
                 <label for="descripcion" class="form-label">Descripción</label>
-                <textarea type="text" class="form-control" id="descripcion" rows="3" required></textarea>
+                <textarea type="text" class="form-control" name="descripcion" rows="3" required></textarea>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Una Descripción</h6></div>
             </div>
@@ -152,35 +65,6 @@
     </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-       (() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-      let arrow = document.querySelectorAll(".arrow");
-for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e)=>{
- let arrowParent = e.target.parentElement.parentElement;
- arrowParent.classList.toggle("showMenu");
-  });
-}
-
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".bx-menu");
-console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
-});
-    </script>
+    {%include 'Layout/Validacion.html' %}    
 </body>
 </html>
