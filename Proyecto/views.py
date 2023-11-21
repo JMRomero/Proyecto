@@ -4,13 +4,34 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User,Group
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 
 def group_iden(request):
     grupos_usuario = request.user.groups.all()
     for grupo in grupos_usuario:
         grupoA=grupo.name
         return grupoA
-
+#login
+def inicio(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Usuario autenticado con éxito
+            return redirect('/')  # Redirige a la página de inicio
+        else:
+            # Autenticación fallida, agregamos un mensaje de error a la URL
+            messages.error(request, 'Usuario o contraseña incorrectos')
+            return redirect('login')
+    else:
+        return render(request, 'registration/login.html')
+@login_required
+def menu(request):
+    return render(request,'Menu/menu.html')
 #producto
 @login_required
 def producto(request):
@@ -86,10 +107,7 @@ def estadoaL(request,id,lote):
     estadoiL=connection.cursor()
     estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
     return redirect(f'/Producto/listal/{str(id)}')
-#login
-@login_required
-def menu(request):
-    return render(request,'Menu/menu.html')
+
 
 
 #proveedor
@@ -287,4 +305,4 @@ def updateUsuario(request,id):
     #login
 def salir(request):
     logout(request)
-    return redirect('/menu')
+    return redirect('login')

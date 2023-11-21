@@ -21,16 +21,33 @@
         </ul>
       </nav>
     <div class="container">
-    <center>
-        <form action="" method="POST" class="row g-3 needs-validation">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <span class="alert alert-{{ message.tags }}"><h1 style="color: rgb(255, 0, 0); background-color:lightgray;">{{ message }}</h1></span>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
+    <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem); height: 30%; width: 30%;">
+        <form method="POST" class="row g-1 needs-validation text-center" novalidate>
             {% csrf_token %}
-            <label for="">Usuario</label>
-            <input type="text" id="idusername" name="username"><br>
-            <label for="">Contraseña</label>
-            <input type="password" id="id_password" name="password">
+            <div class="add_circle_outline">
+                <div class="profile-content">
+                    <img src="{%static 'img/foto.png'%}">
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="idusername" class="form-label">Cedula:</label>
+                <input type="text" class="form-control" id="idusername"name="username" required>
+            </div>
+            <div class="col-12">
+                <label for="id_password" class="form-label">Contraseña:</label>
+                <input type="password" id="id_password" class="form-control" name="password" required><br>
+            </div>
             <input type="submit" class="btn btn-primary" value="Ingresar">
-        </form>
-    </center>
+        </form><br>
+    </div>
 </div>
 </body>
 
