@@ -10,7 +10,10 @@ def group_iden(request):
     for grupo in grupos_usuario:
         grupoA=grupo.name
         return grupoA
-
+#menu
+@login_required
+def menu(request):
+    return render(request,'Menu/menu.html')
 #producto
 @login_required
 def producto(request):
@@ -86,10 +89,7 @@ def estadoaL(request,id,lote):
     estadoiL=connection.cursor()
     estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
     return redirect(f'/Producto/listal/{str(id)}')
-#login
-@login_required
-def menu(request):
-    return render(request,'Menu/menu.html')
+
 
 
 #proveedor
@@ -263,11 +263,12 @@ def usuarioEstadoA(request,id):
 @login_required
 def usuarioInsert(request):
     if request.method=="POST":
-        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol'):
+
+        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol')and request.POST.get('contrasena') and contrasen:
             password = (request.POST.get('contrasena'))
             hashed_password = make_password(password)
             insert=connection.cursor()
-            insert.execute("INSERT INTO auth_user (Cedula,Nombre,Apellido,Telefono,Correo,Direccion,Fecha_Nacimiento,Fecha_Creacion,id_rol) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),"+request.POST.get('Id_rol')+")")
+            insert.execute("INSERT INTO auth_user (username,first_name,last_name,Telefono,email,Direccion,fechaNacimiento,date_joined,password) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),'"+str(hashed_password)+"';")
             return redirect('/Usuario/lista')
     else:
         grupo_actual= group_iden(request)

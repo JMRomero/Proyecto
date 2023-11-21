@@ -27,61 +27,75 @@
       <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">closed_caption</i>
-                <label class="form-label">No De Cédula</label>
+                <label class="form-label">No De Cédula*</label>
                 <input type="number" class="form-control" name='cedula' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">assignment_ind</i>
                 <label class="form-label">Nombre</label>
                 <input type='text' class="form-control" name='nombre' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">assignment_ind</i>
                 <label class="form-label">Apellido</label>
                 <input type='text' class="form-control" name='apellido' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
             </div>
-            <div class="col-6">
+            <div class="col-2">
                 <i class="material-icons prefix">contact_phone</i>
                 <label class="form-label">Teléfono</label> 
                 <input type="number" class="form-control" name="telefono" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
                 </div>
-            <div class="col-6">
+            <div class="col-2">
                 <i class="material-icons prefix">mail</i>
                  <label class="form-label">Correo Electrónico</label>
                 <input type="text" class="form-control" name="correo" required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
                 </div>
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">home</i>
                 <label class="form-label">Dirección</label> 
                 <input type='text' class="form-control" name='direccion' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
                 </div>
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">insert_invitation</i>
                 <label class="form-label">Fecha De Nacimiento</label>
                 <input type='date' class="form-control" name='fecha_nacimiento' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Fehca De Nacimiento</h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <i class="material-icons prefix">people</i>
-                <label class="form-label">Rol</label>
+                <label class="form-label">ROLLLLLLLLLLLLLLLLLL</label>
                 <input type='number' class="form-control" name='Id_rol' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Rol</h6></div>
+            </div>
+            <div class="col-4">
+                <i class="material-icons prefix">lock_outline</i>
+                <label class="form-label">Contraseña</label>
+                <input type='password' class="form-control" name='contrasena' required >
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Fehca De Nacimiento</h6></div>
+            </div>
+            <div class="col-4">
+                <i class="material-icons prefix">lock_outline</i>
+                <label class="form-label">Confirmar Contraseña</label>
+                <input type='password' class="form-control" name='confirmar_contrasena' required >
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Fehca De Nacimiento</h6></div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
