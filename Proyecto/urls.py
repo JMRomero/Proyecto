@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio
 
 
 urlpatterns = [
@@ -28,7 +28,7 @@ urlpatterns = [
     path('Producto/EI/<int:id>',esatdoI),
     path('Producto/EA/<int:id>',esatdoA),
     #menu
-    path('menu',menu),
+    path('',menu),
     #proveedor
     path('Proveedor/lista',viewProveedor),
     path('Proveedor/actualizar/<int:id>',updateProveedor),
@@ -58,6 +58,7 @@ urlpatterns = [
     path('Producto/LEA/<int:id>/<str:lote>',estadoaL),
     path('Producto/actualizarL/<int:id>/<str:lote>',updateLote),
     #dos lineas de login
+    path('accounts/login/',inicio, name='login'),
     path('accounts/',include('django.contrib.auth.urls')),
     path('salir/', views.salir, name="salir"),
 ]

@@ -16,13 +16,13 @@
         </ul>
       </li>
       <li>
-        <a href="/menu">
+        <a href="/">
           <i class="material-icons prefix">home</i>
           <span class="link_name">Menú</span>
         </a>
         
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/menu">Menú</a></li>
+          <li><a class="link_name" href="/">Menú</a></li>
         </ul>
       </li>
       <li>
@@ -92,20 +92,7 @@
      
 </div>
     
-  <script>(() => {
-    'use strict'
-    const forms = document.querySelectorAll('.needs-validation')
-    Array.from(forms).forEach(form => {
-      form.addEventListener('submit', event => {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-  
-        form.classList.add('was-validated')
-      }, false)
-    })
-  })()
+  <script>
         let arrow = document.querySelectorAll(".arrow");
   for (var i = 0; i < arrow.length; i++) {
     arrow[i].addEventListener("click", (e)=>{
