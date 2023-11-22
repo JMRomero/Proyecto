@@ -287,7 +287,9 @@ def usuarioInsert(request):
             password = (request.POST.get('contrasena'))
             hashed_password = make_password(password)
             insert=connection.cursor()
-            insert.execute("INSERT INTO auth_user (username,first_name,last_name,Telefono,email,Direccion,fechaNacimiento,date_joined,password) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),'"+str(hashed_password)+"';")
+            insert.execute("INSERT INTO auth_user (username,first_name,last_name,Telefono,email,Direccion,fechaNacimiento,date_joined,password) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),'"+str(hashed_password)+"');")
+            insertgroup=connection.cursor()
+            insertgroup.execute("INSERT INTO auth_user_groups (user_id,group_id) values((select id from auth_user where username="+request.POST.get('cedula')+"),"+request.POST.get('Id_rol')+");")
             return redirect('/Usuario/lista')
     else:
         grupo_actual= group_iden(request)
@@ -295,15 +297,40 @@ def usuarioInsert(request):
 @login_required
 def updateUsuario(request,id):
     if request.method=="POST":
-        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento') and request.POST.get('Id_rol'):
+        if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento'):
             insert=connection.cursor()
-            insert.execute("UPDATE auth_user SET Cedula="+request.POST.get('cedula')+",Nombre='"+request.POST.get('nombre')+"',Apellido='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",Correo='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',Fecha_Nacimiento='"+request.POST.get('fecha_nacimiento')+"',id_rol='"+request.POST.get('Id_rol')+"' where Cedula="+str(id)+";")
+            insert.execute("UPDATE auth_user SET username="+request.POST.get('cedula')+",first_name='"+request.POST.get('nombre')+"',last_name='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",email='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',fechaNacimiento='"+request.POST.get('fecha_nacimiento')+"' where username="+str(id)+";")
             return redirect('/Usuario/lista')
     else:
         consulta=connection.cursor()
-        consulta.execute("select * from auth_user where Cedula="+str(id)+";")
+        consulta.execute("select * from auth_user where username="+str(id)+";")
         grupo_actual= group_iden(request)
         return render(request,'Usuario/actualizar.html',{'datos':consulta,'group':grupo_actual})
+@login_required
+def updateUsuarioContrasena(request,id):
+    if request.method == 'POST':
+        if request.POST.get('contrasena') and request.POST.get('confirmar_contrasena'):
+            password=request.POST.get('contrasena')
+            hashed_password=make_password(password)
+            insert=connection.cursor()
+            insert.execute("Update auth_user SET password='"+str(hashed_password)+"' where username='"+str(id)+"'")
+            return redirect('/Usuario/lista')
+    else:
+        usuariodata=connection.cursor()
+        usuariodata.execute("select username,first_name,last_name from auth_user where username="+str(id)+";")
+        grupo_actual= group_iden(request)
+        return render(request,"Usuario/insertar_contra.html",{'datos':usuariodata,'group':grupo_actual})
+@login_required
+def usuarioRolA(request,id):
+    rol=connection.cursor()
+    rol.execute("UPDATE auth_user_groups SET group_id=2 where user_id=(select id from auth_user where username="+str(id)+")")
+    return redirect('/Usuario/lista')
+@login_required
+def usuarioRolR(request,id):
+    rol=connection.cursor()
+    rol.execute("UPDATE auth_user_groups SET group_id=1 where user_id=(select id from auth_user where username="+str(id)+")")
+    return redirect('/Usuario/lista')
+
     #login
 def salir(request):
     logout(request)

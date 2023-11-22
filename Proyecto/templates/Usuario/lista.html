@@ -41,7 +41,8 @@
                         <th>Fecha de nacimiento</th>
                         <th>Fecha de creacion</th>
                         <th>Rol</th>
-                        <th>Editar Usuario</th>
+                        <th>Editar</th>
+                        <th>Cambiar Contraseña</th>
                     </tr>
                 </thead>
                 {%else%}
@@ -59,9 +60,16 @@
                         <td>{{p.12}}</td>
                         <td>{{p.11}}</td>
                         <td>{{p.10}}</td>
-                        <td>{{p.14}}</td>
+                        {%if p.14 == "Admin" %}
+                        <td><a href="#"><i onclick="usuarioRolR('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.14}}</i></a></td>
+                        {%else%}
+                        <td><a href="#"><i onclick="usuarioRolA('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.14}}</i></a></td>
+                        {%endif%}
                         <td> 
                             <a href="/Usuario/actualizar/{{p.4}}"><i class="material-icons prefix ">border_color</i></a>
+                        </td>
+                        <td>
+                            <a href="/Usuario/actualizar/contrasena/{{p.4}}"><i class="material-icons prefix ">border_color</i></a>
                         </td>
                     {%endfor%}
                     </tr>
@@ -82,7 +90,7 @@
                         <th>Fecha de nacimiento</th>
                         <th>Fecha de creacion</th>
                         <th>Rol</th>
-                        <th>Acciones</th>
+                        <th>Editar</th>
                     </tr>
                 </thead>
                 {%else%}
@@ -114,6 +122,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </div>
    <script>
+    function usuarioRolA(id,name,lastname){
+        respuesta=confirm("Desea cambiar el rol del usuario "+name+" "+lastname+" ?");
+        if (respuesta){
+            location.href="/Usuario/RA/"+id;
+        }
+    }
+    function usuarioRolR(id,name,lastname){
+        respuesta=confirm("Desea cambiar el rol del usuario "+name+" "+lastname+" ?");
+        if (respuesta){
+            location.href="/Usuario/RR/"+id;
+        }
+    }
     function usuarioEstadoA(id,name,lastname){
         respuesta=confirm("Desea cambiar el estado del usuario "+name+" "+lastname+" ?");
         if (respuesta){
