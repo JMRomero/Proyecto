@@ -31,7 +31,8 @@ def inicio(request):
         return render(request, 'registration/login.html')
 @login_required
 def menu(request):
-    return render(request,'Menu/menu.html')
+    grupo_actual= group_iden(request)
+    return render(request,'Menu/menu.html',{'group':grupo_actual})
 #producto
 @login_required
 def producto(request):
@@ -331,7 +332,21 @@ def usuarioRolR(request,id):
     rol.execute("UPDATE auth_user_groups SET group_id=1 where user_id=(select id from auth_user where username="+str(id)+")")
     return redirect('/Usuario/lista')
 
-    #login
+@login_required
+def Notificacion(request):
+    PROMin=connection.cursor()
+    PROMin.execute("call Producto_Min")
+    PROCero=connection.cursor()
+    PROCero.execute("call Producto_cero")
+    LOTEvencer=connection.cursor()
+    LOTEvencer.execute("call Lotes_Vencer")
+    LOTEvencido=connection.cursor()
+    LOTEvencido.execute("call Lotes_vencidos")
+    grupo_actual= group_iden(request)
+    return render(request,'Notificacion/Notificaciones.html',{'PM':PROMin,'PC':PROCero,'LV':LOTEvencer,'LVV':LOTEvencido,'group':grupo_actual})
+
+
+#logout
 def salir(request):
     logout(request)
     return redirect('login')
