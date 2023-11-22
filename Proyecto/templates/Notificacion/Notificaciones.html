@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,30 +11,82 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
 </head>
 <body>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="Notificacion">
-        Launch demo modal
-      </button>
-      
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <div class="container-fluid">
+          <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Notificaciones</a>
         </div>
-      </div>
+        <ul class="right hide-on-med-and-down">
+        </ul>
+      </nav>
+    {%include 'Layout/Menu.html' %}
+    <div class="container">
+        <div class="row g-3">
+        <div class="col-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Productos cerca de acabar</th>
+            </tr>
+        </thead>
+        <tbody>
+                {%for PM in PM%}
+                    <tr>
+                        <td><div class="alert alert-info">{{PM.0}} </div></td>
+                    </tr>
+                
+                {%endfor%}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Productos Con existencia 0</th>
+            </tr>
+        </thead>
+        <tbody>
+                {%for PC in PC%}
+            <tr>
+                <td><div class="alert alert-danger">{{PC.0}} </div>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    </div>
+    <div class="col-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Lotes cerca de vencer</th>
+            </tr>
+        </thead>
+        <tbody>
+                {%for LV in LV%}
+                <tr>
+                    <td><div class="alert alert-danger">{{LV.0}}  del Producto {{LVV.2}}  con codigo de barras {{LVV.1}} </div></td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+<div class="col-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Lotes Vencidos</th>
+            </tr>
+        </thead>
+        <tbody>
+                {%for LVV in LVV%}
+                <tr>
+                    <td><div class="alert alert-danger">{{LVV.0}}  del Producto {{LVV.2}}  con codigo de barras {{LVV.1}} </div></td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div></div>
+    </div>
 </body>
-<script>$('Notificacion').modal('handleUpdate')</script>
+
 </html>
