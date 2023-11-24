@@ -25,7 +25,7 @@
     <div class="container">
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         {%for p in info%}
-        <br><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1>
+        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center><br>
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/Producto/{{idc}}" type='button' values='Subir' class="btn btn-primary">Agregar Un Nuevo Lote</a>

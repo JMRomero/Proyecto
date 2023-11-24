@@ -395,8 +395,10 @@ def LoteInsert(request,idc,idp):
         info=connection.cursor ()
         info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
         info2=info.fetchall()
+        prod=connection.cursor()
+        prod.execute("select id_producto, Nombre from Producto where id_producto="+str(idp)+";")
         grupo_actual= group_iden(request)
-        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'CP':idp,'info':info2,'group':grupo_actual})
+        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'CP':prod,'info':info2,'group':grupo_actual})
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
@@ -435,8 +437,10 @@ def LoteUpdate(request,idc,idl):
         info=connection.cursor ()
         info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
         info2=info.fetchall()
+        prod=connection.cursor()
+        prod.execute("select Producto.id_producto, Producto.Nombre from Producto inner join lote on producto.id_producto=lote.id_producto where lote.Loteid='"+str(idl)+"';")
         grupo_actual= group_iden(request)
-        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'group':grupo_actual})
+        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'CP':prod,'group':grupo_actual})
 #logout
 def salir(request):
     logout(request)
