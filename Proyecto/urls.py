@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD
 
 
 urlpatterns = [
@@ -69,7 +69,6 @@ urlpatterns = [
     path('Usuario/actualizar/contrasena/<int:id>',updateUsuarioContrasena),
 
     #lote
-    path('Producto/stock',Stock),
     path('Producto/listal/<int:id>',viewL),
     path('Producto/LEI/<int:id>/<str:lote>',estadoiL),
     path('Producto/LEA/<int:id>/<str:lote>',estadoaL),
