@@ -25,7 +25,11 @@
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         {%for p in info%}
-        <br><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1>
+        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center>
+        {%endfor%}
+        <br>
+        {%for p in CP%}
+        <br><center><h2>Actualizando Lote asignado al Producto N#{{p.0}}  {{p.1}}</h2></center>
         {%endfor%}
         <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
