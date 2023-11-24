@@ -13,9 +13,9 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
-            <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Insertar Productos</a>
-            </div>
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Editar Lote</h1></a>
+        </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
@@ -24,42 +24,58 @@
 <div class="container">
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-      <br><br>
+        {%for p in info%}
+        <br><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1>
+        {%endfor%}
+        <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
+        {%for p in lote%}
             {% csrf_token %}
             <div class="col-6">
                 <i class="material-icons prefix">queue_play_next</i>
-                <label class="form-label">Cantidad</label>
-                <input type="text" class="form-control" name="Cantidad" required>
+                <label class="form-label">Codigo lote</label>
+                <input type="text" class="form-control" name="Lote" required value="{{p.1}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
             </div>
             <div class="col-6">
+                <i class="material-icons prefix">queue_play_next</i>
+                <label class="form-label">Cantidad</label>
+                <input type="text" class="form-control" name="Cantidad" required value="{{p.2}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+            </div>
+            <div class="col-4">
                 <i class="material-icons prefix">attach_money</i>
                 <label class="form-label">Precio Compra</label>
-                <input type="text" class="form-control" name="PrecioC" required>
+                <input type="text" class="form-control" name="PrecioC" required value="{{p.3}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <i class="material-icons prefix">attach_money</i>
                 <label class="form-label">Precio Venta</label>
-                <input type="text" class="form-control" name="precioV" required>
+                <input type="text" class="form-control" name="PrecioV" required value="{{p.4}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Precio De Venta</h6></div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <i class="material-icons prefix">today</i>
                 <label class="form-label">Fecha De Vencimiento</label>
-                <input type="text" class="form-control" name="fechaVenci" required>
+                <input type="date" class="form-control" name="FechaVenci" required value="{{p.6|date:'Y-m-d'}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
             </div>
+            
+            {%endfor%}
+
             <div class="d-grid gap-2 col-6 mx-auto">
-                <input type='submit' values='Subir' class="btn btn-primary" type="button">
-                <a href="/Producto/stock" class="btn btn-primary" type="button">Cancelar</a>
+                <input type='submit' values='Subir' class="btn btn-primary" type="button" >
+                {%for p in info%}
+                <a href="/Compra/Lista/{{p.0}}" class="btn btn-outline-danger" type="button">Cancelar</a>
+                {%endfor%}
             </div>
-           
+            
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

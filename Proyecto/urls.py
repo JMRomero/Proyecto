@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,Stock,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD
 
 
 urlpatterns = [
@@ -31,6 +31,17 @@ urlpatterns = [
     path('',menu),
     #notificacion
     path('Notificacion',Notificacion),
+    #Recibo compra
+    path('Compra/SProveedor',RProveedor),
+    path('Compra/CProveedor',Cproveedor),
+    path('Compra/create/<int:NIT>',crearR),
+    path('Compra/Producto/<int:idc>',RProducto),
+    path('Compra/CProducto/<int:idc>',Cproducto),
+    path('Compra/lote/<int:idc>/<int:idp>',LoteInsert),
+    path('Compra/loteA/<int:idc>/<str:idl>',LoteUpdate),
+    path('Compra/Lista/<int:idc>',reciboCompraView),
+    path('Compra/Recibos',Recibos),
+    path('Compra/Recibo/<int:idc>',RecibosD),
     #proveedor
     path('Proveedor/lista',viewProveedor),
     path('Proveedor/actualizar/<int:id>',updateProveedor),
