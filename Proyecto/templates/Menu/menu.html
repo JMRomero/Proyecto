@@ -31,7 +31,7 @@
           </style>
 </head>
 <body>
-
+{%if group == 'Admin'%}
 <div class="container text-center">
   <div class="row justify-content-center">
     <div class="col">
@@ -52,7 +52,11 @@
     </div>
     
     </div>
+
   </div>
+  {%else%}
+  <center><h1>Bienvenido al sistema, eres REGENTE, solo puedes hacer ventas e ingresar pedidos especiales.</h1></center>
+  {%endif%}
 </div>
 <br><br><br><br><br>
 <hr>
