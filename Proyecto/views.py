@@ -67,9 +67,9 @@ def viewL(request,id):
         cursor.execute("SELECT Estado FROM producto WHERE id_producto="+str(id)+";")  # Me consulta a la hora de cambiar un lote, si el producto al que esta asignado el lote esta activo, para hacer la validacion en el html y dejar o no activar
         impEA = cursor.fetchone()[0]#guarda el booleano
     with connection.cursor() as cursor:
-        cursor.execute("select timestampdiff(day,now(),fechaVenci) from lote where id_producto="+str(id)+" and Estado=False;") 
+        cursor.execute("select timestampdiff(day,fechaVenci,now()) from lote where id_producto="+str(id)+" and Estado=False;") 
         dias = [row[0] for row in cursor.fetchall()]
-        Lvenci=[valor>0 for valor in dias]
+        Lvenci=[valor<0 if valor is not None else False for valor in dias]
     Listaconbinada=list(zip(viewLI,Lvenci))
     grupo_actual= group_iden(request)
     return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
