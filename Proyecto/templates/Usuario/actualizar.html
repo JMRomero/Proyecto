@@ -20,54 +20,62 @@
             </ul>
           </nav>
 {%include 'Layout/Menu.html' %}
-{%include 'Layout/Validacion.html' %}
-    {% for p in datos %}
-    <div class="container">
-        <br>
-        <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-          <br><br>
-          <form class="row g-3 needs-validation" novalidate method='POST'>
+{% for p in datos %}
+<div class="container">
+    <br>
+    <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+      <br><br>
+      <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-4">
+           
+            <div class="col-3">
                 <i class="material-icons prefix">closed_caption</i>
-                <label class="form-label">No De Cédula</label>
-                <input type="number" class="form-control" name='cedula' required value="{{p.0}}">
-                </div>
-                <div class="col-4">
+                <label class="form-label">No De Cédula*</label>
+                <input type="number" class="form-control" name='cedula' required value="{{p.4}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
+            </div>
+            <div class="col-3">
                 <i class="material-icons prefix">assignment_ind</i>
                 <label class="form-label">Nombre</label>
-                <input type='text' class="form-control" name='nombre' required value="{{p.1}}">
+                <input type='text' class="form-control" name='nombre' required value="{{p.5}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-3">
                 <i class="material-icons prefix">assignment_ind</i>
                 <label class="form-label">Apellido</label>
-                <input type='text' class="form-control" name='apellido' required value="{{p.2}}">
+                <input type='text' class="form-control" name='apellido' required value="{{p.6}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
+            </div>
+            <div class="col-3">
+                <i class="material-icons prefix">contact_phone</i>
+                <label class="form-label">Teléfono</label> 
+                <input type="number" class="form-control" name="telefono" required value="{{p.13}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
+                </div>
+            <div class="col-3">
+                <i class="material-icons prefix">mail</i>
+                 <label class="form-label">Correo Electrónico</label>
+                <input type="text" class="form-control" name="correo" required value="{{p.7}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
                 </div>
             <div class="col-6">
-                <i class="material-icons prefix">contact_phone</i>
-                <label class="form-label">Teléfono</label>
-                <input type="number" class="form-control" name="telefono" required value="{{p.3}}"><br>
-            </div>
-            <div class="col-6">
-                <i class="material-icons prefix">mail</i>
-                <label class="form-label">Correo Electrónico</label>
-                <input type="text" class="form-control" name="correo" required value="{{p.4}}" ><br>
-            </div>
-            <div class="col-4">
                 <i class="material-icons prefix">home</i>
-                <label class="form-label">Direccion</label> 
-                <input type='text' class="form-control" name='direccion' required  value="{{p.5}}"><br>
-            </div>
-            <div class="col-4">
+                <label class="form-label">Dirección</label> 
+                <input type='text' class="form-control" name='direccion' required value="{{p.12}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
+                </div>
+            <div class="col-3">
                 <i class="material-icons prefix">insert_invitation</i>
-                <label class="form-label">Fecha de nacimiento</label>
-                <input type='date' class="form-control" name='fecha_nacimiento' required value="{{p.6|date:'Y-m-d'}}">
-                <p>{{p.10}}</p>
-            </div>
-            <div class="col-4">
-                <i class="material-icons prefix">people</i>
-                <label class="form-label">Rol</label>
-                <input type='number' class="form-control" name='Id_rol' required  value="{{p.8}}">
+                <label class="form-label">Fecha De Nacimiento</label>
+                <input type='date' class="form-control" name='fecha_nacimiento' required value="{{p.11|date:'Y-m-d'}}" >
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Fecha De Nacimiento</h6></div>
             </div>
             {%endfor%}
             <div class="d-grid gap-2 col-6 mx-auto">
@@ -79,6 +87,6 @@
     </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    
+    {%include 'Layout/Validacion.html' %}
 </body>
 </html>
