@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {%include 'Layout/ValidacionRol.html' %}   
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +37,6 @@
                         <th>Nombre</th>
                         <th>Estado</th>
                         <th>Telefono</th>
-                        <th>Categoria de Productos</th>
                         <th>Horario de Atencion</th>
                         <th>Politica de Devolucion</th>
                         <th>Editar Proveedor</th>
@@ -54,7 +54,6 @@
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
                         <td>{{p.5}}</td>
-                        <td>{{p.6}}</td>
                         <td> 
                             <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
 
@@ -71,7 +70,6 @@
                         <th>Nombre</th>
                         <th>Estado</th>
                         <th>Telefono</th>
-                        <th>Categoria de Productos</th>
                         <th>Horario de Atencion</th>
                         <th>Politica de Devolucion</th>
                         <th>Editar Proveedor</th>
@@ -89,7 +87,6 @@
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
                         <td>{{p.5}}</td>
-                        <td>{{p.6}}</td>
                         <td> 
                             <a href="/Proveedor/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a>
                         </td>

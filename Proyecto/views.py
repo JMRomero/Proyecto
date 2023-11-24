@@ -126,9 +126,9 @@ def viewProveedor(request):
 @login_required
 def updateProveedor(request,id):
     if request.method=="POST":
-        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
+        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
             insert=connection.cursor()
-            insert.execute("UPDATE proveedor SET NIT="+request.POST.get('nit')+",Nombre='"+request.POST.get('nombre')+"',Telefono="+request.POST.get('telefono')+",Categoria_Productos='"+request.POST.get('categoria_productos')+"',Politica_Devolucion='"+request.POST.get('politica_devolucion')+"' where NIT="+str(id)+";")
+            insert.execute("UPDATE proveedor SET NIT="+request.POST.get('nit')+",Nombre='"+request.POST.get('nombre')+"',Telefono="+request.POST.get('telefono')+",Politica_Devolucion='"+request.POST.get('politica_devolucion')+"' where NIT="+str(id)+";")
             return redirect('/Proveedor/lista')
     else:
         consulta=connection.cursor()
@@ -138,9 +138,9 @@ def updateProveedor(request,id):
 @login_required    
 def proveedorInsert(request):
     if request.method=="POST":
-        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('categoria_productos') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
+        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
             insert=connection.cursor()
-            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Categoria_Productos,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('categoria_productos')+"','"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
+            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
             return redirect('/Proveedor/lista')
     else:
         grupo_actual= group_iden(request)
@@ -157,19 +157,6 @@ def proveedorEstadoA(request,id):
     return redirect('/Proveedor/lista')
 
 #lote
-@login_required
-def Stock(request):
-    if request.method=="POST":
-        if request.POST.get('codigo') and  request.POST.get('precioC') and request.POST.get('precioT')  and request.POST.get('cantidad') and request.POST.get('vencimiento') and request.POST.get('lote'):
-            
-            insert=connection.cursor()
-            insert.execute("UPDATE producto SET PrecioC="+request.POST.get('precioC')+",PrecioT="+request.POST.get('precioT')+",Fecha_Modificacion=now() where id_producto="+request.POST.get('codigo')+";")
-            insert2=connection.cursor()
-            insert2.execute("Insert into vencimiento (fechaV,id_producto,LoteP,Cantidad) VALUES('"+request.POST.get('vencimiento')+"',"+request.POST.get('codigo')+",'"+request.POST.get('lote')+"',"+request.POST.get('cantidad')+");")
-            return redirect('/Producto/lista')
-    else:
-       grupo_actual= group_iden(request)
-       return render(request,'Producto/Stock.html',{'group':grupo_actual})
 @login_required
 def viewLote(request,id):
     viewA=connection.cursor()
@@ -331,7 +318,7 @@ def usuarioRolR(request,id):
     rol=connection.cursor()
     rol.execute("UPDATE auth_user_groups SET group_id=1 where user_id=(select id from auth_user where username="+str(id)+")")
     return redirect('/Usuario/lista')
-
+#Notificaciones
 @login_required
 def Notificacion(request):
     PROMin=connection.cursor()
@@ -345,7 +332,115 @@ def Notificacion(request):
     grupo_actual= group_iden(request)
     return render(request,'Notificacion/Notificaciones.html',{'PM':PROMin,'PC':PROCero,'LV':LOTEvencer,'LVV':LOTEvencido,'group':grupo_actual})
 
-
+#recibo de compra
+@login_required
+def RProveedor(request):
+    proveedor=connection.cursor()
+    proveedor.execute("select NIT,Nombre from Proveedor where Estado=True")
+    grupo_actual= group_iden(request)
+    return render(request,'ReciboCompra/Proveedor.html',{'PROV':proveedor,'group':grupo_actual})
+@login_required
+def Cproveedor(request):
+    if request.method=="POST":
+        if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
+            nit=request.POST.get('nit')
+            insert=connection.cursor()
+            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
+            return redirect(f'/Compra/create/{nit}')
+    else:
+        grupo_actual= group_iden(request)
+        return render(request,'ReciboCompra/Nproveedor.html',{'group':grupo_actual})
+@login_required
+def crearR(request,NIT):
+    compra=connection.cursor()
+    compra.execute(f"insert into compra (Fecha_Llegada,NIT) Values(now(),{NIT});")
+    idc=connection.cursor()
+    idc.execute("select id_compra from compra order by id_compra desc limit 1;;")
+    idc2=idc.fetchone()
+    for idc3 in idc2:
+        return redirect(f'/Compra/Producto/{idc3}')
+@login_required
+def RProducto(request,idc):
+    prod=connection.cursor()
+    prod.execute("select id_producto,Nombre from Producto where Estado=True")
+    info=connection.cursor ()
+    info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+    info2=info.fetchall()
+    grupo_actual= group_iden(request)
+    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'RC':str(idc),'info':info2,'group':grupo_actual})
+@login_required
+def Cproducto(request,idc):
+   if request.method=="POST":
+        if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
+            id=request.POST.get('codigo')
+            insert=connection.cursor()
+            insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
+            return redirect(f'/Compra/lote/{idc}/{id}')
+   else:
+        info=connection.cursor ()
+        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info2=info.fetchall()
+        grupo_actual= group_iden(request)
+        return render(request,'ReciboCompra/Nproducto.html',{'RC':idc,'info':info2,'group':grupo_actual})
+@login_required
+def LoteInsert(request,idc,idp):
+    if request.method == 'POST':
+        if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
+            lote=connection.cursor()
+            lote.execute("Insert into Lote values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
+            detalle=connection.cursor()
+            detalle.execute("Insert into detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+request.POST.get('Cantidad')+","+str(idc)+");")
+            return redirect (f'/Compra/Lista/{idc}')
+    else:
+        info=connection.cursor ()
+        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info2=info.fetchall()
+        prod=connection.cursor()
+        prod.execute("select id_producto, Nombre from Producto where id_producto="+str(idp)+";")
+        grupo_actual= group_iden(request)
+        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'CP':prod,'info':info2,'group':grupo_actual})
+@login_required   
+def reciboCompraView(request,idc):
+    idc2=idc
+    lote=connection.cursor()
+    lote.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc2)+";")
+    lote2=lote.fetchall()
+    info=connection.cursor()
+    info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc2)+";")
+    info2=info.fetchall()
+    grupo_actual= group_iden(request)
+    return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':info2,'idc':idc2,'group':grupo_actual})
+@login_required
+def Recibos(request):
+    recibos=connection.cursor()
+    recibos.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+    grupo_actual= group_iden(request)
+    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual})
+@login_required
+def RecibosD(request,idc):
+    recibo=connection.cursor()
+    recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
+    grupo_actual= group_iden(request)
+    return render(request,'ReciboCompra/ListaRD.html',{'RC':recibo,'group':grupo_actual})
+@login_required
+def LoteUpdate(request,idc,idl):
+    if request.method == 'POST':
+        if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
+            insert=connection.cursor()
+            insert.execute("Update lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",precioV="+request.POST.get('PrecioV')+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
+            insert=connection.cursor()
+            insert.execute("Update detalle_Compra set Precio="+request.POST.get('PrecioC')+",PrecioU="+request.POST.get('PrecioV')+",CantidadProductos="+request.POST.get('Cantidad')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+            return redirect(f'/Compra/Lista/{idc}')
+    else:
+        lote=connection.cursor()
+        lote.execute("select * from lote where Loteid='"+str(idl)+"';")
+        info=connection.cursor ()
+        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info2=info.fetchall()
+        prod=connection.cursor()
+        prod.execute("select Producto.id_producto, Producto.Nombre from Producto inner join lote on producto.id_producto=lote.id_producto where lote.Loteid='"+str(idl)+"';")
+        grupo_actual= group_iden(request)
+        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'CP':prod,'group':grupo_actual})
 #logout
 def salir(request):
     logout(request)

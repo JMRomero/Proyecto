@@ -1,0 +1,62 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {%include 'Layout/ValidacionRol.html' %}   
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
+    <title>Seleccionar Producto</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Seleccionar Producto</h1></a>
+        </div>
+        <ul class="right hide-on-med-and-down">
+        </ul>
+    </nav>
+    {%include 'Layout/Menu.html' %}
+
+    <div class="container"> <br>
+        <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        {%for p in info%}
+        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center><br>
+        {%endfor%}
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary" type="button">Registrar Y Seleccionar Nuevo Producto</a>
+            </div><br>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a href="/Compra/Lista/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
+        </div><br><br>
+
+        
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    {% for p in PROD%}
+                    <tr>
+                        <td>{{p.0}}</td>
+                        <td>{{p.1}}</td>
+                        <td> 
+                            <a href="/Compra/lote/{{RC}}/{{p.0}}"><i class="material-icons prefix ">check_circle</i></a>
+                        </td>
+                    {%endfor%}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

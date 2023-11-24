@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Insertar Producto</title>
+    <title>Menu</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
@@ -20,128 +20,43 @@
             </ul>
           </nav>
           <br>
-          <div class="sidebar close">
-            <div class="logo-details">
-              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
-              <span class="logo_name"style='color:#080808'>Sistemas</span>
-            </div>
-            <ul class="nav-links">
-              <li class=''>
-                <section>
-                <a href="#">
-                  <i class='bx bx-menu'>
-                </i>
-                <span class="link_name">Menu desplegable</span>
-                </section>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" >Menu desplegable</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/menu">
-                  <i class="material-icons prefix">home</i>
-                  <span class="link_name">Menú</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/menu">Menú</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Pedidos/lista">
-                  <i class="material-icons prefix">rate_review</i>
-                  <span class="link_name">Listado Pedidos Especiales</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Producto/lista">
-                  <i class="material-icons prefix">laptop_windows</i>
-                  <span class="link_name">Listado Productos</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Proveedor/lista">
-                  <i class="material-icons prefix">supervisor_account</i>
-                  <span class="link_name">Listado Proveedores</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Usuario/lista">
-                  <i class="material-icons prefix">person_add</i>
-                  <span class="link_name">Lista Usuarios</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">input</i>
-                  <span class="link_name">Cerrar Sesión</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
-                </ul>
-              </li>
-            <div class="profile-details">
-              <div class="profile-content">
-                <img src="{%static 'img/foto.png'%}" alt="profileImg">
-              </div>
-              <div class="name-job">
-                <div class="profile_name">Administrador</div>
-              </div>
-              <i class='bx bx-log-out'></i>
-            </div>
-          </li>
-        </ul>
-          </div>
-          <section class="home-section">
-            <div class="home-content">
-</div>
-
-<style>
-  .btn-long {
-    width: 300px; /* Ancho deseado */
-    height: 100px; /* Altura deseada */
-    margin: 5px;
-    overflow: hidden;
-  }
-  
-  
-</style>
+          {%include "Layout/Menu.html" %}
+          <style>
+            .btn-long {
+              width: 300px; /* Ancho deseado */
+              height: 100px; /* Altura deseada */
+              margin: 5px;
+              overflow: hidden;
+            }
+          </style>
 </head>
 <body>
-
+{%if group == 'Admin'%}
 <div class="container text-center">
   <div class="row justify-content-center">
     <div class="col">
-      <button type="button" class="btn btn-info btn-long "><img src="{%static 'img/proveedor.png'%}" alt="profileImg" height="50px" width="50">Número De Proveedores</button>
+      <a href="/Proveedor/lista" class="btn btn-info btn-long "><br><img src="{%static 'img/proveedor.png'%}" alt="profileImg" height="50px" width="50">Número De Proveedores</a>
       <span class="mx-2"></span>
-      <button type="button" class="btn btn-danger btn-long"><img src="{%static 'img/porrealizar.png'%}" alt="profileImg" height="50px" width="50">Pedidos Por Realizar</button>
+      <a href="/Pedidos/lista" class="btn btn-danger btn-long"><br><img src="{%static 'img/porrealizar.png'%}" alt="profileImg" height="50px" width="50">Pedidos Por Realizar</a>
       <span class="mx-2"></span>
-      <button type="button" class="btn btn-success btn-long"><img src="{%static 'img/realizados.png'%}" alt="profileImg" height="50px" width="50">Pedidos Realizados</button>
+      <a href="/Pedidos/listaC" class="btn btn-success btn-long"><br><img src="{%static 'img/realizados.png'%}" alt="profileImg" height="50px" width="50">Pedidos Realizados</a>
     </div>
   </div>
   <div class="row justify-content-center">
     <div class="col">
-      <button type="button" class="btn btn-secondary btn-long "><img src="{%static 'img/numerop.png'%}" alt="profileImg" height="50px" width="50">Número De Productos</button>
+      <a href="/Producto/lista" class="btn btn-secondary btn-long "><br><img src="{%static 'img/numerop.png'%}" alt="profileImg" height="50px" width="50">Número De Productos</a>
       <span class="mx-2"></span>
-      <button type="button" class="btn btn-warning btn-long"><img src="{%static 'img/usuarios.png'%}" alt="profileImg" height="50px" width="50">Número De Usuarios</button>
+      <a href="/Usuario/lista" class="btn btn-warning btn-long"><br><img src="{%static 'img/usuarios.png'%}" alt="profileImg" height="50px" width="50">Número De Usuarios</a>
       <span class="mx-2"></span>
-      <button type="button" class="btn btn-primary btn-long"><img src="{%static 'img/s.jpg'%}" alt="profileImg" height="50px" width="50">Estadisticas</button>
+      <a href="" class="btn btn-primary btn-long"><br><img src="{%static 'img/esta.png'%}" alt="profileImg" height="50px" width="50">Estadisticas</a>
     </div>
     
     </div>
+
   </div>
+  {%else%}
+  <center><h1>Bienvenido al sistema, eres REGENTE, solo puedes hacer ventas e ingresar pedidos especiales.</h1></center>
+  {%endif%}
 </div>
 <br><br><br><br><br>
 <hr>

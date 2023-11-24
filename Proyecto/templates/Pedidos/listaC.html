@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Insertar Pedido Especial</title>
+    <title>Lista Pedido Especial Terminados</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
@@ -19,85 +19,7 @@
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-          <br>
-          <div class="sidebar close">
-            <div class="logo-details">
-              <i class='bx bxl-kickstarter bx-tada' style='color:#080808'></i>
-              <span class="logo_name"style='color:#080808'>Sistemas</span>
-            </div>
-            <ul class="nav-links">
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">home</i>
-                  <span class="link_name">Menú</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Menú</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">rate_review</i>
-                  <span class="link_name">Listado Pedidos Especiales</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Listado Pedidos Especiales</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Producto/lista">
-                  <i class="material-icons prefix">laptop_windows</i>
-                  <span class="link_name">Listado Productos</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Proveedor/lista">
-                  <i class="material-icons prefix">supervisor_account</i>
-                  <span class="link_name">Listado Proveedores</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/Usuario/lista">
-                  <i class="material-icons prefix">person_add</i>
-                  <span class="link_name">Lista Usuarios</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="material-icons prefix">input</i>
-                  <span class="link_name">Cerrar Sesión</span>
-                </a>
-                <ul class="sub-menu blank">
-                  <li><a class="link_name" href="#">Cerrar Sesión</a></li>
-                </ul>
-              </li>
-            <div class="profile-details">
-              <div class="profile-content">
-                <img src="{%static 'img/foto.png'%}" alt="profileImg">
-              </div>
-              <div class="name-job">
-                <div class="profile_name">Administrador</div>
-              </div>
-              <i class='bx bx-log-out'></i>
-            </div>
-          </li>
-        </ul>
-          </div>
-          <section class="home-section">
-            <div class="home-content">
-              <i class='bx bx-menu'></i>
-            </div>
-          </section>    
-</div>
+          {%include 'Layout/Menu.html' %}
 <div class="d-grid gap-2 col-6 mx-auto">
         <a href="lista" class="btn btn-primary" type="button">Lista de Pedidos Por Pedir Y Realizados</a>
         </div>
