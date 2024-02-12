@@ -52,7 +52,7 @@
                       <td>{{p.1}}</td>
                       <td>{{p.9}}</td>
                       <td>{{p.2}}</td>
-                        <td>Pedido Concluido <a href="#">  <i class="material-icons prefix" onclick="estadoC('{{p.0}}','{{p.2}}','2')">cancel</i></a></td>
+                        <td>Pedido Concluido <a href="#"><i class="material-icons prefix" onclick="estadoC('{{p.0}}','{{p.2}}')">cancel</i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
                         <td>{{p.7}}</td>
@@ -71,41 +71,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     function estadoC(id,name){
-        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
-        if (respuesta){
-            location.href="/Pedidos/ER/"+id;
+      respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
+      if (respuesta){
+        location.href="/Pedidos/ER/"+id;
         }
     }
 
-
-    (() => {
-  'use strict'
-  const forms = document.querySelectorAll('.needs-validation')
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-      let arrow = document.querySelectorAll(".arrow");
-for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e)=>{
- let arrowParent = e.target.parentElement.parentElement;
- arrowParent.classList.toggle("showMenu");
-  });
-}
-
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".bx-menu");
-console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
-});
     
 </script>
 </body>
