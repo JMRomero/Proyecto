@@ -58,10 +58,10 @@ def viewP(request):
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()
-    viewLA.execute("select * from Lote where id_producto="+str(id)+" and Estado=1")
+    viewLA.execute("select *,format(PrecioC,'###.###.###.###'),format(PrecioV,'###.###.###.###')from Lote where id_producto="+str(id)+" and Estado=1")
     activos=viewLA.fetchall()   
     viewLI=connection.cursor()
-    viewLI.execute("select * from Lote where id_producto="+str(id)+" and Estado=0")
+    viewLI.execute("select *,format(PrecioC,'###.###.###.###'),format(PrecioV,'###.###.###.###') from Lote where id_producto="+str(id)+" and Estado=0")
     inactivos=viewLI.fetchall()
     with connection.cursor() as cursor:
         cursor.execute("SELECT Estado FROM producto WHERE id_producto="+str(id)+";")  # Me consulta a la hora de cambiar un lote, si el producto al que esta asignado el lote esta activo, para hacer la validacion en el html y dejar o no activar
@@ -413,13 +413,13 @@ def reciboCompraView(request,idc):
 @login_required
 def Recibos(request):
     recibos=connection.cursor()
-    recibos.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+    recibos.execute("select Compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual})
 @login_required
 def RecibosD(request,idc):
     recibo=connection.cursor()
-    recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
+    recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###'),format(detalle_compra.PrecioU,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/ListaRD.html',{'RC':recibo,'group':grupo_actual})
 @login_required
