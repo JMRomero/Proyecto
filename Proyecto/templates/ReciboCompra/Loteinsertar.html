@@ -16,7 +16,7 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Agregar Lote</h1></a>
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Agregar Lote</h1><br></a>
         </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -26,7 +26,7 @@
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         {%for p in info%}
-        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center>
+        <br><center><h1>Compra N#{{p.0}}  NIT del Proveedor: {{p.3}}</h1></center>
         {%endfor%}
         <br>
         {%for p in CP%}
