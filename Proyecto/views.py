@@ -334,9 +334,17 @@ def Notificacion(request):
 
 #recibo de compra
 @login_required
-def RProveedor(request):
+def RProveedor1(request):
+    vaciar=connection.cursor()
+    vaciar.execute("DELETE  * FROM temp_proveedor;")
+    vaciar.execute("DELETE  * FROM temp_producto;")
+    vaciar.execute("DELETE  * FROM temp_lote;")
+    vaciar.execute("DELETE  * FROM temp_compra;")
+    vaciar.execute("DELETE  * FROM temp_detalle_compra;")
+    return redirect('/Compra/SProveedor2')
+def RProveedor2(request):
     proveedor=connection.cursor()
-    proveedor.execute("select NIT,Nombre from Proveedor where Estado=True")
+    proveedor.execute("select proveedor.NIT,proveedor.Nombre,temp_proveedor.NIT,temp_proveedor.Nombre from proveedor INNER JOIN temp_proveedor ON where proveedor.Estado=True and temp_proveedor.Estado=True")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/Proveedor.html',{'PROV':proveedor,'group':grupo_actual})
 @login_required
@@ -441,6 +449,28 @@ def LoteUpdate(request,idc,idl):
         prod.execute("select Producto.id_producto, Producto.Nombre from Producto inner join lote on producto.id_producto=lote.id_producto where lote.Loteid='"+str(idl)+"';")
         grupo_actual= group_iden(request)
         return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'CP':prod,'group':grupo_actual})
+@login_required
+def Recibos_Finalizar(request):
+    proveedor=connection.cursor()
+    proveedor.execute("INSERT INTO 'proveedor' SELECT * FROM 'temp_proveedor';")
+    proveedor.execute("DELETE * FROM 'temp_proveedor';")
+
+    producto=connection.cursor()
+    producto.execute("INSERT INTO 'producto' SELECT * FROM 'temp_producto';")
+    producto.execute("DELETE * FROM 'temp_producto';")
+
+    lote=connection.cursor()
+    lote.execute("INSERT INTO 'lote' SELECT *FROM 'temp_lote';")
+    lote.execute("DELETE * FROM 'temp_lote';")
+
+    compra=connection.cursor()
+    compra.execute("INSERT INTO 'compra' (Total, Fecha_Llegada, NIT) SELECT (Total, Fecha_Llegada, NIT) FROM 'temp_compra';")
+    compra.execute("DELETE * FROM 'temp_compra';")
+
+    detalle_compra=connection.cursor()
+    detalle_compra.execute("INSERT INTO 'detalle_compra' SELECT * FROM 'temp_detalle_compra'")
+    detalle_compra.execute("DELETE * FROM 'temp_detalle_compra';")
+    return redirect('/Compra/Recibos')
 #logout
 def salir(request):
     logout(request)
