@@ -13,6 +13,7 @@
     <title>Lote insertar</title>
 </head>
 <body>
+    {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
             <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Agregar Lote</h1></a>
@@ -21,7 +22,6 @@
             </ul>
           </nav>
 {%include 'Layout/Validacion.html' %}
-{%include 'Layout/Menu.html' %}
 <div class="container">
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
@@ -57,10 +57,10 @@
             </div>
             <div class="col-4">
                 <i class="material-icons prefix">attach_money</i>
-                <label class="form-label">Precio Venta</label>
+                <label class="form-label">Porcentaje de ganancia </label>
                 <input type="text" class="form-control" name="PrecioV" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Precio De Venta</h6></div>
+                <div class="invalid-feedback"><h6>Digite el Porcentaje</h6></div>
             </div>
             <div class="col-4">
                 <i class="material-icons prefix">today</i>

@@ -58,8 +58,8 @@ def viewP(request):
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()
-    viewLA.execute("select *,format(PrecioC,'###.###.###.###'),format(PrecioV,'###.###.###.###')from Lote where id_producto="+str(id)+" and Estado=1")
-    activos=viewLA.fetchall()   
+    viewLA.execute("select *,format(PrecioC,'###.###.###.###'),format(PrecioV,'###.###.###.###') from Lote where id_producto="+str(id)+" and Estado=1")
+    activos=viewLA.fetchall() 
     viewLI=connection.cursor()
     viewLI.execute("select *,format(PrecioC,'###.###.###.###'),format(PrecioV,'###.###.###.###') from Lote where id_producto="+str(id)+" and Estado=0")
     inactivos=viewLI.fetchall()
@@ -70,9 +70,10 @@ def viewL(request,id):
         cursor.execute("select timestampdiff(day,fechaVenci,now()) from lote where id_producto="+str(id)+" and Estado=False;") 
         dias = [row[0] for row in cursor.fetchall()]
         Lvenci=[valor<0 if valor is not None else False for valor in dias]
-    Listaconbinada=list(zip(viewLI,Lvenci))
+    ListacombinadaI=list(zip(viewLI,Lvenci))
     grupo_actual= group_iden(request)
-    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':Listaconbinada,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':ListacombinadaI,'Diff_LA':viewLA,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 
 
 @login_required
@@ -395,7 +396,7 @@ def LoteInsert(request,idc,idp):
     if request.method == 'POST':
         if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
             lote=connection.cursor()
-            lote.execute("Insert into Lote values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
+            lote.execute("Insert into Lote (id_producto,Loteid,Cantidad,PrecioC,Estado,fechaVenci,fechaModify,fechaCreate) values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
             detalle=connection.cursor()
             detalle.execute("Insert into detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+request.POST.get('Cantidad')+","+str(idc)+");")
             return redirect (f'/Compra/Lista/{idc}')
