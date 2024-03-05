@@ -25,7 +25,7 @@
     <div class="container"> <br>
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         {%for p in info%}
-        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center><br>
+        <br><center><h1>Compra N#{{p.0}}  NIT Proveedor: {{p.3}}</h1></center><br>
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary" type="button">Registrar Y Seleccionar Nuevo Producto</a>
@@ -45,6 +45,14 @@
                     </thead>
                 <tbody>
                     {% for p in PROD%}
+                    <tr>
+                        <td>{{p.0}}</td>
+                        <td>{{p.1}}</td>
+                        <td> 
+                            <a href="/Compra/lote/{{RC}}/{{p.0}}"><i class="material-icons prefix ">check_circle</i></a>
+                        </td>
+                    {%endfor%}
+                    {% for p in PROD2%}
                     <tr>
                         <td>{{p.0}}</td>
                         <td>{{p.1}}</td>

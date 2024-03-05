@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar
 
 
 urlpatterns = [
@@ -43,6 +43,7 @@ urlpatterns = [
     path('Compra/Lista/<int:idc>',reciboCompraView),
     path('Compra/Recibos',Recibos),
     path('Compra/Recibos/Finalizar',Recibos_Finalizar),
+    path('Compra/Recibos/Cancelar',Recibos_Cancelar),
     path('Compra/Recibo/<int:idc>',RecibosD),
     #proveedor
     path('Proveedor/lista',viewProveedor),

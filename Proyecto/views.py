@@ -337,15 +337,15 @@ def Notificacion(request):
 @login_required
 def RProveedor1(request):
     vaciar=connection.cursor()
-    vaciar.execute("DELETE  * FROM temp_proveedor;")
-    vaciar.execute("DELETE  * FROM temp_producto;")
-    vaciar.execute("DELETE  * FROM temp_lote;")
-    vaciar.execute("DELETE  * FROM temp_compra;")
-    vaciar.execute("DELETE  * FROM temp_detalle_compra;")
+    vaciar.execute("DELETE FROM temp_proveedor;")
+    vaciar.execute("DELETE FROM temp_producto;")
+    vaciar.execute("DELETE FROM temp_lote;")
+    vaciar.execute("DELETE FROM temp_compra;")
+    vaciar.execute("DELETE FROM temp_detalle_compra;")
     return redirect('/Compra/SProveedor2')
 def RProveedor2(request):
     proveedor=connection.cursor()
-    proveedor.execute("select proveedor.NIT,proveedor.Nombre,temp_proveedor.NIT,temp_proveedor.Nombre from proveedor INNER JOIN temp_proveedor ON where proveedor.Estado=True and temp_proveedor.Estado=True")
+    proveedor.execute("select NIT,Nombre from proveedor  where proveedor.Estado=True;")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/Proveedor.html',{'PROV':proveedor,'group':grupo_actual})
 @login_required
@@ -354,7 +354,7 @@ def Cproveedor(request):
         if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
             nit=request.POST.get('nit')
             insert=connection.cursor()
-            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
+            insert.execute("INSERT INTO temp_proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
             return redirect(f'/Compra/create/{nit}')
     else:
         grupo_actual= group_iden(request)
@@ -362,32 +362,34 @@ def Cproveedor(request):
 @login_required
 def crearR(request,NIT):
     compra=connection.cursor()
-    compra.execute(f"insert into compra (Fecha_Llegada,NIT) Values(now(),{NIT});")
+    compra.execute(f"insert into temp_compra (id_compra,Fecha_Llegada,NIT) Values((select COUNT(id_compra)+1 from compra),now(),{NIT});")
     idc=connection.cursor()
-    idc.execute("select id_compra from compra order by id_compra desc limit 1;;")
+    idc.execute("select COUNT(id_compra)+1 from compra;")
     idc2=idc.fetchone()
     for idc3 in idc2:
         return redirect(f'/Compra/Producto/{idc3}')
 @login_required
 def RProducto(request,idc):
     prod=connection.cursor()
-    prod.execute("select id_producto,Nombre from Producto where Estado=True")
+    prod.execute("select id_producto,Nombre from Producto where Estado=True;")
+    prod2=connection.cursor()
+    prod2.execute("select id_producto, Nombre from temp_producto where Estado=True;")
     info=connection.cursor ()
-    info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+    info.execute("select * from temp_compra where id_compra="+str(idc)+";")
     info2=info.fetchall()
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'RC':str(idc),'info':info2,'group':grupo_actual})
+    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'PROD2':prod2,'RC':str(idc),'info':info2,'group':grupo_actual})
 @login_required
 def Cproducto(request,idc):
    if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
             id=request.POST.get('codigo')
             insert=connection.cursor()
-            insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
+            insert.execute("INSERT INTO temp_producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
             return redirect(f'/Compra/lote/{idc}/{id}')
    else:
         info=connection.cursor ()
-        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
         info2=info.fetchall()
         grupo_actual= group_iden(request)
         return render(request,'ReciboCompra/Nproducto.html',{'RC':idc,'info':info2,'group':grupo_actual})
@@ -396,33 +398,31 @@ def LoteInsert(request,idc,idp):
     if request.method == 'POST':
         if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
             lote=connection.cursor()
-            lote.execute("Insert into Lote (id_producto,Loteid,Cantidad,PrecioC,Estado,fechaVenci,fechaModify,fechaCreate) values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
+            lote.execute("Insert into temp_lote (id_producto,Loteid,Cantidad,PrecioC,Estado,fechaVenci,fechaModify,fechaCreate) values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
             detalle=connection.cursor()
-            detalle.execute("Insert into detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+request.POST.get('Cantidad')+","+str(idc)+");")
+            detalle.execute("Insert into temp_detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+request.POST.get('Cantidad')+","+str(idc)+");")
             return redirect (f'/Compra/Lista/{idc}')
     else:
         info=connection.cursor ()
-        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
         info2=info.fetchall()
-        prod=connection.cursor()
-        prod.execute("select id_producto, Nombre from Producto where id_producto="+str(idp)+";")
         grupo_actual= group_iden(request)
-        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'CP':prod,'info':info2,'group':grupo_actual})
+        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':info2,'group':grupo_actual})
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
     lote=connection.cursor()
-    lote.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc2)+";")
+    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
     lote2=lote.fetchall()
     info=connection.cursor()
-    info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc2)+";")
+    info.execute("select * from temp_compra where id_compra="+str(idc)+";")
     info2=info.fetchall()
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':info2,'idc':idc2,'group':grupo_actual})
 @login_required
 def Recibos(request):
     recibos=connection.cursor()
-    recibos.execute("select Compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+    recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual})
 @login_required
@@ -436,42 +436,58 @@ def LoteUpdate(request,idc,idl):
     if request.method == 'POST':
         if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
             insert=connection.cursor()
-            insert.execute("Update lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",precioV="+request.POST.get('PrecioV')+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
+            insert.execute("Update temp_lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",precioV="+request.POST.get('PrecioV')+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
             insert=connection.cursor()
-            insert.execute("Update detalle_Compra set Precio="+request.POST.get('PrecioC')+",PrecioU="+request.POST.get('PrecioV')+",CantidadProductos="+request.POST.get('Cantidad')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+            insert.execute("Update temp_detalle_Compra set Precio="+request.POST.get('PrecioC')+",PrecioU="+request.POST.get('PrecioV')+",CantidadProductos="+request.POST.get('Cantidad')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
             return redirect(f'/Compra/Lista/{idc}')
     else:
         lote=connection.cursor()
-        lote.execute("select * from lote where Loteid='"+str(idl)+"';")
+        lote.execute("select * from temp_lote where Loteid='"+str(idl)+"';")
         info=connection.cursor ()
-        info.execute("select Compra.*,Proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra="+str(idc)+";")
+        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
         info2=info.fetchall()
-        prod=connection.cursor()
-        prod.execute("select Producto.id_producto, Producto.Nombre from Producto inner join lote on producto.id_producto=lote.id_producto where lote.Loteid='"+str(idl)+"';")
         grupo_actual= group_iden(request)
-        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'CP':prod,'group':grupo_actual})
+        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'group':grupo_actual})
 @login_required
 def Recibos_Finalizar(request):
     proveedor=connection.cursor()
-    proveedor.execute("INSERT INTO 'proveedor' SELECT * FROM 'temp_proveedor';")
-    proveedor.execute("DELETE * FROM 'temp_proveedor';")
+    proveedor.execute("INSERT INTO proveedor SELECT * FROM temp_proveedor;")
+    proveedor.execute("DELETE FROM temp_proveedor;")
 
     producto=connection.cursor()
-    producto.execute("INSERT INTO 'producto' SELECT * FROM 'temp_producto';")
-    producto.execute("DELETE * FROM 'temp_producto';")
+    producto.execute("INSERT INTO producto SELECT * FROM temp_producto;")
+    producto.execute("DELETE FROM temp_producto;")
 
     lote=connection.cursor()
-    lote.execute("INSERT INTO 'lote' SELECT *FROM 'temp_lote';")
-    lote.execute("DELETE * FROM 'temp_lote';")
+    lote.execute("INSERT INTO lote SELECT *FROM temp_lote;")
+    lote.execute("DELETE FROM temp_lote;")
 
     compra=connection.cursor()
-    compra.execute("INSERT INTO 'compra' (Total, Fecha_Llegada, NIT) SELECT (Total, Fecha_Llegada, NIT) FROM 'temp_compra';")
-    compra.execute("DELETE * FROM 'temp_compra';")
+    compra.execute("INSERT INTO compra SELECT * FROM temp_compra;")
+    compra.execute("DELETE FROM temp_compra;")
 
     detalle_compra=connection.cursor()
-    detalle_compra.execute("INSERT INTO 'detalle_compra' SELECT * FROM 'temp_detalle_compra'")
-    detalle_compra.execute("DELETE * FROM 'temp_detalle_compra';")
+    detalle_compra.execute("INSERT INTO detalle_compra SELECT * FROM temp_detalle_compra;")
+    detalle_compra.execute("DELETE FROM temp_detalle_compra;")
     return redirect('/Compra/Recibos')
+@login_required
+def Recibos_Cancelar(request):
+    proveedor=connection.cursor()
+    proveedor.execute("DELETE FROM temp_proveedor;")
+
+    producto=connection.cursor()
+    producto.execute("DELETE FROM temp_producto;")
+
+    lote=connection.cursor()
+    lote.execute("DELETE FROM temp_lote;")
+
+    compra=connection.cursor()
+    compra.execute("DELETE FROM temp_compra;")
+
+    detalle_compra=connection.cursor()
+    detalle_compra.execute("DELETE FROM temp_detalle_compra;")
+    return redirect('/Compra/Recibos')
+
 #logout
 def salir(request):
     logout(request)
