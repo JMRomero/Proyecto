@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Cambiar Contraseña</title>
@@ -28,17 +28,18 @@
       {%for p in datos%}
       <h1>Esta apunto de cambiar la contraseña del usuario {{p.1}} {{p.2}} con cedula {{p.0}}</h1>
       {%endfor%}
+      <br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             <div class="col-6">
-                <i class="material-icons prefix">lock_outline</i>
+                <i class="fa fa-unlock-alt fa-lg " aria-hidden="true"></i>
                 <label class="form-label">Contraseña</label>
                 <input type='password' class="form-control" id="contrasena" name='contrasena' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite la contraseña</h6></div>
             </div>
             <div class="col-6">
-                <i class="material-icons prefix">lock_outline</i>
+                <i class="fa fa-unlock fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Confirmar Contraseña</label>
                 <input type='password' class="form-control" id="confirmar_contrasena" name='confirmar_contrasena' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>

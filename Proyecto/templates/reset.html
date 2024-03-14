@@ -1,0 +1,100 @@
+{% block content %}
+
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diseñologin.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <title>Login</title>
+</head>
+
+<body>
+    {% if validlink %}
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Restablecimiento de contraseña</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row justify-content-center pt-5 mt-5 mr-1">
+            <div class="col-md-4 formulario">
+                <br>
+                <h4>
+                    <p class="text-secondary-emphasis text-center">Ingrese nueva clave </p>
+                </h4>
+                <div class="col-12">
+                    <form class="row g-3 needs-validation" method="post">
+                        {% csrf_token %}
+                        <label class="text-secondary-emphasis text-center">
+                            <h5 class="fw-normal" style=" font-weight: lighter;">Ingrese su nueva contraseña dos veces
+                                para que podamos verificar que la escribió correctamente.
+                            </h5>
+                        </label>
+
+                        <input type="password" class="form-control" placeholder="Nueva contraseña" name="new_password1"
+                            autocomplete="new-password" required aria-describedby="id_new_password1_helptext"
+                            id="id_new_password1">
+                           
+                        <input type="password" class="form-control" placeholder="Confirmar contraseña"
+                            name="new_password2" autocomplete="new-password" required id="id_new_password2">
+                            {% for error in form.old_password.errors %}
+                            <div class="alert alert-danger with-close alert-dismissible fade show">
+                                {{error}} 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                        
+                        {% for error in form.new_password1.errors %}
+                            <div class="alert alert-danger with-close alert-dismissible fade show">
+                                {{error}} 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                        
+                        {% for error in form.new_password2.errors %}
+                            <div class="alert alert-danger with-close alert-dismissible fade show">
+                                {{error}} 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                        
+                           
+                        <input type="submit" value="Cambiar mi contraseña" class="btn btn-primary">
+                        <a href="/accounts/login" type="button" class="btn btn-danger">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<br><br><br><br><br><br>
+<div class="row justify-content-center pt-5 mt-5 mr-0">
+    <div class="col-md-4 formulario">
+        <form class="row g-3 needs-validation" method="post">
+            <label class="text-secondary-emphasis text-center">
+              <h5 class="fw-normal" style=" font-weight: lighter;">ENLACE INVÁLIDO: Este enlace ya ha sido utilizado.</h5>
+            </label>
+            <a href="/accounts/login" type="button" class="btn btn-primary">Volvel a inicio de sesión</a>
+        </div>
+        </form>
+
+{%endif%}
+</body>
+
+</html>
+
+{% endblock content %}

@@ -17,7 +17,7 @@
       </li>
       <li>
         <a href="/">
-          <i class="material-icons prefix">home</i>
+          <i class="fa fa-home" aria-hidden="true"></i>
           <span class="link_name">Menú</span>
         </a>
         
@@ -27,7 +27,7 @@
       </li>
       <li>
         <a href="/Pedidos/lista">
-          <i class="material-icons prefix">rate_review</i>
+          <i class="fa fa-file-text-o" aria-hidden="true"></i>
           <span class="link_name">Listado Pedidos Especiales</span>
         </a>
         <ul class="sub-menu blank">
@@ -37,7 +37,7 @@
       {%if group == "Admin"%}
       <li>
         <a href="/Producto/lista">
-          <i class="material-icons prefix">laptop_windows</i>
+          <i class="fa fa-laptop" aria-hidden="true"></i>
           <span class="link_name">Listado Productos</span>
         </a>
         <ul class="sub-menu blank">
@@ -47,7 +47,7 @@
 
       <li>
         <a href="/Proveedor/lista">
-          <i class="material-icons prefix">supervisor_account</i>
+          <i class="fa fa-users" aria-hidden="true"></i>
           <span class="link_name">Listado Proveedores</span>
         </a>
         <ul class="sub-menu blank">
@@ -56,7 +56,7 @@
       </li>
       <li>
         <a href="/Usuario/lista">
-          <i class="material-icons prefix">person_add</i>
+          <i class="fa fa-user-circle" aria-hidden="true"></i>
           <span class="link_name">Lista Usuarios</span>
         </a>
         <ul class="sub-menu blank">
@@ -65,7 +65,7 @@
       </li>
       <li>
         <a href="/Notificacion">
-          <i class="material-icons prefix">notifications</i>
+          <i class="fa fa-bell" aria-hidden="true"></i>
           <span class="link_name">Notificacion</span>
         </a>
         <ul class="sub-menu blank">
@@ -74,7 +74,7 @@
       </li>
       <li>
         <a href="/Compra/Recibos">
-          <i class="material-icons prefix">shopping_basket</i>
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
           <span class="link_name">Recibos de Compra</span>
         </a>
         <ul class="sub-menu blank">
@@ -84,7 +84,7 @@
       {%endif%}
       <li>
         <a href=#>
-          <i class="material-icons prefix" onclick="cerrar()">input</i>
+          <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true" onclick="cerrar()"></i>
           <span class="link_name" onclick="cerrar()">Cerrar Sesión</span>
         </a>
         <ul class="sub-menu blank">
@@ -103,17 +103,15 @@
         <div class="profile_name">{{user}}</div>
         <div class="profile_name">{{group}}</div>
       </div>
-      <i class='bx bx-log-out'></i>
     </div>
   </li>
 </ul>
-</div>
   </div>
   <section class="home-section">
     <div class="home-content">
 
-     
 </div>
+
     
   <script>
         let arrow = document.querySelectorAll(".arrow");

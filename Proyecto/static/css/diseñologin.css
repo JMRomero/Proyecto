@@ -1,21 +1,21 @@
 body {
-    background-image: url(../img/c.jpg);
+    background-image: url(../img/mosaic.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
 }
 
 .formulario{
-    background: rgba(0,0,0,.1);
+    background: rgba(255, 248, 248, 0.753);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.568);
+    box-shadow: 0 0 30px rgba(14, 10, 245, 0.671);
     color: white;
 }
 
 .form-control{
     background: rgba(0,0,0,.3);
-    border-style: none;
+    /* border-style: none; */
     transition: 0.5s ease-in;
     outline: none;
     box-shadow: none;
@@ -27,7 +27,7 @@ body {
     outline: none;
 }
 .form-control::placeholder{
-    color: white;
+    color: rgb(31, 31, 31);
 
 }
 
@@ -36,11 +36,13 @@ body {
     padding: 10px;
     font-size: 16px;
     font-weight: 700!important;
-    color: white;
+    color: rgb(255, 255, 255);
     box-shadow: 0 0 30px rgba(0,0,0,0.568);
     transition: 0.5 ease-in;
 }
 
 .ingresar:hover{
-    color: white;
+    color: rgb(16, 19, 202);
 }
+
+

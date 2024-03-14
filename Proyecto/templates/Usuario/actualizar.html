@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Actualizar Usuario</title>
@@ -30,28 +30,28 @@
             {% csrf_token %}
            
             <div class="col-3">
-                <i class="material-icons prefix">closed_caption</i>
+                <i class="fa fa-cc" aria-hidden="true"></i>
                 <label class="form-label">No De Cédula*</label>
                 <input type="number" class="form-control" name='cedula' required value="{{p.4}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
             </div>
             <div class="col-3">
-                <i class="material-icons prefix">assignment_ind</i>
+                <i class="fa fa-id-card-o" aria-hidden="true"></i>
                 <label class="form-label">Nombre</label>
                 <input type='text' class="form-control" name='nombre' required value="{{p.5}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
             </div>
             <div class="col-3">
-                <i class="material-icons prefix">assignment_ind</i>
+                <i class="fa fa-id-card" aria-hidden="true"></i>
                 <label class="form-label">Apellido</label>
                 <input type='text' class="form-control" name='apellido' required value="{{p.6}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
             </div>
             <div class="col-3">
-                <i class="material-icons prefix">contact_phone</i>
+                <i class="fa fa-mobile fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Teléfono</label> 
                 <input type="number" class="form-control" name="telefono" required value="{{p.13}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>

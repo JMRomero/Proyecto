@@ -1,3 +1,4 @@
+from itertools import product
 from django.shortcuts import render,redirect
 from django.db import connection
 from django.contrib.auth.decorators import login_required
@@ -6,7 +7,10 @@ from django.contrib.auth.models import User,Group
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.db.models import Q
+from Proyecto.models import Producto
 
+from plyer import notification
 
 def group_iden(request):
     grupos_usuario = request.user.groups.all()
@@ -69,12 +73,25 @@ def producto(request):
         return render(request,'Producto/insertar.html',{'group':grupo_actual,'repetido':repetido})
 @login_required
 def viewP(request):
-    viewA=connection.cursor()
-    viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True;")
-    activos=viewA.fetchall()
-    viewI=connection.cursor()
-    viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
-    inactivos=viewI.fetchall()
+    if request.method == 'POST':
+        viewA=connection.cursor()
+        v=request.POST.get("qp")
+        vv=[caracter.isdigit() for caracter in v]
+        if all(vv):
+            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and id_producto LIKE '%"+str(request.POST.get("qp"))+"%';")
+        else:
+            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and Nombre LIKE '%"+str(request.POST.get("qp"))+"%';")
+        activos=viewA.fetchall()
+        viewI=connection.cursor()
+        viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
+        inactivos=viewI.fetchall()
+    else:
+        viewA=connection.cursor()
+        viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True;")
+        activos=viewA.fetchall()
+        viewI=connection.cursor()
+        viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
+        inactivos=viewI.fetchall()
     grupo_actual= group_iden(request)
     return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required

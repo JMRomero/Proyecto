@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Lote insertar</title>
@@ -35,35 +35,35 @@
       <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             <div class="col-6">
-                <i class="material-icons prefix">queue_play_next</i>
+                <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Codigo lote</label>
                 <input type="text" class="form-control" name="Lote" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+                <div class="invalid-feedback"><h6>Digite El Lote</h6></div>
             </div>
             <div class="col-6">
-                <i class="material-icons prefix">queue_play_next</i>
+                <i class="fa fa-plus-square fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Cantidad</label>
                 <input type="text" class="form-control" name="Cantidad" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">attach_money</i>
+                <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Precio Compra</label>
                 <input type="text" class="form-control" name="PrecioC" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">attach_money</i>
-                <label class="form-label">Porcentaje de ganancia </label>
+                <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Porcentaje de ganancia</label>
                 <input type="text" class="form-control" name="PrecioV" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite el Porcentaje</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">today</i>
+                <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Fecha De Vencimiento</label>
                 <input type="date" class="form-control" name="FechaVenci" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
@@ -77,5 +77,6 @@
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    {%include 'Layout/Validacion.html' %}
 </body>
 </html>
