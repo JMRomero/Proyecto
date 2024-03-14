@@ -27,7 +27,7 @@
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
        <br><br>
         {%for p in info%}
-        <br><center><h1>Compra N#{{p.0}} del Proveedor: {{p.4}} NIT: {{p.3}}</h1></center>
+        <br><center><h1>Compra N#{{p.0}}  NIT del Proveedor: {{p.3}}</h1></center>
         {%endfor%}
         <br>
         {%for p in CP%}
@@ -58,10 +58,10 @@
             </div>
             <div class="col-4">
                 <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Precio Venta</label>
+                <label class="form-label">Porcentaje de ganancia</label>
                 <input type="text" class="form-control" name="PrecioV" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Precio De Venta</h6></div>
+                <div class="invalid-feedback"><h6>Digite el Porcentaje</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD
+from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
@@ -34,7 +34,8 @@ urlpatterns = [
     #notificacion
     path('Notificacion',Notificacion),
     #Recibo compra
-    path('Compra/SProveedor',RProveedor),
+    path('Compra/SProveedor1',RProveedor1),
+    path('Compra/SProveedor2',RProveedor2),
     path('Compra/CProveedor',Cproveedor),
     path('Compra/create/<int:NIT>',crearR),
     path('Compra/Producto/<int:idc>',RProducto),
@@ -43,6 +44,8 @@ urlpatterns = [
     path('Compra/loteA/<int:idc>/<str:idl>',LoteUpdate),
     path('Compra/Lista/<int:idc>',reciboCompraView),
     path('Compra/Recibos',Recibos),
+    path('Compra/Recibos/Finalizar',Recibos_Finalizar),
+    path('Compra/Recibos/Cancelar',Recibos_Cancelar),
     path('Compra/Recibo/<int:idc>',RecibosD),
     #proveedor
     path('Proveedor/lista',viewProveedor),
@@ -85,4 +88,3 @@ urlpatterns = [
     path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="reset.html"), name = 'password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name="reset_password_complete.html"), name = 'password_reset_complete'),
 ]
-
