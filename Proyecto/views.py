@@ -13,6 +13,7 @@ def group_iden(request):
     for grupo in grupos_usuario:
         grupoA=grupo.name
         return grupoA
+#region inicio
 #login
 def inicio(request):
     if request.method == 'POST':
@@ -29,22 +30,43 @@ def inicio(request):
             return redirect('login')
     else:
         return render(request, 'registration/login.html')
+#endregion 
+#region Menu
 @login_required
 def menu(request):
     grupo_actual= group_iden(request)
     return render(request,'Menu/menu.html',{'group':grupo_actual})
+#endregion
+#region producto
 #producto
 @login_required
 def producto(request):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
+            consulta=connection.cursor()
+            consulta.execute("select COUNT(nombre) from producto where id_producto="+request.POST.get('codigo')+";")
+            existente=consulta.fetchone()[0]
+            if existente>0:
+                codigo=request.POST.get('codigo')
+                nombre=request.POST.get('nombre')
+                gramo_litro=request.POST.get('gramo_litro')
+                Max=request.POST.get('Max')
+                Min=request.POST.get('Min')
+                repetido=1
+                nombrep=connection.cursor()
+                nombrep.execute("select nombre from producto where id_producto="+codigo+";")
+                nombrep2=nombrep.fetchone()[0]
+                grupo_actual= group_iden(request)
+                return render(request,'Producto/insertar.html',{'group':grupo_actual,'codigo':codigo,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'repetido':repetido})
+            else:
             ##Captura la infromacion, conecte a la base de datos y ejecute el insert
-            insert=connection.cursor()
-            insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
-            return redirect('/Producto/lista')
+                insert=connection.cursor()
+                insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
+                return redirect('/Producto/lista')
     else:
         grupo_actual= group_iden(request)
-        return render(request,'Producto/insertar.html',{'group':grupo_actual})
+        repetido=0
+        return render(request,'Producto/insertar.html',{'group':grupo_actual,'repetido':repetido})
 @login_required
 def viewP(request):
     viewA=connection.cursor()
@@ -80,10 +102,27 @@ def viewL(request,id):
 def update(request,id):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
-            ##Captura la infromacion, conecte a la base de datos y ejecute el insert
-            insert=connection.cursor()
-            insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+" where id_producto="+str(id)+";")
-            return redirect('/Producto/lista')
+            consulta=connection.cursor()
+            consulta.execute("select COUNT(id_producto) from producto where id_producto="+request.POST.get('codigo')+";")
+            existente=consulta.fetchone()[0]
+            if existente>0:
+                codigo=str(id)
+                codigoE=request.POST.get('codigo')
+                nombre=request.POST.get('nombre')
+                gramo_litro=request.POST.get('gramo_litro')
+                Max=request.POST.get('Max')
+                Min=request.POST.get('Min')
+                repetido=1
+                nombrep=connection.cursor()
+                nombrep.execute("select nombre from producto where id_producto="+codigoE+";")
+                nombrep2=nombrep.fetchone()[0]
+                grupo_actual= group_iden(request)
+                return render(request,'Producto/actualizar.html',{'group':grupo_actual,'codigo':codigo,'codigoE':codigoE,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'repetido':repetido})
+            else:
+                ##Captura la infromacion, conecte a la base de datos y ejecute el insert
+                insert=connection.cursor()
+                insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+" where id_producto="+str(id)+";")
+                return redirect('/Producto/lista')
     else:
         consulta=connection.cursor()
         consulta.execute("select *from producto where id_producto="+str(id)+";")
@@ -109,10 +148,8 @@ def estadoaL(request,id,lote):
     estadoiL=connection.cursor()
     estadoiL.execute(f"UPDATE Lote SET Estado=False WHERE id_producto={str(id)} and Loteid='{str(lote)}'")
     return redirect(f'/Producto/listal/{str(id)}')
-
-
-
-
+#endregion
+#region Proveedor
 #proveedor
 @login_required
 def viewProveedor(request):
@@ -128,9 +165,26 @@ def viewProveedor(request):
 def updateProveedor(request,id):
     if request.method=="POST":
         if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
-            insert=connection.cursor()
-            insert.execute("UPDATE proveedor SET NIT="+request.POST.get('nit')+",Nombre='"+request.POST.get('nombre')+"',Telefono="+request.POST.get('telefono')+",Politica_Devolucion='"+request.POST.get('politica_devolucion')+"' where NIT="+str(id)+";")
-            return redirect('/Proveedor/lista')
+            consulta=connection.cursor()
+            consulta.execute("select COUNT(NIT) from proveedor   where NIT="+request.POST.get('nit')+";")
+            existencia=consulta.fetchone()[0]
+            if existencia>0:
+                nit=str(id)
+                nitE=request.POST.get('nit')
+                nombre=request.POST.get('nombre')
+                telefono=request.POST.get('telefono')
+                horario=request.POST.get('horario_atencion')
+                politica=request.POST.get('politica_devolucion')
+                repetido=1
+                nombrep=connection.cursor()
+                nombrep.execute("select Nombre from Proveedor where NIT="+nitE+";")
+                nombrepr=nombrep.fetchone()[0]
+                grupo_actual= group_iden(request)
+                return render(request,'Proveedor/actualizar.html',{'group':grupo_actual,'repetido':repetido,'nit':nit,'nitE':nitE,'nombre':nombre,'telefono':telefono,'horario':horario,'politica':politica,'nombrepr':nombrepr})       
+            else:
+                insert=connection.cursor()
+                insert.execute("UPDATE proveedor SET NIT="+request.POST.get('nit')+",Nombre='"+request.POST.get('nombre')+"',Telefono="+request.POST.get('telefono')+",Politica_Devolucion='"+request.POST.get('politica_devolucion')+"' where NIT="+str(id)+";")
+                return redirect('/Proveedor/lista')
     else:
         consulta=connection.cursor()
         consulta.execute("select * from proveedor where NIT="+str(id)+";")
@@ -140,12 +194,29 @@ def updateProveedor(request,id):
 def proveedorInsert(request):
     if request.method=="POST":
         if request.POST.get('nit') and request.POST.get('nombre') and  request.POST.get('telefono') and request.POST.get('horario_atencion') and request.POST.get('politica_devolucion'):
-            insert=connection.cursor()
-            insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
-            return redirect('/Proveedor/lista')
+            consulta=connection.cursor()
+            consulta.execute("select COUNT(NIT) from proveedor   where NIT="+request.POST.get('nit')+";")
+            existencia=consulta.fetchone()[0]
+            if existencia>0:
+                nit=request.POST.get('nit')
+                nombre=request.POST.get('nombre')
+                telefono=request.POST.get('telefono')
+                horario=request.POST.get('horario_atencion')
+                politica=request.POST.get('politica_devolucion')
+                repetido=1
+                nombrep=connection.cursor()
+                nombrep.execute("select Nombre from Proveedor where NIT="+request.POST.get('nit')+";")
+                nombrepr=nombrep.fetchone()[0]
+                grupo_actual= group_iden(request)
+                return render(request,'Proveedor/insertar.html',{'group':grupo_actual,'repetido':repetido,'nit':nit,'nombre':nombre,'telefono':telefono,'horario':horario,'politica':politica,'nombrepr':nombrepr})       
+            else:
+                insert=connection.cursor()
+                insert.execute("INSERT INTO proveedor (NIT,Nombre,Telefono,Horario_Atencion,Politica_Devolucion) VALUES("+request.POST.get('nit')+",'"+request.POST.get('nombre')+"',"+request.POST.get('telefono')+",'"+request.POST.get('horario_atencion')+"','"+request.POST.get('politica_devolucion')+"')")
+                return redirect('/Proveedor/lista')
     else:
+        repetido=0
         grupo_actual= group_iden(request)
-        return render(request,'Proveedor/insertar.html',{'group':grupo_actual})
+        return render(request,'Proveedor/insertar.html',{'group':grupo_actual,'repetido':repetido})
 @login_required    
 def proveedorEstadoI(request,id):
     estadoI=connection.cursor()
@@ -178,7 +249,8 @@ def updateLote(request,id,lote):
         consulta.execute("select * from lote where Loteid='"+str(lote)+"';")
         grupo_actual= group_iden(request)
         return render(request,'lote/actualizar.html',{'datos':consulta,'group':grupo_actual})
-               
+#endregion   
+#region pedidos especiales
 #pedidos especiales
 @login_required
 def viewPedidos(request):
@@ -247,6 +319,8 @@ def updatePedidos(request,id):
         consulta.execute("select * from pedidos_especiales where id_pedido="+str(id)+";")
         grupo_actual= group_iden(request)
         return render(request,'Pedidos/actualizar.html',{'datos':consulta,'group':grupo_actual})
+#endregion    
+#region usuarios
 #usuarios
 @login_required
 def viewUsuario(request):
@@ -319,6 +393,8 @@ def usuarioRolR(request,id):
     rol=connection.cursor()
     rol.execute("UPDATE auth_user_groups SET group_id=1 where user_id=(select id from auth_user where username="+str(id)+")")
     return redirect('/Usuario/lista')
+#endregion
+#region Notificaciones
 #Notificaciones
 @login_required
 def Notificacion(request):
@@ -332,7 +408,8 @@ def Notificacion(request):
     LOTEvencido.execute("call Lotes_vencidos")
     grupo_actual= group_iden(request)
     return render(request,'Notificacion/Notificaciones.html',{'PM':PROMin,'PC':PROCero,'LV':LOTEvencer,'LVV':LOTEvencido,'group':grupo_actual})
-
+#endregion
+#region recibo compra
 #recibo de compra
 @login_required
 def RProveedor1(request):
@@ -371,14 +448,14 @@ def crearR(request,NIT):
 @login_required
 def RProducto(request,idc):
     prod=connection.cursor()
-    prod.execute("select id_producto,Nombre from Producto where Estado=True;")
-    prod2=connection.cursor()
-    prod2.execute("select id_producto, Nombre from temp_producto where Estado=True;")
+    prod.execute("select id_producto,Nombre from Producto where Estado=True union select id_producto, Nombre from temp_producto where Estado=True;")
     info=connection.cursor ()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
-    info2=info.fetchall()
+    prov=connection.cursor()
+    prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+    ListacombinadaI=list(zip(info,prov))
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'PROD2':prod2,'RC':str(idc),'info':info2,'group':grupo_actual})
+    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'RC':str(idc),'info':ListacombinadaI,'group':grupo_actual})
 @login_required
 def Cproducto(request,idc):
    if request.method=="POST":
@@ -390,9 +467,11 @@ def Cproducto(request,idc):
    else:
         info=connection.cursor ()
         info.execute("select * from temp_compra where id_compra="+str(idc)+";")
-        info2=info.fetchall()
+        prov=connection.cursor()
+        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
-        return render(request,'ReciboCompra/Nproducto.html',{'RC':idc,'info':info2,'group':grupo_actual})
+        return render(request,'ReciboCompra/Nproducto.html',{'RC':idc,'info':ListacombinadaI,'group':grupo_actual})
 @login_required
 def LoteInsert(request,idc,idp):
     if request.method == 'POST':
@@ -405,9 +484,11 @@ def LoteInsert(request,idc,idp):
     else:
         info=connection.cursor ()
         info.execute("select * from temp_compra where id_compra="+str(idc)+";")
-        info2=info.fetchall()
+        prov=connection.cursor()
+        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
-        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':info2,'group':grupo_actual})
+        return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':ListacombinadaI,'group':grupo_actual})
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
@@ -416,9 +497,11 @@ def reciboCompraView(request,idc):
     lote2=lote.fetchall()
     info=connection.cursor()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
-    info2=info.fetchall()
+    prov=connection.cursor()
+    prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+    ListacombinadaI=list(zip(info,prov))
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':info2,'idc':idc2,'group':grupo_actual})
+    return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':ListacombinadaI,'idc':idc2,'group':grupo_actual})
 @login_required
 def Recibos(request):
     recibos=connection.cursor()
@@ -445,9 +528,11 @@ def LoteUpdate(request,idc,idl):
         lote.execute("select * from temp_lote where Loteid='"+str(idl)+"';")
         info=connection.cursor ()
         info.execute("select * from temp_compra where id_compra="+str(idc)+";")
-        info2=info.fetchall()
+        prov=connection.cursor()
+        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
-        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':info2,'group':grupo_actual})
+        return render(request,"ReciboCompra/LoteActualizar.html",{'lote':lote,'info':ListacombinadaI,'group':grupo_actual})
 @login_required
 def Recibos_Finalizar(request):
     proveedor=connection.cursor()
@@ -487,7 +572,7 @@ def Recibos_Cancelar(request):
     detalle_compra=connection.cursor()
     detalle_compra.execute("DELETE FROM temp_detalle_compra;")
     return redirect('/Compra/Recibos')
-
+#endregion
 #logout
 def salir(request):
     logout(request)

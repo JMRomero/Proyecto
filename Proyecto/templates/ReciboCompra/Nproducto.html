@@ -26,8 +26,8 @@
         
       <br>
       <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        {%for p in info%}
-        <br><center><h1>Compra N#{{p.0}}  NIT del Proveedor: {{p.3}}</h1></center>
+        {%for p,pr in info%}
+        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
         {%endfor%}
         <br><br>
         <form class="row g-3 needs-validation" novalidate method='POST'>
