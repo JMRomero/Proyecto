@@ -7,12 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Actualizar Producto</title>
 </head>
 <body>
+  {%include 'Layout/Menu.html' %}
   <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
     <div class="container-fluid">
       <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar Producto</a>
@@ -20,25 +21,23 @@
     <ul class="right hide-on-med-and-down">
     </ul>
   </nav>
-
-{%include 'Layout/Menu.html' %}
 </div>
-    <div class="container">
+<div class="container">
     <br>
-    <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        <br><br>
+    <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+      <br><br>
         {% for p in datos %}
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             <div class="col-6">
-                <i class="material-icons prefix">money</i>
+                <i class="fa fa-barcode" aria-hidden="true"></i>
                 <label class="form-label">Codigo de Barras</label>
                 <input type="text" class="form-control" name="codigo" required value="{{p.0}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div>
             </div>
                 <div class="col-6">
-                    <i class="material-icons prefix">add_shopping_cart</i>
+                    <i class="fa fa-product-hunt" aria-hidden="true"></i>
                     <label class="form-label">Nombre del Producto</label>  
                     <input type='text' class="form-control" name='nombre' required value="{{p.1}}">
                     <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -46,7 +45,7 @@
                     <br>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">invert_colors</i>
+                <i class="fa fa-bitbucket" aria-hidden="true"></i>
                 <label>Gramo/Litro</label>
                 <input type="text" class="form-control" name='gramo_litro' required value="{{p.3}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -55,14 +54,14 @@
                 </div>
             
             <div class="col-4">
-                <i class="material-icons prefix">add_circle_outline</i>
+                <i class="fa fa-hand-o-up" aria-hidden="true"></i>
                 <label for=""><h6>Cantidad Maxima</h6></label> 
                 <input type='number' class="form-control" name='Max' required value="{{p.5}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
                 </div>
             <div class="col-4">
-                <i class="material-icons prefix">remove_circle_outline</i>
+                <i class="fa fa-hand-o-down" aria-hidden="true"></i>
                 <label for="">Cantidad Minima</label> 
                 <input type='number' class="form-control" name='Min' required value="{{p.6}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>

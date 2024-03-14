@@ -6,11 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Lista Pedido Especial Terminados</title>
 </head>
+{%include 'Layout/Menu.html' %}
 <body>
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
@@ -19,14 +20,14 @@
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-          {%include 'Layout/Menu.html' %}
+          <br>
 <div class="d-grid gap-2 col-6 mx-auto">
         <a href="lista" class="btn btn-primary" type="button">Lista de Pedidos Por Pedir Y Realizados</a>
         </div>
         <br>
         <div class="container">
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        <br>
+        <br><br>
             {%if concluidos%}
             <table class="table table-hover">
                 <thead>
@@ -52,13 +53,13 @@
                       <td>{{p.1}}</td>
                       <td>{{p.9}}</td>
                       <td>{{p.2}}</td>
-                        <td>Pedido Concluido <a href="#"><i class="material-icons prefix" onclick="estadoC('{{p.0}}','{{p.2}}')">cancel</i></a></td>
+                        <td>Pedido Concluido <a href="#"><i class="fa fa-window-close fa-lg" aria-hidden="true" onclick="estadoC('{{p.0}}','{{p.2}}')"></i></a></td>
                         <td>{{p.3}}</td>
                         <td>{{p.4}}</td>
                         <td>{{p.7}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.8}}</td>
-                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="material-icons prefix">border_color</i></a></td>
+                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></td>
                     {%endfor%}
                     </tr>
                 </tbody>

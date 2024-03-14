@@ -286,3 +286,16 @@ body{
     width: calc(100% - 78px);
   }
 }
+
+@media screen and (max-width: 1300px) {
+  .main_textosNombre {
+    font-size: 50px;
+  }
+  .main_textosTrabajo input,
+  .main_textosTrabajo p {
+    font-size: 20px;
+  }
+  .textOnImg {
+    bottom: 150px;
+  }   
+}
