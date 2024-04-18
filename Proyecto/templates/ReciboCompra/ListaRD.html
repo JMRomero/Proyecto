@@ -16,7 +16,9 @@
     {%include 'layout/Menu.html'%}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><h1 class="position-absolute start-50 top-10 translate-middle">Lista de Lotes Agregados</h1><br></a>
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br>
+            <br>
+            <h1 class="position-absolute start-50 top-10 translate-middle">Lista de Lotes Agregados</h1><br></a>
         </div>
         <ul class="right hide-on-med-and-down">
         </ul>
@@ -31,6 +33,14 @@
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/Recibos" type='button' values='Subir' class="btn btn-primary">Volver a Recibos</a>
+            <form class="d-flex" method="POST" action="">
+                {% csrf_token %}
+                {% if busqueda %}
+                <h1>hola</h1>
+                {% endif %}
+                <input class="form-control me-2" required type="text" placeholder="Ingrese el código del lote"  name="qp">
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            </form>
         </div><br>
             <table class="table table-hover">
                 <thead>

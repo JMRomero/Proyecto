@@ -7,9 +7,6 @@ from django.contrib.auth.models import User,Group
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.db.models import Q
-from Proyecto.models import Producto
-
 from plyer import notification
 
 def group_iden(request):
@@ -35,8 +32,25 @@ def inicio(request):
         return render(request, 'registration/login.html')
 @login_required
 def menu(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(id_producto) FROM producto where Estado=True")
+        productosA = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(id_producto) FROM producto where Estado=False")
+        productosI = cursor.fetchone()[0]
+        cursor.execute("select COUNT(NIT) from proveedor where Estado=True")
+        proveedorA=cursor.fetchone()[0]
+        cursor.execute("select COUNT(NIT) from proveedor where Estado=False")
+        proveedorI=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=1")
+        realizar=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=0")
+        realizado=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id) from auth_user where is_active=True")
+        usuariosA=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id) from auth_user where is_active=False")
+        usuariosI=cursor.fetchone()[0]
     grupo_actual= group_iden(request)
-    return render(request,'Menu/menu.html',{'group':grupo_actual})
+    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI})
 #producto
 @login_required
 def producto(request):
@@ -61,6 +75,7 @@ def viewP(request):
             viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and Nombre LIKE '%"+str(request.POST.get("qp"))+"%';")
         activos=viewA.fetchall()
         viewI=connection.cursor()
+        busqueda=True
         viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
     else:
@@ -70,8 +85,10 @@ def viewP(request):
         viewI=connection.cursor()
         viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
+        busqueda=False
     grupo_actual= group_iden(request)
-    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    
+    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()

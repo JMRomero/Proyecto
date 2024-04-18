@@ -11,7 +11,6 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Lista Pedido Especial Terminados</title>
 </head>
-{%include 'Layout/Menu.html' %}
 <body>
   {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
@@ -24,6 +23,14 @@
           <br>
 <div class="d-grid gap-2 col-6 mx-auto">
         <a href="lista" class="btn btn-primary" type="button">Lista de Pedidos Por Pedir Y Realizados</a>
+        <form class="d-flex" method="POST" action="">
+          {% csrf_token %}
+          {% if busqueda %}
+          <h1>hola</h1>
+          {% endif %}
+          <input class="form-control me-2" required type="text" placeholder="Ingrese el celular del cliente"  name="qp">
+          <button class="btn btn-outline-primary" type="submit">Buscar</button>
+      </form>
         </div>
         <br>
         <div class="container">
