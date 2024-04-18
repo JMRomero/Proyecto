@@ -32,6 +32,51 @@
         {%for p in CP%}
         <br><center><h2>Insertando Lote en el Producto N#{{p.0}}  {{p.1}}</h2></center>
         {%endfor%}
+        {%if repetido%}
+        <form class="row g-3 needs-validation" novalidate method='POST'>
+            {% csrf_token %}
+            <div class="col-6">
+                <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Codigo lote</label>
+                <input type="text" class="form-control" name="Lote" required value="{{codigor}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite El Lote</h6></div>
+                <div class="alert alert-danger" role="alert">el Lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>
+            </div>
+            <div class="col-6">
+                <i class="fa fa-plus-square fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Cantidad</label>
+                <input type="text" class="form-control" name="Cantidad" required value="{{cantidad}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+            </div>
+            <div class="col-4">
+                <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Precio Compra</label>
+                <input type="text" class="form-control" name="PrecioC" required value="{{precioC}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
+            </div>
+            <div class="col-4">
+                <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Porcentaje de ganancia</label>
+                <input type="text" class="form-control" name="PrecioV" required value="{{precioV}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite el Porcentaje</h6></div>
+            </div>
+            <div class="col-4">
+                <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Fecha De Vencimiento</label>
+                <input type="date" class="form-control" name="FechaVenci" required value="{{FechaVenci}}">
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <input type='submit' values='Subir' class="btn btn-primary" type="button" >
+                <a href="/Compra/Producto/{{RC}}" class="btn btn-outline-danger" type="button">Cancelar</a>
+            </div>
+        </form>
+        {%else%}
       <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             <div class="col-6">
@@ -74,7 +119,7 @@
                 <a href="/Compra/Producto/{{RC}}" class="btn btn-outline-danger" type="button">Cancelar</a>
             </div>
            
-        </form>
+        </form>{%endif%}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     {%include 'Layout/Validacion.html' %}

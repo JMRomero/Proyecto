@@ -29,7 +29,7 @@
               <form class="row g-3 needs-validation" novalidate method='POST'>
                   {% csrf_token %}
                   <div class="col-6">
-                      <i class="material-icons prefix">money</i>
+                    <i class="fa fa-barcode" aria-hidden="true"></i>
                       <label class="form-label">Codigo de Barras</label>
                       <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -37,7 +37,7 @@
                       <div class="alert alert-danger" role="alert">el codigo de Barras "{{codigo}}" ya esta registrado como el producto "{{nombrep}}"</div>
                   </div>
                       <div class="col-6">
-                          <i class="material-icons prefix">add_shopping_cart</i>
+                        <i class="fa fa-product-hunt" aria-hidden="true"></i>
                           <label class="form-label">Nombre del Producto</label>  
                           <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
                           <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -45,7 +45,7 @@
                           <br>
                   </div>
                   <div class="col-4">
-                      <i class="material-icons prefix">invert_colors</i>
+                    <i class="fa fa-bitbucket" aria-hidden="true"></i>
                       <label>Gramo/Litro</label>
                       <input type="text" class="form-control" name='gramo_litro' required value="{{gramo_litro}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -54,14 +54,14 @@
                       </div>
                   
                   <div class="col-4">
-                      <i class="material-icons prefix">add_circle_outline</i>
+                    <i class="fa fa-hand-o-up" aria-hidden="true"></i>
                       <label for=""><h6>Cantidad Maxima</h6></label> 
                       <input type='number' class="form-control" name='Max' required value="{{Max}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
                       </div>
                   <div class="col-4">
-                      <i class="material-icons prefix">remove_circle_outline</i>
+                    <i class="fa fa-hand-o-down" aria-hidden="true"></i>
                       <label for="">Cantidad Minima</label> 
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
