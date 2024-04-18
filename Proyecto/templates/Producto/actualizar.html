@@ -26,8 +26,64 @@
 </div>
 <div class="container">
     <br>
-    <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-      <br><br>
+    {%if repetido%}
+          <div class="container">
+            <br>
+            <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+              <br><br>
+              <form class="row g-3 needs-validation" novalidate method='POST'>
+                  {% csrf_token %}
+                  <div class="col-6">
+                      <i class="material-icons prefix">money</i>
+                      <label class="form-label">Codigo de Barras</label>
+                      <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
+                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                      <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div><br>
+                      <div class="alert alert-danger" role="alert">el codigo de Barras "{{codigoE}}" ya esta registrado como el producto {{nombrep}}. Por favor intente otro</div>
+                  </div>
+                      <div class="col-6">
+                          <i class="material-icons prefix">add_shopping_cart</i>
+                          <label class="form-label">Nombre del Producto</label>  
+                          <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
+                          <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                          <div class="invalid-feedback"><h6>Ingrese Nombre Del Producto</h6></div>
+                          <br>
+                  </div>
+                  <div class="col-4">
+                      <i class="material-icons prefix">invert_colors</i>
+                      <label>Gramo/Litro</label>
+                      <input type="text" class="form-control" name='gramo_litro' required value="{{gramo_litro}}">
+                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                      <div class="invalid-feedback"><h6>Ingrese Gramo/Litro</h6></div>
+                          <br>
+                      </div>
+                  
+                  <div class="col-4">
+                      <i class="material-icons prefix">add_circle_outline</i>
+                      <label for=""><h6>Cantidad Maxima</h6></label> 
+                      <input type='number' class="form-control" name='Max' required value="{{Max}}">
+                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                      <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
+                      </div>
+                  <div class="col-4">
+                      <i class="material-icons prefix">remove_circle_outline</i>
+                      <label for="">Cantidad Minima</label> 
+                      <input type='number' class="form-control" name='Min' required value="{{Min}}">
+                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                      <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
+                      <br><br>
+                      </div>
+              
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                      <input type='submit' values='Subir' class="btn btn-primary" type="button">
+                      <a href="/Producto/lista" type="button" class="btn btn-outline-danger">Cancelar</a>
+              </form><br><br>
+                </div>
+              </section>
+          </div>
+          {%else%}
+    <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br><br>
         {% for p in datos %}
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
@@ -77,6 +133,7 @@
                 <a href="/Producto/lista" type="button" class="btn btn-outline-danger">Cancelar</a>
         </form></div><br><br>
       </div>
+      {%endif%}
     </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

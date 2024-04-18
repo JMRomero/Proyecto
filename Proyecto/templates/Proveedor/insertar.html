@@ -23,6 +23,54 @@
           </nav>
     <div class="container">
     <br>
+    {%if repetido%}
+    <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br><br>
+        <form class="row g-3 needs-validation" novalidate method='POST'>
+              {% csrf_token %}
+              <div class="col-6">
+                      <i class="material-icons prefix">subtitles</i>
+                      <label class="form-label">NIT Del Proveedor</label>
+                      <input type="text" name='nit' class="form-control" required value="{{nit}}">
+                      <div class="alert alert-danger" role="alert">el NIT "{{nit}}" ya esta registrado como el Proveedor "{{nombrepr}}"</div>
+                      <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                      <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
+              </div>
+              <div class="col-6">
+                  <i class="material-icons prefix">assignment_ind</i>
+                  <label class="form-label">Nombre Del Proveedor</label>
+                  <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
+              </div>
+              <div class="col-6">
+                  <i class="material-icons prefix">contact_phone</i>
+                  <label class="form-label">Teléfono</label>
+                  <input type="number" class="form-control" name="telefono" required value="{{telefono}}">
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
+                  </div>
+              <div class="col-6">
+                  <i class="material-icons prefix">insert_invitation</i>
+                  <label class="form-label">Horario de Atención</label>
+                  <input type='text' class="form-control" name='horario_atencion' required value="{{horario}}">
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
+                  </div>
+              <div class="col-12">
+                  <i class="material-icons prefix">chrome_reader_mode</i>
+                  <label class="form-label">Política de Devolución</label>
+                  <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required>{{politica}}</textarea>
+                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                  <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>
+              </div>
+              <div class="d-grid gap-2 col-6 mx-auto">
+                  <input type='submit' values='Subir' class="btn btn-primary" type="button">
+                  <a href="/Proveedor/lista" type="button" class="btn btn-outline-danger">Cancelar</a>
+              </div>
+              </form><br>
+            </div>
+    {%else%}
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
       <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
@@ -68,6 +116,7 @@
             </div>
             </form><br>
           </div>
+          {%endif%}
         </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     {%include 'Layout/Validacion.html' %}
