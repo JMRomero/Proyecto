@@ -24,6 +24,14 @@
           <br>
 <div class="d-grid gap-2 col-6 mx-auto">
     <a href="/Producto/lista" class="btn btn-primary" type="button">Regresar Lista De Productos</a>
+    <form class="d-flex" method="POST" action="">
+        {% csrf_token %}
+        {% if busqueda %}
+        <h1>hola</h1>
+        {% endif %}
+        <input class="form-control me-2" required type="text" placeholder="Ingrese código del producto o código del lote"  name="qp">
+        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+    </form>
     </div>
     <br><br>
     <div class="container">

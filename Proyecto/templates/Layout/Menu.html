@@ -1,102 +1,103 @@
 {%load static%}
 
 <div class="sidebar close">
-    <div class="logo-details">
-      <i><img src="{%static 'img/Logo.png'%}" alt="profileImg" height="50px" width="50"></i>
-      <span class="logo_name"style='color:#080808'>Sistemas</span>
-    </div>
-    <ul class="nav-links">
-      <br><li>
-        <section>
-        <a href="#" >
+  <div class="logo-details">
+    <i><img src="{%static 'img/Logo.png'%}" alt="profileImg" height="50px" width="50"></i>
+    <span class="logo_name" style='color:#080808'>Sistemas</span>
+  </div>
+  <ul class="nav-links">
+    <br>
+    <li>
+      <section>
+        <a href="#">
           <i class='bx bx-menu position-absolute start-50 top-1 translate-middle'></i>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name">Desplegar Menu</a></li>
+        </ul>
+    </li>
+    <li>
+      <a href="/">
+        <i class="fa fa-home" aria-hidden="true"></i>
+        <span class="link_name">Menú</span>
       </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" >Desplegar Menu</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="/">
-          <i class="fa fa-home" aria-hidden="true"></i>
-          <span class="link_name">Menú</span>
-        </a>
-        
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/">Menú</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="/Pedidos/lista">
-          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-          <span class="link_name">Listado Pedidos Especiales</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
-        </ul>
-      </li>
-      {%if group == "Admin"%}
-      <li>
-        <a href="/Producto/lista">
-          <i class="fa fa-laptop" aria-hidden="true"></i>
-          <span class="link_name">Listado Productos</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
-        </ul>
-      </li>
 
-      <li>
-        <a href="/Proveedor/lista">
-          <i class="fa fa-users" aria-hidden="true"></i>
-          <span class="link_name">Listado Proveedores</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="/Usuario/lista">
-          <i class="fa fa-user-circle" aria-hidden="true"></i>
-          <span class="link_name">Lista Usuarios</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="/Notificacion">
-          <i class="fa fa-bell" aria-hidden="true"></i>
-          <span class="link_name">Notificacion</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Notificacion">Notificacion</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="/Compra/Recibos">
-          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-          <span class="link_name">Recibos de Compra</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Compra/Recibos">Recibos de Compra</a></li>
-        </ul>
-      </li>
-      {%endif%}
-      <li>
-        <a href=#>
-          <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true" onclick="cerrar()"></i>
-          <span class="link_name" onclick="cerrar()">Cerrar Sesión</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href=# onclick="cerrar()">Cerrar Sesión</a></li>
-        </ul>
-      </li>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/">Menú</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="/Pedidos/lista">
+        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        <span class="link_name">Listado Pedidos Especiales</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
+      </ul>
+    </li>
+    {%if group == "Admin"%}
+    <li>
+      <a href="/Producto/lista">
+        <i class="fa fa-laptop" aria-hidden="true"></i>
+        <span class="link_name">Listado Productos</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="/Proveedor/lista">
+        <i class="fa fa-users" aria-hidden="true"></i>
+        <span class="link_name">Listado Proveedores</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="/Usuario/lista">
+        <i class="fa fa-user-circle" aria-hidden="true"></i>
+        <span class="link_name">Lista Usuarios</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="/Notificacion">
+        <i class="fa fa-bell" aria-hidden="true"></i>
+        <span class="link_name">Notificacion</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Notificacion">Notificacion</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="/Compra/Recibos">
+        <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+        <span class="link_name">Recibos de Compra</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Compra/Recibos">Recibos de Compra</a></li>
+      </ul>
+    </li>
+    {%endif%}
+    <li>
+      <a href=#>
+        <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true" onclick="cerrar()"></i>
+        <span class="link_name" onclick="cerrar()">Cerrar Sesión</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href=# onclick="cerrar()">Cerrar Sesión</a></li>
+      </ul>
+    </li>
     <div class="profile-details">
       <div class="profile-content">
         {%if group == "Admin"%}
         <img src="{%static 'img/Admin.png'%}" alt="profileImg">
         {%else%}
-        <img src="{%static 'img/Regente.jpg'%}" alt="profileImg" >
+        <img src="{%static 'img/Regente.jpg'%}" alt="profileImg">
         {%endif%}
       </div>
       <div class="name-job">
@@ -104,32 +105,33 @@
         <div class="profile_name">{{group}}</div>
       </div>
     </div>
-  </li>
-</ul>
-  </div>
-  <section class="home-section">
-    <div class="home-content">
-
+    </li>
+  </ul>
 </div>
+<section class="home-section">
+  <div class="home-content">
 
-    
+  </div>
+
+
   <script>
-        let arrow = document.querySelectorAll(".arrow");
-  for (var i = 0; i < arrow.length; i++) {
-    arrow[i].addEventListener("click", (e)=>{
-   let arrowParent = e.target.parentElement.parentElement;
-   arrowParent.classList.toggle("showMenu");
+    let arrow = document.querySelectorAll(".arrow");
+    for (var i = 0; i < arrow.length; i++) {
+      arrow[i].addEventListener("click", (e) => {
+        let arrowParent = e.target.parentElement.parentElement;
+        arrowParent.classList.toggle("showMenu");
+      });
+    }
+
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".bx-menu");
+    console.log(sidebarBtn);
+    sidebarBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("close");
     });
-  }
-  
-  let sidebar = document.querySelector(".sidebar");
-  let sidebarBtn = document.querySelector(".bx-menu");
-  console.log(sidebarBtn);
-  sidebarBtn.addEventListener("click", ()=>{
-    sidebar.classList.toggle("close");
-  });
-  function cerrar(){
-        respuesta=confirm("Desea cerrar sesion?");
-        if (respuesta){
-            location.href="/salir";}
+    function cerrar() {
+      respuesta = confirm("Desea cerrar sesion?");
+      if (respuesta) {
+        location.href = "/salir";
+      }
     }</script>

@@ -37,6 +37,23 @@ def inicio(request):
 #region Menu
 @login_required
 def menu(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(id_producto) FROM producto where Estado=True")
+        productosA = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(id_producto) FROM producto where Estado=False")
+        productosI = cursor.fetchone()[0]
+        cursor.execute("select COUNT(NIT) from proveedor where Estado=True")
+        proveedorA=cursor.fetchone()[0]
+        cursor.execute("select COUNT(NIT) from proveedor where Estado=False")
+        proveedorI=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=1")
+        realizar=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=0")
+        realizado=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id) from auth_user where is_active=True")
+        usuariosA=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id) from auth_user where is_active=False")
+        usuariosI=cursor.fetchone()[0]
     grupo_actual= group_iden(request)
     return render(request,'Menu/menu.html',{'group':grupo_actual})
 #endregion
@@ -82,6 +99,7 @@ def viewP(request):
             viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and Nombre LIKE '%"+str(request.POST.get("qp"))+"%';")
         activos=viewA.fetchall()
         viewI=connection.cursor()
+        busqueda=True
         viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
     else:
@@ -91,8 +109,10 @@ def viewP(request):
         viewI=connection.cursor()
         viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
+        busqueda=False
     grupo_actual= group_iden(request)
-    return render(request,'Producto/lista.html',{'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    
+    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()
