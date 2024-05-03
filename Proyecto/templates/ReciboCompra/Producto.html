@@ -21,11 +21,11 @@
         <ul class="right hide-on-med-and-down">
         </ul>
     </nav>
-    <div class="container"><br> 
-        <h1 class="position-absolute start-50 top-10 translate-middle fs-3">Seleccionar Producto</h1><br>
+    <div class="container"><br><br>
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        {%for p,pr in info%}
-        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
+        <br><p class="text-center fst-italic text-body fs-2 mb-3">Seleccionar Producto</p>
+            {%for p,pr in info%}
+        <h1 class="text-center fst-italic text-body fs-3 mb-4">Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1>
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary" type="button">Registrar Y Seleccionar Nuevo Producto</a>

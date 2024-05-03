@@ -17,8 +17,6 @@
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
             <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br>
-            <br>
-            <h1 class="position-absolute start-50 top-10 translate-middle">Lista de Lotes Agregados</h1><br></a>
         </div>
         <ul class="right hide-on-med-and-down">
         </ul>
@@ -27,7 +25,7 @@
     <div class="container">
         <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-       <br><br>
+       <br>
         {%for p in info%}
         <br><h1>Compra N#{{p.0}}  NIT del Proveedor: {{p.3}} </h1>
         {%endfor%}
@@ -42,8 +40,9 @@
                 <input class="form-control me-2" required type="text" placeholder="Ingrese el código del lote"  name="qp">
                 <button class="btn btn-outline-primary" type="submit">Buscar</button>
             </form>
-        </div><br>
+        </div><br><br>
             <table class="table table-hover">
+                <h2 class="position-absolute start-50 top-10 translate-middle fst-italic" >Lista de Lotes Agregados</h2><br><br></a>
                 <thead>
                     <tr>
                         <th>Codigo de Barras del producto</th>
