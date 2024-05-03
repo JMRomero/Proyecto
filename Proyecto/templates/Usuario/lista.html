@@ -27,9 +27,9 @@
     <form class="d-flex" method="POST" action="">
         {% csrf_token %}
         {% if busqueda %}
-        <h1>hola</h1>
+        <a href="/Usuario/lista" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
         {% endif %}
-        <input class="form-control me-2" required type="text" placeholder="Ingrese cedula del usuario"  name="qp">
+        <input class="form-control me-2" required type="text" placeholder="Buscar por Cedula,Nombre o Apellido del usuario"  name="NCU"{%if busqueda%}value="{{NCU}}"{%endif%}>
         <button class="btn btn-outline-primary" type="submit">Buscar</button>
     </form>
     </div>
@@ -56,7 +56,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun usuario activo</p>
+                {%if busqueda%}<p>No hay ningun usuario activo con es@ Nombre/Cedula</p>{%else%}
+                <p>No hay ningun usuario activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in usuarioA%}
@@ -118,7 +119,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun usuario inactivo</p>
+                {%if busqueda%}<p>No hay ningun usuario inactivo con es@ Nombre/Cedula</p>{%else%}
+                <p>No hay ningun usuario inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in usuarioI%}

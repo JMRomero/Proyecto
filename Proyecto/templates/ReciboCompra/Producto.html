@@ -32,7 +32,16 @@
             </div><br>
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/Lista/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
-        </div><br><br>
+        </div><br>
+        <div class="d-grid gap-2 col-6 mx-auto">
+        <form class="d-flex" method="POST" action="">
+            {% csrf_token %}
+            {% if busqueda %}
+            <a href="/Compra/Producto/{{RC}}" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
+            {% endif %}
+            <input class="form-control me-2" required type="text" placeholder="Buscar por código o nombre del producto"  name="qp" {%if busqueda%}value="{{qp}}" {%endif%}>
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form></div><br><br>
 
         
                 <table class="table table-hover">

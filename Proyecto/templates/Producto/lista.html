@@ -32,9 +32,9 @@
             <form class="d-flex" method="POST" action="">
                 {% csrf_token %}
                 {% if busqueda %}
-                <a href="/Producto/lista"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
+                <a href="/Producto/lista" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
                 {% endif %}
-                <input class="form-control me-2" required type="text" placeholder="Ingrese código o nombre del producto"  name="qp">
+                <input class="form-control me-2" required type="text" placeholder="Buscar por código o nombre del producto"  name="qp" {%if busqueda%}value="{{qp}}" {%endif%}>
                 <button class="btn btn-outline-success" type="submit">Buscar</button>
             </form>
         </div>
@@ -63,7 +63,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun producto activo</p>
+                {%if busqueda%}<p>No hay ningun producto con ese Codigo/Nombre</p>{%else%}
+                <p>No hay ningun producto activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in productoA%}
@@ -103,7 +104,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun producto inactivo</p>
+                {%if busqueda%}<p>No hay ningun producto con ese Codigo/Nombre</p>{%else%}
+                <p>No hay ningun producto inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in productoI%}

@@ -38,20 +38,20 @@
             <div class="col-6">
                 <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Celular del Cliente</label>
-                <input type="number" class="form-control" name="celularClie" required>
+                <input type="number" max="9999999999" min="1000000000" class="form-control" name="celularClie" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Celular Del Cliente</h6></div>
+                <div class="invalid-feedback"><h6>Digite Celular Del Cliente.Deben ser 10 numeros</h6></div>
                 </div>
                 <div class="col-12">
                   
                   <label class="form-label">Cantidad</label>
-                  <input type="number" class="form-control" name="cantidad" required>
+                  <input type="number" max="99" min="1" class="form-control" name="cantidad" required>
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
                   </div>
                 <div class="col-12">
                   <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
-                <label for="descripcion" class="form-label">Descripción</label>
+                <label for="descripcion" class="form-label">Nombre/Descripcion del medicamento</label>
                 <textarea type="text" class="form-control" name="descripcion" rows="3" required></textarea>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Una Descripción</h6></div>

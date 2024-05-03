@@ -24,15 +24,91 @@ def inicio(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)#token que verifica el inicio
+            primerinicio=connection.cursor()
+            primerinicio.execute("select last_login from auth_user where username='"+username+"';") #buscar su ultimo login
+            primerinicioo=primerinicio.fetchone()[0]
+            if primerinicioo==None: #si no a iniciado session, debera cambiar contraseña
+                return redirect(f'/cambiarcontraseña/{username}')  # Redirige a cambiar contraseña
+            else:
+                login(request, user)#token que verifica el inicio
             # Usuario autenticado con éxito
             return redirect('/')  # Redirige a la página de inicio
         else:
+            activo=connection.cursor()
+            activo.execute("select is_active from auth_user where username='"+username+"';")
+            try :
+                activoo=activo.fetchone()[0]
+                if activoo==0:
+                    messages.error(request, 'Su usuario esta Inactivo')
+            except:
             # Autenticación fallida, agregamos un mensaje de error a la URL
-            messages.error(request, 'Usuario o contraseña incorrectos')
+                messages.error(request, 'Usuario o contraseña incorrectos')
             return redirect('login')
     else:
         return render(request, 'registration/login.html')
+#cambiarcontraseña
+def cambiarpassword(request,username):
+    if request.method=='POST':
+        if request.POST.get('new_password1') and request.POST.get('new_password2'):
+            password1=request.POST.get('new_password1')
+            password2=request.POST.get('new_password2')
+            count=0
+            if password1 != password2:
+                nConiciden=True
+                count=+1
+            else:
+                nConiciden=False
+            numeros=[caracter.isdigit() for caracter in password1]
+            if all(numeros):
+                todonumeros=True
+                count=+1
+            else:
+                todonumeros=False
+            if len(password1)<8:
+                corta=True
+                count=+1
+            else:
+                corta=False
+            with connection.cursor()as cursor:
+                cursor.execute("select COUNT(id) from auth_user where first_name LIKE'%"+password1+"%' and username='"+username+"';")
+                nombre=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where last_name LIKE'%"+password1+"%' and username='"+username+"';")
+                apellido=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where email LIKE'%"+password1+"%' and username='"+username+"';")
+                email=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where username ='"+password1+"' and username='"+username+"';")
+                cedula=cursor.fetchone()[0]
+            if nombre>0:
+                nombrep=True
+                count=+1
+            else:
+                nombrep=False
+            if apellido>0:
+                apellidop=True
+                count=+1
+            else:
+                apellidop=False
+            if email>0:
+                emailp=True
+                count=+1
+            else:
+                emailp=False
+            if cedula>0:
+                cedulap=True
+                count=+1
+            else:
+                cedulap=False
+            if nConiciden or todonumeros or corta or nombrep or apellidop or emailp or cedulap:
+                return render(request, "registration/changePassword.html",{'coinciden':nConiciden,'corta':corta,'numero':todonumeros,'nombre':nombrep,'apellido':apellidop,'email':emailp,'cedula':cedulap,'count':count}) 
+            else:
+                hashed_password=make_password(password1)
+                insert=connection.cursor()
+                insert.execute("Update auth_user SET password='"+str(hashed_password)+"' where username='"+username+"'")
+                user = authenticate(request, username=username, password=password1)
+                login(request, user)
+                return redirect('/')
+    else:
+        return render(request, "registration/changePassword.html")
 #endregion 
 #region Menu
 @login_required
@@ -91,16 +167,20 @@ def producto(request):
 def viewP(request):
     if request.method == 'POST':
         viewA=connection.cursor()
+        viewI=connection.cursor()
         v=request.POST.get("qp")
         vv=[caracter.isdigit() for caracter in v]
         if all(vv):
-            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and id_producto LIKE '%"+str(request.POST.get("qp"))+"%';")
+            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and id_producto LIKE '%"+str(v)+"%';")
         else:
-            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and Nombre LIKE '%"+str(request.POST.get("qp"))+"%';")
+            viewA.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=True and Nombre LIKE '%"+str(v)+"%';")
+        vv=[caracter.isdigit() for caracter in v]
+        if all(vv):
+            viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False and id_producto LIKE '%"+str(v)+"%';")
+        else:
+            viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False and Nombre LIKE '%"+str(v)+"%';")
         activos=viewA.fetchall()
-        viewI=connection.cursor()
         busqueda=True
-        viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
     else:
         viewA=connection.cursor()
@@ -110,9 +190,9 @@ def viewP(request):
         viewI.execute("select *, CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End as cantidad from producto where estado=False;")
         inactivos=viewI.fetchall()
         busqueda=False
+        v=0
     grupo_actual= group_iden(request)
-    
-    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'qp':v})
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()
@@ -195,14 +275,30 @@ def estadoaL(request,id,lote):
 #proveedor
 @login_required
 def viewProveedor(request):
-    viewA=connection.cursor()
-    viewA.execute("select * from proveedor where Estado=1;")
+    if request.method=='POST':
+        viewA=connection.cursor()    
+        viewI=connection.cursor()
+        proveedor=request.POST.get('NP')
+        busqueda=True
+        #saber si son letras o numeros
+        vv=[caracter.isdigit() for caracter in proveedor]
+        if all(vv):
+            viewA.execute("select * from proveedor where Estado=1 and NIT LIKE '%"+str(proveedor)+"%';")
+            viewI.execute("select * from proveedor where Estado=0 and NIT LIKE '%"+str(proveedor)+"%';")
+        else:
+            viewA.execute("select * from proveedor where Estado=1 and Nombre LIKE '%"+str(proveedor)+"%';")
+            viewI.execute("select * from proveedor where Estado=0 and Nombre LIKE '%"+str(proveedor)+"%';")
+    else:
+        viewA=connection.cursor()
+        viewA.execute("select * from proveedor where Estado=1;")
+        viewI=connection.cursor()
+        viewI.execute("select * from proveedor where Estado=0;")
+        busqueda=False
+        proveedor=0
     activos=viewA.fetchall()
-    viewI=connection.cursor()
-    viewI.execute("select * from proveedor where Estado=0;")
     inactivos=viewI.fetchall()
     grupo_actual= group_iden(request)
-    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    return render(request,'Proveedor/lista.html',{'proveedorA':viewA,'proveedorI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor})
 @login_required
 def updateProveedor(request,id):
     if request.method=="POST":
@@ -326,14 +422,26 @@ def updateLote(request,id,lote):
 #pedidos especiales
 @login_required
 def viewPedidos(request):
-    viewA=connection.cursor()
-    viewA.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=1;")
-    activos=viewA.fetchall()
-    viewI=connection.cursor()
-    viewI.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=0;")
-    inactivos=viewI.fetchall()
+    if request.method=='POST':
+        busqueda=True
+        medicamento=request.POST.get('NM')
+        viewA=connection.cursor()
+        viewA.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=1 and descripcion LIKE '%"+str(medicamento)+"%';")
+        activos=viewA.fetchall()
+        viewI=connection.cursor()
+        viewI.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=0 and descripcion LIKE '%"+str(medicamento)+"%';")
+        inactivos=viewI.fetchall()    
+    else:
+        viewA=connection.cursor()
+        viewA.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=1;")
+        activos=viewA.fetchall()
+        viewI=connection.cursor()
+        viewI.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=0;")
+        inactivos=viewI.fetchall()
+        busqueda=False
+        medicamento=0
     grupo_actual= group_iden(request)
-    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    return render(request,'Pedidos/lista.html',{'pedidosA':viewA,'pedidosI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'busqueda':busqueda,'NM':medicamento})
 @login_required
 def pedidosInsert(request):
     if request.method=="POST":
@@ -348,17 +456,17 @@ def pedidosInsert(request):
 @login_required    
 def pedidosEstadoI(request,id):
     estadoI=connection.cursor()
-    estadoI.execute("UPDATE pedidos_especiales SET estadoPe=0 where id_pedido="+str(id)+"")
+    estadoI.execute("UPDATE pedidos_especiales SET estadoPe=0,fechaM=now() where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
 @login_required
 def pedidosEstadoA(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1 where id_pedido="+str(id)+"")
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=1, fechaM=now() where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
 @login_required
 def pedidosEstadoC(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=2 where id_pedido="+str(id)+"")
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=2,fechaM=now() where id_pedido="+str(id)+"")
     return redirect('/Pedidos/lista')
 @login_required
 def pedidosEstadoR(request,id):
@@ -368,10 +476,18 @@ def pedidosEstadoR(request,id):
 @login_required
 def viewPedidosC(request):
     viewC=connection.cursor()
-    viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2;")
-    Concluidos=viewC.fetchall()
+    if request.method=='POST':
+        busqueda=True
+        medicamento=request.POST.get('NM')
+        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2 and descripcion LIKE '%"+medicamento+"%';")
+        Concluidos=viewC.fetchall()
+    else:
+        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2;")
+        Concluidos=viewC.fetchall()
+        busqueda=False
+        medicamento=0
     grupo_actual= group_iden(request)
-    return render(request,'Pedidos/listaC.html',{'pedidosC':viewC,'concluidos':Concluidos,'group':grupo_actual})
+    return render(request,'Pedidos/listaC.html',{'pedidosC':viewC,'concluidos':Concluidos,'group':grupo_actual,'busqueda':busqueda,'NM':medicamento})
 @login_required
 def updatePedidos(request,id):
     if request.method=="POST":
@@ -396,16 +512,30 @@ def updatePedidos(request,id):
 #usuarios
 @login_required
 def viewUsuario(request):
-    viewA=connection.cursor()
-    viewA.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=True;")
-    activos=viewA.fetchall()
-    viewI=connection.cursor()
-    viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False;")
-    inactivos=viewI.fetchall()
+    if request.method=='POST':
+        viewA=connection.cursor()
+        viewI=connection.cursor()
+        nombre_cedulausuario=request.POST.get('NCU')
+        busqueda=True
+        validar=[caracter.isdigit() for caracter in nombre_cedulausuario]
+        if all(validar):
+            viewA.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=True and auth_user.username LIKE'%"+str(nombre_cedulausuario)+"%';")
+            viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False and auth_user.username LIKE'%"+str(nombre_cedulausuario)+"%';")        
+        else:
+            viewA.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=True and (auth_user.first_name LIKE'%"+str(nombre_cedulausuario)+"%' or auth_user.last_name LIKE'%"+str(nombre_cedulausuario)+"%');")
+            viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False and (auth_user.first_name LIKE'%"+str(nombre_cedulausuario)+"%' or auth_user.last_name LIKE'%"+str(nombre_cedulausuario)+"%');")
+    else:
+        viewA=connection.cursor()
+        viewA.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=True;")
+        viewI=connection.cursor()
+        viewI.execute("SELECT auth_user.*, auth_group.name FROM auth_user INNER JOIN auth_user_groups ON auth_user.id=auth_user_groups.user_id INNER JOIN auth_group on auth_group.id=auth_user_groups.group_id WHERE auth_user.is_active=False;")
+        busqueda=False
+        nombre_cedulausuario=0
     grupo_actual= group_iden(request)
     usuario=nombredelusuario(request)
-    print(usuario)
-    return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'usuario':usuario})
+    activos=viewA.fetchall()
+    inactivos=viewI.fetchall()
+    return render(request,'Usuario/lista.html',{'usuarioA':viewA,'usuarioI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'usuario':usuario,'busqueda':busqueda,'NCU':nombre_cedulausuario})
 @login_required
 def usuarioEstadoI(request,id):
     estadoI=connection.cursor()
@@ -420,10 +550,16 @@ def usuarioEstadoA(request,id):
 def usuarioInsert(request):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('telefono') and request.POST.get('correo')and request.POST.get('direccion')and request.POST.get('fecha_nacimiento')and request.POST.get('Id_rol')and request.POST.get('contrasena'):
-            consulta=connection.cursor()
-            consulta.execute("select COUNT(id) from auth_user where username='"+request.POST.get('cedula')+"'")
-            existente=consulta.fetchone()[0]
-            if existente>0:
+            consultac=connection.cursor()#consultar si la cedula se repite
+            consultac.execute("select COUNT(id) from auth_user where username='"+request.POST.get('cedula')+"'")
+            consultan=connection.cursor()#consultar si el telefono se repite
+            consultan.execute("select COUNT(id) from auth_user where Telefono='"+request.POST.get('telefono')+"'")
+            consultae=connection.cursor()#consultar si el email se repite
+            consultae.execute("select COUNT(id) from auth_user where email='"+request.POST.get('correo')+"'")
+            existentec=consultac.fetchone()[0]
+            existenten=consultan.fetchone()[0]
+            existentee=consultae.fetchone()[0]
+            if existentec>0 or existenten>0 or existentee>0: #si se repite alguna almacenamos los datos y verificamos cual de ellos se repite y mandar el respectivo mensaje 
                 cedula=request.POST.get('cedula')
                 nombre=request.POST.get('nombre')
                 apellido=request.POST.get('apellido')
@@ -433,13 +569,45 @@ def usuarioInsert(request):
                 fecha=request.POST.get('fecha_nacimiento')
                 rol=request.POST.get('Id_rol')
                 contraseña=request.POST.get('contraseña')
-                nombreu=connection.cursor()
-                nombreu.execute("select first_name from auth_user where username='"+cedula+"';")
-                nombreua=nombreu.fetchone()[0]
+                if existentec>0:
+                    nombreuc=connection.cursor()#nombre usuario con la cedula registrada 'nombreuc:nombre usuario cedula'
+                    nombreuc.execute("select first_name from auth_user where username='"+cedula+"';")
+                    apellidouc=connection.cursor()
+                    apellidouc.execute("select last_name from auth_user where username='"+cedula+"';")
+                    nombreuac=nombreuc.fetchone()[0]#nombre del usuario actual con la cedula
+                    apellidouac=apellidouc.fetchone()[0]#el apellido
+                    cc=True
+                else:
+                    cc=False
+                    nombreuac="ninguno"
+                    apellidouac="ninguno"
+                if existenten>0:
+                    nombreut=connection.cursor()#nombre del usuario que ta tiene asignado el nuemero de telefono 'nombreut:nombre usuario telefono'
+                    nombreut.execute("select first_name from auth_user where Telefono='"+telefono+"';")
+                    apellidout=connection.cursor()#el apellido
+                    apellidout.execute("select last_name from auth_user where Telefono='"+telefono+"';")
+                    nombreuat=nombreut.fetchone()[0]#nombre del usuario actual con el numero de telefono
+                    apellidouat=apellidout.fetchone()[0]#el apellido
+                    tt=True
+                else:
+                    tt=False
+                    nombreuat="ninguno"
+                    apellidouat="ninguno"
+                if existentee>0:
+                    nombreuce=connection.cursor()#nombre del usuario que ya tiene registrado el correo 'nombreuce: nombre usuario correo electronico'
+                    nombreuce.execute("select first_name from auth_user where email='"+correo+"';")
+                    apellidouce=connection.cursor()#el apellido
+                    apellidouce.execute("select last_name from auth_user where email='"+correo+"';")
+                    nombreuace=nombreuce.fetchone()[0]#nombre del usuario actual con el correo
+                    apellidouace=apellidouce.fetchone()[0]#el apellido
+                    ce=True
+                else:
+                    ce=False
+                    nombreuace="ninguno"
+                    apellidouace="ninguno"
                 repetido=True
                 grupo_actual= group_iden(request)
-                lista=[cedula,nombre,apellido,telefono,correo,direccion,fecha,rol,contraseña]
-                return render(request,'Usuario/insertar.html',{'group':grupo_actual,'repetido':repetido,'cedula':cedula,'nombre':nombre,'apellido':apellido,'telefono':telefono,'correo':correo,'direccion':direccion,'fecha':fecha,'rol':rol})
+                return render(request,'Usuario/insertar.html',{'group':grupo_actual,'repetido':repetido,'cedulaR':cc,'telefonoR':tt,'correoR':ce,'cedula':cedula,'nombrerc':nombreuac,'apellidorc':apellidouac,'nombrert':nombreuat,'apellidort':apellidouat,'nombrerce':nombreuace,'apellidorce':apellidouace,'nombre':nombre,'apellido':apellido,'telefono':telefono,'correo':correo,'direccion':direccion,'fecha':fecha,'rol':rol})
             else:
                 password = (request.POST.get('contrasena'))
                 hashed_password = make_password(password)
@@ -455,9 +623,71 @@ def usuarioInsert(request):
 def updateUsuario(request,id):
     if request.method=="POST":
         if request.POST.get('cedula') and request.POST.get('nombre') and request.POST.get('apellido') and  request.POST.get('telefono') and request.POST.get('correo') and request.POST.get('direccion') and request.POST.get('fecha_nacimiento'):
-            insert=connection.cursor()
-            insert.execute("UPDATE auth_user SET username="+request.POST.get('cedula')+",first_name='"+request.POST.get('nombre')+"',last_name='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",email='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',fechaNacimiento='"+request.POST.get('fecha_nacimiento')+"' where username="+str(id)+";")
-            return redirect('/Usuario/lista')
+            consultac=connection.cursor()#consultar si la cedula se repite
+            consultac.execute("select COUNT(id) from auth_user where username='"+request.POST.get('cedula')+"' and username!='"+str(id)+"';")
+            consultan=connection.cursor()#consultar si el telefono se repite
+            consultan.execute("select COUNT(id) from auth_user where Telefono='"+request.POST.get('telefono')+"' and username!='"+str(id)+"';")
+            consultae=connection.cursor()#consultar si el email se repite
+            consultae.execute("select COUNT(id) from auth_user where email='"+request.POST.get('correo')+"' and username!='"+str(id)+"';")
+            existentec=consultac.fetchone()[0]
+            existenten=consultan.fetchone()[0]
+            existentee=consultae.fetchone()[0]
+            if existentec>0 or existenten>0 or existentee>0: #si se repite alguna almacenamos los datos y verificamos cual de ellos se repite y mandar el respectivo mensaje 
+                cedula=request.POST.get('cedula')
+                nombre=request.POST.get('nombre')
+                apellido=request.POST.get('apellido')
+                telefono=request.POST.get('telefono')
+                correo=request.POST.get('correo')
+                direccion=request.POST.get('direccion')
+                fecha=request.POST.get('fecha_nacimiento')
+                rol=request.POST.get('Id_rol')
+                contraseña=request.POST.get('contraseña')
+                if existentec>0:
+                    nombreuc=connection.cursor()#nombre usuario con la cedula registrada 'nombreuc:nombre usuario cedula'
+                    nombreuc.execute("select first_name from auth_user where username='"+cedula+"';")
+                    apellidouc=connection.cursor()
+                    apellidouc.execute("select last_name from auth_user where username='"+cedula+"';")
+                    nombreuac=nombreuc.fetchone()[0]#nombre del usuario actual con la cedula
+                    apellidouac=apellidouc.fetchone()[0]#el apellido
+                    cc=True
+                else:
+                    cc=False
+                    nombreuac="ninguno"
+                    apellidouac="ninguno"
+                if existenten>0:
+                    nombreut=connection.cursor()#nombre del usuario que ta tiene asignado el nuemero de telefono 'nombreut:nombre usuario telefono'
+                    nombreut.execute("select first_name from auth_user where Telefono='"+telefono+"';")
+                    apellidout=connection.cursor()#el apellido
+                    apellidout.execute("select last_name from auth_user where Telefono='"+telefono+"';")
+                    nombreuat=nombreut.fetchone()[0]#nombre del usuario actual con el numero de telefono
+                    apellidouat=apellidout.fetchone()[0]#el apellido
+                    tt=True
+                else:
+                    tt=False
+                    nombreuat="ninguno"
+                    apellidouat="ninguno"
+                if existentee>0:
+                    nombreuce=connection.cursor()#nombre del usuario que ya tiene registrado el correo 'nombreuce: nombre usuario correo electronico'
+                    nombreuce.execute("select first_name from auth_user where email='"+correo+"';")
+                    apellidouce=connection.cursor()#el apellido
+                    apellidouce.execute("select last_name from auth_user where email='"+correo+"';")
+                    nombreuace=nombreuce.fetchone()[0]#nombre del usuario actual con el correo
+                    apellidouace=apellidouce.fetchone()[0]#el apellido
+                    ce=True
+                else:
+                    ce=False
+                    nombreuace="ninguno"
+                    apellidouace="ninguno"
+                repetido=True
+                grupo_actual= group_iden(request)
+                print(existentec)
+                print(existentee)
+                print(existenten)
+                return render(request,'Usuario/actualizar.html',{'group':grupo_actual,'repetido':repetido,'cedulaR':cc,'telefonoR':tt,'correoR':ce,'cedula':cedula,'nombrerc':nombreuac,'apellidorc':apellidouac,'nombrert':nombreuat,'apellidort':apellidouat,'nombrerce':nombreuace,'apellidorce':apellidouace,'nombre':nombre,'apellido':apellido,'telefono':telefono,'correo':correo,'direccion':direccion,'fecha':fecha,'rol':rol})
+            else:
+                insert=connection.cursor()
+                insert.execute("UPDATE auth_user SET username="+request.POST.get('cedula')+",first_name='"+request.POST.get('nombre')+"',last_name='"+request.POST.get('apellido')+"',Telefono="+request.POST.get('telefono')+",email='"+request.POST.get('correo')+"',Direccion='"+request.POST.get('direccion')+"',fechaNacimiento='"+request.POST.get('fecha_nacimiento')+"' where username="+str(id)+";")
+                return redirect('/Usuario/lista')
     else:
         consulta=connection.cursor()
         consulta.execute("select * from auth_user where username="+str(id)+";")
@@ -467,11 +697,65 @@ def updateUsuario(request,id):
 def updateUsuarioContrasena(request,id):
     if request.method == 'POST':
         if request.POST.get('contrasena') and request.POST.get('confirmar_contrasena'):
-            password=request.POST.get('contrasena')
-            hashed_password=make_password(password)
-            insert=connection.cursor()
-            insert.execute("Update auth_user SET password='"+str(hashed_password)+"' where username='"+str(id)+"'")
-            return redirect('/Usuario/lista')
+            password1=request.POST.get('contrasena')
+            password2=request.POST.get('confirmar_contrasena')
+            count=0
+            if password1 != password2:
+                nConiciden=True
+                count=+1
+            else:
+                nConiciden=False
+            numeros=[caracter.isdigit() for caracter in password1]
+            if all(numeros):
+                todonumeros=True
+                count=+1
+            else:
+                todonumeros=False
+            if len(password1)<8:
+                corta=True
+                count=+1
+            else:
+                corta=False
+            with connection.cursor()as cursor:
+                cursor.execute("select COUNT(id) from auth_user where first_name LIKE'%"+password1+"%' and username='"+id+"';")
+                nombre=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where last_name LIKE'%"+password1+"%' and username='"+id+"';")
+                apellido=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where email LIKE'%"+password1+"%' and username='"+id+"';")
+                email=cursor.fetchone()[0]
+                cursor.execute("select COUNT(id) from auth_user where username ='"+password1+"' and username='"+id+"';")
+                cedula=cursor.fetchone()[0]
+            if nombre>0:
+                nombrep=True
+                count=+1
+            else:
+                nombrep=False
+            if apellido>0:
+                apellidop=True
+                count=+1
+            else:
+                apellidop=False
+            if email>0:
+                emailp=True
+                count=+1
+            else:
+                emailp=False
+            if cedula>0:
+                cedulap=True
+                count=+1
+            else:
+                cedulap=False
+            if nConiciden or todonumeros or corta or nombrep or apellidop or emailp or cedulap:
+                usuariodata=connection.cursor()
+                usuariodata.execute("select username,first_name,last_name from auth_user where username="+str(id)+";")
+                grupo_actual= group_iden(request)
+                return render(request, "Usuario/insertar_contra.html",{'coinciden':nConiciden,'corta':corta,'numero':todonumeros,'nombre':nombrep,'apellido':apellidop,'email':emailp,'cedula':cedulap,'count':count,'datos':usuariodata,'group':grupo_actual}) 
+            else:
+                password=request.POST.get('contrasena')
+                hashed_password=make_password(password)
+                insert=connection.cursor()
+                insert.execute("Update auth_user SET password='"+str(hashed_password)+"' where username='"+str(id)+"'")
+                return redirect('/Usuario/lista')
     else:
         usuariodata=connection.cursor()
         usuariodata.execute("select username,first_name,last_name from auth_user where username="+str(id)+";")
@@ -515,10 +799,23 @@ def RProveedor1(request):
     vaciar.execute("DELETE FROM temp_detalle_compra;")
     return redirect('/Compra/SProveedor2')
 def RProveedor2(request):
-    proveedor=connection.cursor()
-    proveedor.execute("select NIT,Nombre from proveedor  where proveedor.Estado=True;")
+    if request.method=='POST':
+        proveedores=connection.cursor()    
+        proveedor=request.POST.get('NP')
+        busqueda=True
+        #saber si son letras o numeros
+        vv=[caracter.isdigit() for caracter in proveedor]
+        if all(vv):
+            proveedores.execute("select * from proveedor where Estado=1 and NIT LIKE '%"+str(proveedor)+"%';")
+        else:
+            proveedores.execute("select * from proveedor where Estado=1 and Nombre LIKE '%"+str(proveedor)+"%';")
+    else:
+        proveedores=connection.cursor()
+        proveedores.execute("select NIT,Nombre from proveedor  where proveedor.Estado=True;")
+        busqueda=False
+        proveedor=0
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/Proveedor.html',{'PROV':proveedor,'group':grupo_actual})
+    return render(request,'ReciboCompra/Proveedor.html',{'PROV':proveedores,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor})
 @login_required
 def Cproveedor(request):
     if request.method=="POST":
@@ -559,15 +856,28 @@ def crearR(request,NIT):
         return redirect(f'/Compra/Producto/{idc3}')
 @login_required
 def RProducto(request,idc):
-    prod=connection.cursor()
-    prod.execute("select id_producto,Nombre from Producto where Estado=True union select id_producto, Nombre from temp_producto where Estado=True;")
+    if request.method == 'POST':
+        viewA=connection.cursor()
+        v=request.POST.get("qp")
+        vv=[caracter.isdigit() for caracter in v]
+        if all(vv):
+            viewA.execute("select id_producto,Nombre from Producto where Estado=True and id_producto LIKE '%"+str(v)+"%'  union select id_producto, Nombre from temp_producto where Estado=True and id_producto LIKE '%"+str(v)+"%';")
+        else:
+            viewA.execute("select id_producto,Nombre from Producto where Estado=True and Nombre LIKE '%"+str(v)+"%'  union select id_producto, Nombre from temp_producto where Estado=True and Nombre LIKE '%"+str(v)+"%';")
+        prod=viewA.fetchall()
+        busqueda=True
+    else:
+        v=0
+        busqueda=False
+        prod=connection.cursor()
+        prod.execute("select id_producto,Nombre from Producto where Estado=True union select id_producto, Nombre from temp_producto where Estado=True;")
     info=connection.cursor ()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
     prov=connection.cursor()
     prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
     ListacombinadaI=list(zip(info,prov))
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'RC':str(idc),'info':ListacombinadaI,'group':grupo_actual})
+    return render(request,'ReciboCompra/Producto.html',{'PROD':prod,'RC':str(idc),'info':ListacombinadaI,'group':grupo_actual,'busqueda':busqueda,'qp':v})
 @login_required
 def Cproducto(request,idc):
    if request.method=="POST":
@@ -667,9 +977,16 @@ def reciboCompraView(request,idc):
 @login_required
 def Recibos(request):
     recibos=connection.cursor()
-    recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+    if request.method=='POST':
+        busqueda=True
+        proveedor=request.POST.get('NP')
+        recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT where Proveedor.Nombre LIKE '%"+str(proveedor)+"%';")    
+    else:
+        recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+        busqueda=False
+        proveedor=0
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual})
+    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor})
 @login_required
 def RecibosD(request,idc):
     recibo=connection.cursor()

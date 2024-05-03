@@ -31,8 +31,9 @@
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {%if busqueda%}
-            <h1>hola</h1>{%endif%}
-            <input class="form-control me-2" required type="text" placeholder="Ingrese NIT del proveedor" name="qp">
+            <a href="/Proveedor/lista" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
+            {%endif%}
+            <input class="form-control me-2" required type="text" placeholder="Buscar por NIT o Nombre del proveedor" name="NP" {%if busqueda%}value="{{NP}}"{%endif%}>
             <button class="btn btn-outline-primary" type="submit">Buscar</button>
         </form>
     </div>
@@ -57,7 +58,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun proveedor activo</p>
+                {%if busqueda%}<p>No hay ningun proveedor Con ese NIT/Nombre</p>{%else%}
+                <p>No hay ningun proveedor activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in proveedorA%}
@@ -91,7 +93,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun proveedor inactivo</p>
+                {%if busqueda%}<p>No hay ningun proveedor Con ese NIT/Nombre</p>{%else%}
+                <p>No hay ningun proveedor inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in proveedorI%}

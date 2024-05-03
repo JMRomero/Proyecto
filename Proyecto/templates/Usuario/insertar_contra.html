@@ -49,6 +49,13 @@
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
                 <a href="/Usuario/lista" type="button" class="btn btn-outline-danger">Cancelar</a><br>
             </div>
+              {%if email%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña es parecida al Correo del usuario</div>{%endif%}
+              {%if cedula%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña es igual al numero de la cedula.Por favor pon una diferente</div>{%endif%}
+              {%if corta%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña es muy corta, debe tener minimo 8 caracteres</div>{%endif%}
+              {%if numero%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña debe tener letras, no solo numeros</div>{%endif%}
+              {%if coinciden%}<div class="alert alert-danger with-close alert-dismissible fade show">Las Contraseñas no Coninsiden</div>{%endif%}
+              {%if nombre%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña es parecida al Nombre del Usuario</div>{%endif%}
+              {%if apellido%}<div class="alert alert-danger with-close alert-dismissible fade show">La Contraseña es parecida al Apellido del Usuario</div>{%endif%}
         </form>
       </div>
     </section>

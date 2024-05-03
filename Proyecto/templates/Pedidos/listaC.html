@@ -26,9 +26,9 @@
         <form class="d-flex" method="POST" action="">
           {% csrf_token %}
           {% if busqueda %}
-          <h1>hola</h1>
+          <a href="/Pedidos/listaC" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
           {% endif %}
-          <input class="form-control me-2" required type="text" placeholder="Ingrese el celular del cliente"  name="qp">
+          <input class="form-control me-2" required type="text" placeholder="Buscar por Nombre/Descripcion del medicamento"  name="NM" {%if busqueda%}value="{{NM}}"{%endif%}>
           <button class="btn btn-outline-primary" type="submit">Buscar</button>
       </form>
         </div>
@@ -45,7 +45,7 @@
                         <th>Nombre del cliente</th>
                         <th>Estado</th>
                         <th>Celular del cliente</th>
-                        <th>Descripcion</th>
+                        <th>Nombre/Descripcion del medicamento</th>
                         <th>Cantidad</th>
                         <th>Fecha de creacion</th>
                         <th>Fecha de Modificacion</th>
@@ -53,7 +53,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                <p>No hay ningun pedido concluido</p>
+                {%if busqueda%}<p>No hay ningun pedido concluido con el Producto</p>{%else%}
+                <p>No hay ningun pedido concluido</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosC%}

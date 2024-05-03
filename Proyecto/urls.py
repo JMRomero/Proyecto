@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar
+from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
@@ -71,7 +71,7 @@ urlpatterns = [
     path('Usuario/RR/<int:id>',usuarioRolR),
     path('Usuario/insert',usuarioInsert),
     path('Usuario/actualizar/<int:id>',updateUsuario),
-    path('Usuario/actualizar/contrasena/<int:id>',updateUsuarioContrasena),
+    path('Usuario/actualizar/contrasena/<str:id>',updateUsuarioContrasena),
 
     #lote
     path('Producto/listal/<int:id>',viewL),
@@ -81,6 +81,7 @@ urlpatterns = [
     #login
     path('accounts/login/',inicio, name='login'),
     path('salir/', views.salir, name="salir"),
+    path('cambiarcontraseña/<str:username>',cambiarpassword),
     #recuperacion de contraseña 
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name="reset_password.html", email_template_name="reset_password_email.html", subject_template_name = 'password_reset_subject.txt'), name="password_reset"),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name="reset_password_sent.html"), name = "password_reset_done"),
