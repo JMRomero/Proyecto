@@ -12,10 +12,23 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
   <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <title>Menu</title>
+  <style>
+    .botoni {
+      width: 80px;
+      height: 70px;
+      border-radius: 20px; /* Esta línea crea la forma ovalada */
+      position: absolute;
+      top: -30px;
+      left: calc(47% - 30px);
+      ;
+    }
+  </style>
 </head>
 
-<body>
+<body >
   {%include "Layout/Menu.html" %}
+
+  
   <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
     <div class="container-fluid">
       <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Bienvenido a SIFHO</a>
@@ -24,45 +37,52 @@
     </ul>
   </nav>
   <br>
-
-
-  <style>
-    .btn-long {
-      width: 300px;
-      /* Ancho deseado */
-      height: 100px;
-      /* Altura deseada */
-      margin: 5px;
-      overflow: hidden;
-    }
-  </style>
-
-
   {%if group == 'Admin'%}
-  <div class="container text-center">
-    <div class="row justify-content-center">
-      <div class="col">
-        <a href="/Proveedor/lista" class="btn btn-info btn-long "><br><img src="{%static 'img/proveedor.png'%}"
-            alt="profileImg" height="50px" width="50">Número De Proveedores: {{proveedorA}}</a>
-        <span class="mx-2"></span>
-        <a href="/Pedidos/lista" class="btn btn-danger btn-long"><br><img src="{%static 'img/porrealizar.png'%}"
-            alt="profileImg" height="50px" width="50">Pedidos Por Realizar: {{realizar}}</a>
-        <span class="mx-2"></span>
-        <a href="/Pedidos/listaC" class="btn btn-success btn-long"><br><img src="{%static 'img/realizados.png'%}"
-            alt="profileImg" height="50px" width="50">Pedidos Realizados: {{realizado}}</a>
+  <br><br>
+  <div class="row justify-content-center text-center">
+    <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
+      <div class="card" style="box-shadow: 0 0 30px rgba(116, 55, 214, 0.671);">
+        <div class="card-body">
+         <div class="botoni" style="background-color: #9900ff"></div>
+          <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Proveedores</h5>
+          <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorA}}</p></a>
+        </div>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col">
-        <a href="/Producto/lista" class="btn btn-secondary btn-long "><img src="{%static 'img/numerop.png'%}" alt="profileImg" height="50px"
-              width="50">Productos activos: {{productosA}} Productos inactivos:{{productosI}}</a>
-        </a>
-        <span class="mx-2"></span>
-        <a href="/Usuario/lista" class="btn btn-warning btn-long"><img src="{%static 'img/usuarios.png'%}"alt="profileImg" height="50px" 
-          width="50">Usuarios activos: {{usuariosA}} Usuarios inactivos: {{usuariosI}} </a> 
-        <span class="mx-2"></span>
-        <a href="" class="btn btn-primary btn-long"><br><img src="{%static 'img/esta.png'%}" alt="profileImg"
-            height="50px" width="50">Estadisticas</a>
+    <div class="col-sm-4">
+      <div class="card" style="box-shadow: 0 0 30px #FFD733;">
+        <div class="card-body">
+          <div class="botoni" style="background-color: #FFD733"></div>
+          <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Pedidos especiales</h5>
+          <p class="card-text text-black bg-white mb-4">Pedidos Por Realizar: {{realizar}}</p></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card" style="box-shadow: 0 0 30px #FA562A;">
+        <div class="card-body">
+          <div class="botoni" style="background-color: #FA562A"></div>
+          <a href="/Pedidos/listaC" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Pedidos especiales</h5>
+          <p class="card-text text-black bg-white mb-4">Pedidos Realizados: {{realizado}}</p>
+        </div>
+      </div>
+    </div><br><br><br><br>
+  <div class="col-sm-4">
+      <div class="card" style="box-shadow: 0 0 30px #20D200;">
+        <div class="card-body">
+          <div class="botoni" style="background-color: #20D200"></div>
+          <a href="/Producto/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Productos</h5>
+          <p class="card-text text-black bg-white mb-1">Productos activos: {{productosA}}</p><p class="card-text text-black bg-white">Productos activos: {{productosI}}</p></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card" style="box-shadow: 0 0 30px #4f90daab;">
+        <div class="card-body">
+          <div class="botoni" style="background-color: #2f7eda"></div>
+          <a href="/Usuario/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ususarios</h5>
+          <p class="card-text text-black bg-white mb-1">Usuarios activos: {{usuariosA}}</p><p class="card-text text-black bg-white">Usuarios activos: {{usuariosI}}</p></a>
+        </div>
       </div>
     </div>
   </div>
@@ -72,7 +92,7 @@
   </center>
   {%endif%}
   </div>
-  <br><br><br><br><br>
+  <br><br>
   <hr>
   <p class="text-secondary text-center"><small><small>Sebastian Quintero Correa - Jose Miguel Romero Castro - Samuel
         Montoya Montoya - Juan Pablo Guerra SENA - ADSO - N° Ficha 2697890 - Centro textil y de Gestion
@@ -111,7 +131,7 @@
       sidebar.classList.toggle("close");
     });
   </script>
-
+  
 </body>
 </div>
 

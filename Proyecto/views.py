@@ -131,7 +131,7 @@ def menu(request):
         cursor.execute("select COUNT(id) from auth_user where is_active=False")
         usuariosI=cursor.fetchone()[0]
     grupo_actual= group_iden(request)
-    return render(request,'Menu/menu.html',{'group':grupo_actual})
+    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI})
 #endregion
 #region producto
 #producto

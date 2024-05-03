@@ -147,3 +147,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sifhorecovery@gmail.com'
 EMAIL_HOST_PASSWORD = 'uvxx ixgu kuza afek'
 
+#cierre sesion automatico despues de cerrar el aplocativo 
+SESSION_COOKIE_AGE = 28800
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

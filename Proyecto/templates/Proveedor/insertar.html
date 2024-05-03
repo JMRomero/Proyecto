@@ -29,36 +29,36 @@
         <form class="row g-3 needs-validation" novalidate method='POST'>
               {% csrf_token %}
               <div class="col-6">
-                      <i class="material-icons prefix">subtitles</i>
-                      <label class="form-label">NIT Del Proveedor</label>
-                      <input type="text" name='nit' class="form-control" required value="{{nit}}">
-                      <div class="alert alert-danger" role="alert">el NIT "{{nit}}" ya esta registrado como el Proveedor "{{nombrepr}}"</div>
-                      <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                      <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
+                <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
+                    <label class="form-label">NIT Del Proveedor</label>
+                    <input type="number" name='nit' class="form-control" required value="{{nit}}">
+                    <div class="alert alert-danger" role="alert">el NIT "{{nit}}" ya esta registrado como el Proveedor "{{nombrepr}}"</div>
+                    <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                    <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
               </div>
               <div class="col-6">
-                  <i class="material-icons prefix">assignment_ind</i>
+                <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
                   <label class="form-label">Nombre Del Proveedor</label>
                   <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
               </div>
               <div class="col-6">
-                  <i class="material-icons prefix">contact_phone</i>
+                <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
                   <label class="form-label">Teléfono</label>
                   <input type="number" max="9999999999" min="1000000000" class="form-control" name="telefono" required value="{{telefono}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
                   </div>
               <div class="col-6">
-                  <i class="material-icons prefix">insert_invitation</i>
+                <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
                   <label class="form-label">Horario de Atención</label>
                   <input type='text' class="form-control" name='horario_atencion' required value="{{horario}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
                   </div>
               <div class="col-12">
-                  <i class="material-icons prefix">chrome_reader_mode</i>
+                <i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
                   <label class="form-label">Política de Devolución</label>
                   <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required>{{politica}}</textarea>
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
@@ -78,7 +78,7 @@
             <div class="col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
                     <label class="form-label">NIT Del Proveedor</label>
-                    <input type="text" name='nit' class="form-control" required>
+                    <input type="number" name='nit' class="form-control" required>
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
             </div>

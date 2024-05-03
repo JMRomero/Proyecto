@@ -12,8 +12,8 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Actualizar Producto</title>
 </head>
-<body>
   {%include 'Layout/Menu.html' %}
+  <body>
   <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
     <div class="container-fluid">
       <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar Producto</a>
@@ -21,9 +21,8 @@
     <ul class="right hide-on-med-and-down">
     </ul>
   </nav>
-
-{%include 'Layout/Menu.html' %}
 </div>
+
 <div class="container">
     <br>
     {%if repetido%}
@@ -34,7 +33,7 @@
               <form class="row g-3 needs-validation" novalidate method='POST'>
                   {% csrf_token %}
                   <div class="col-6">
-                      <i class="material-icons prefix">money</i>
+                    <i class="fa fa-barcode" aria-hidden="true"></i>
                       <label class="form-label">Codigo de Barras</label>
                       <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -42,7 +41,7 @@
                       <div class="alert alert-danger" role="alert">el codigo de Barras "{{codigoE}}" ya esta registrado como el producto {{nombrep}}. Por favor intente otro</div>
                   </div>
                       <div class="col-6">
-                          <i class="material-icons prefix">add_shopping_cart</i>
+                        <i class="fa fa-product-hunt" aria-hidden="true"></i>
                           <label class="form-label">Nombre del Producto</label>  
                           <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
                           <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -50,7 +49,7 @@
                           <br>
                   </div>
                   <div class="col-4">
-                      <i class="material-icons prefix">invert_colors</i>
+                    <i class="fa fa-bitbucket" aria-hidden="true"></i>
                       <label>Gramo/Litro</label>
                       <input type="text" class="form-control" name='gramo_litro' required value="{{gramo_litro}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -59,14 +58,14 @@
                       </div>
                   
                   <div class="col-4">
-                      <i class="material-icons prefix">add_circle_outline</i>
+                    <i class="fa fa-hand-o-up" aria-hidden="true"></i>
                       <label for=""><h6>Cantidad Maxima</h6></label> 
                       <input type='number' class="form-control" name='Max' required value="{{Max}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
                       </div>
                   <div class="col-4">
-                      <i class="material-icons prefix">remove_circle_outline</i>
+                    <i class="fa fa-hand-o-down" aria-hidden="true"></i>
                       <label for="">Cantidad Minima</label> 
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
@@ -82,7 +81,7 @@
               </section>
           </div>
           {%else%}
-    <div style="background-color:rgba(187, 187, 187, 0.39) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+          <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
         {% for p in datos %}
         <form class="row g-3 needs-validation" novalidate method='POST'>

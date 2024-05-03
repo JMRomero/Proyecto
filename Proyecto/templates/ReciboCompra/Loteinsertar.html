@@ -16,21 +16,18 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Agregar Lote</h1><br></a>
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra</a>
         </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
 {%include 'Layout/Validacion.html' %}
 <div class="container">
-    <br>
+    <br><br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br><p class="text-center fst-italic text-body fs-2">Agregar Lote</p>
         {%for p,pr in info%}
-        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
-        {%endfor%}
-        <br>
-        {%for p in CP%}
-        <br><center><h2>Insertando Lote en el Producto N#{{p.0}}  {{p.1}}</h2></center>
+        <h3 class="text-center fst-italic text-body fs-3 mb-4">Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h3>
         {%endfor%}
         {%if repetido%}
         <form class="row g-3 needs-validation" novalidate method='POST'>
@@ -110,13 +107,13 @@
             <div class="col-4">
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Fecha De Vencimiento</label>
-                <input type="date" class="form-control" name="FechaVenci" required>
+                <input type="date" class="form-control mb-4" name="FechaVenci" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button" >
-                <a href="/Compra/Producto/{{RC}}" class="btn btn-outline-danger" type="button">Cancelar</a>
+                <a href="/Compra/Producto/{{RC}}" class="btn btn-outline-danger mb-5" type="button">Cancelar</a>
             </div>
            
         </form>{%endif%}
