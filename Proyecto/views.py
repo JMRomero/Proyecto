@@ -28,6 +28,7 @@ def inicio(request):
             primerinicio.execute("select last_login from auth_user where username='"+username+"';") #buscar su ultimo login
             primerinicioo=primerinicio.fetchone()[0]
             if primerinicioo==None: #si no a iniciado session, debera cambiar contraseña
+                print('no a iniciado')
                 return redirect(f'/cambiarcontraseña/{username}')  # Redirige a cambiar contraseña
             else:
                 hora=connection.cursor()
@@ -40,11 +41,13 @@ def inicio(request):
             activo.execute("select is_active from auth_user where username='"+username+"';")
             try :
                 activoo=activo.fetchone()[0]
+                print('ianctivo')
                 if activoo==0:
                     messages.error(request, 'Su usuario esta Inactivo')
                 else:
                     messages.error(request, 'Usuario o contraseña incorrectos')
             except:
+                print('error')
             # Autenticación fallida, agregamos un mensaje de error a la URL
                 messages.error(request, 'Usuario o contraseña incorrectos')
             return redirect('login')
@@ -132,12 +135,14 @@ def menu(request):
         realizar=cursor.fetchone()[0]
         cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=0")
         realizado=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_pedido) from pedidos_especiales where estadoPe=2")
+        concluido=cursor.fetchone()[0]
         cursor.execute("select COUNT(id) from auth_user where is_active=True")
         usuariosA=cursor.fetchone()[0]
         cursor.execute("select COUNT(id) from auth_user where is_active=False")
         usuariosI=cursor.fetchone()[0]
     grupo_actual= group_iden(request)
-    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI})
+    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI,'concluido':concluido})
 #endregion
 #region producto
 #producto

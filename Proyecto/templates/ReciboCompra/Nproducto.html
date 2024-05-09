@@ -16,18 +16,20 @@
     {%include 'layout/Menu.html'%}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Agregar y Seleccionar Producto</h1></a>
+            {%for p,pr in info%}
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de compra número {{p.0}}</a>
         </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
+          {%endfor%}
     <div class="container">
-      <br>
+      <br><br>
       <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+       <br><p class="text-center fst-italic text-body fs-2">Registrar nuevo producto</p>
         {%for p,pr in info%}
-        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
+        <h1 class="text-center fst-italic text-body fs-3 mb-5">Compra asociada al proveedor {{pr.0}} con NIT: {{p.3}} </h1>
         {%endfor%}
-        <br><br>
         {%if repetido%}
               <form class="row g-3 needs-validation" novalidate method='POST'>
                   {% csrf_token %}
@@ -115,7 +117,7 @@
             <div class="col-4">
                 <i class="fa fa-hand-o-down fa-lg" aria-hidden="true"></i>
                 <label for="">Cantidad Minima</label> 
-                <input type='number' class="form-control" name='Min' required>
+                <input type='number' class="form-control mb-4" name='Min' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
             </div>
@@ -125,8 +127,8 @@
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
-                <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
-            </div></form><br><br>{%endif%}
+                <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger mb-5">Cancelar</a>
+            </div></form>{%endif%}
           </div>
         </section>
     </div>

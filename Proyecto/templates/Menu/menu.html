@@ -41,10 +41,10 @@
   <br><br>
   <div class="row justify-content-center text-center">
     <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
-      <div class="card" style="box-shadow: 0 0 30px rgba(116, 55, 214, 0.671);">
+      <div class="card" style="box-shadow: 0 0 30px #43cabf;">
         <div class="card-body">
-         <div class="botoni" style="background-color: #9900ff"></div>
-          <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Proveedores</h5>
+         <div class="botoni" style="background-color: #71f8ed"><img src="{%static 'img/pro.png'%}"  height="65px" width="65"></div>
+          <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de proveedores</h5>
           <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorA}}</p></a>
         </div>
       </div>
@@ -52,34 +52,34 @@
     <div class="col-sm-4">
       <div class="card" style="box-shadow: 0 0 30px #FFD733;">
         <div class="card-body">
-          <div class="botoni" style="background-color: #FFD733"></div>
-          <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Pedidos especiales</h5>
-          <p class="card-text text-black bg-white mb-4">Pedidos Por Realizar: {{realizar}}</p></a>
+          <div class="botoni" style="background-color: #FFD733"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
+          <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
+          <p class="card-text text-black bg-white mb-1">Pedidos por realizar: {{realizar}}</p><p class="card-text text-black bg-white mb-1">Pedidos realizados: {{realizado}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="card" style="box-shadow: 0 0 30px #FA562A;">
         <div class="card-body">
-          <div class="botoni" style="background-color: #FA562A"></div>
-          <a href="/Pedidos/listaC" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Pedidos especiales</h5>
-          <p class="card-text text-black bg-white mb-4">Pedidos Realizados: {{realizado}}</p>
+          <div class="botoni" style="background-color: #FA562A"><img src="{%static 'img/concluidos.png'%}"  height="65px" width="65"></div>
+          <a href="/Pedidos/listaC" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-2"><br><br>Listado de pedidos concluidos</h5>
+          <p class="card-text text-black bg-white mb-4">Pedidos concluidos: {{concluido}}</p>
         </div>
       </div>
     </div><br><br><br><br>
   <div class="col-sm-4">
       <div class="card" style="box-shadow: 0 0 30px #20D200;">
         <div class="card-body">
-          <div class="botoni" style="background-color: #20D200"></div>
-          <a href="/Producto/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Productos</h5>
-          <p class="card-text text-black bg-white mb-1">Productos activos: {{productosA}}</p><p class="card-text text-black bg-white">Productos activos: {{productosI}}</p></a>
+          <div class="botoni" style="background-color: #20D200"><img src="{%static 'img/proveedores.png'%}" height="65px" width="65"></div>
+          <a href="/Producto/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de productos</h5>
+          <p class="card-text text-black bg-white mb-1">Productos activos: {{productosA}}</p><p class="card-text text-black bg-white">Inactivos: {{productosI}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="card" style="box-shadow: 0 0 30px #4f90daab;">
         <div class="card-body">
-          <div class="botoni" style="background-color: #2f7eda"></div>
+          <div class="botoni" style="background-color: #619de2"><img src="{%static 'img/usuarios.png'%}"  height="65px" width="65"></div>
           <a href="/Usuario/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ususarios</h5>
           <p class="card-text text-black bg-white mb-1">Usuarios activos: {{usuariosA}}</p><p class="card-text text-black bg-white">Usuarios activos: {{usuariosI}}</p></a>
         </div>
@@ -97,6 +97,7 @@
   <p class="text-secondary text-center"><small><small>Sebastian Quintero Correa - Jose Miguel Romero Castro - Samuel
         Montoya Montoya - Juan Pablo Guerra SENA - ADSO - N° Ficha 2697890 - Centro textil y de Gestion
         Industrial</small></small> </p>
+  <p class="text-secondary"><small><small><small><small>Derechos reservados de imagenes: href="https://www.flaticon.com/free-icons/supplier" title="supplier icons">Supplier icons created by Eucalyp - Flaticon / href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Icongeek26 - Flaticon / href="https://www.flaticon.com/free-icons/checklist" title="checklist icons">Checklist icons created by Freepik - Flaticon / href="https://www.flaticon.com/free-icons/procurement" title="procurement icons">Procurement icons created by Uniconlabs - Flaticon / href="https://www.flaticon.com/free-icons/staff" title="staff icons">Staff icons created by Uniconlabs - Flaticon</small></small></small></small></p>
   </marquee>
   </section>
   </div>
