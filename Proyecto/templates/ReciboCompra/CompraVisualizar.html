@@ -10,23 +10,26 @@
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Lotes Del Recibo</title>
+    <title>Lotes del recibo</title>
 </head>
 <body>
     {%include 'layout/Menu.html'%}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Lista de Lotes Agregados</h1><br></a>
+            {%for p,pr in info%}
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de compra número {{p.0}}</a>
         </div>
         <ul class="right hide-on-med-and-down">
         </ul>
     </nav>
+    {%endfor%}
     <br>
     <div class="container">
         <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br><p class="text-center fst-italic text-body fs-2">Lista de lotes agregados</p>
         {%for p,pr in info%}
-        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
+        <h1 class="text-center fst-italic text-body fs-3 mb-4">Compr asociada al proveedor {{pr.0}}, con NIT: {{p.3}} </h1>
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/Producto/{{idc}}" type='button' values='Subir' class="btn btn-primary">Agregar Un Nuevo Lote</a>
@@ -56,7 +59,7 @@
                         <td>{{p.2}}%</td>
                         <td>{{p.5}}</td>
                         <td> 
-                            <a href="/Compra/loteA/{{idc}}/{{p.0}}"><i class="material-icons prefix ">border_color</i></a>
+                            <a href="/Compra/loteA/{{idc}}/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg ms-4"aria-hidden="true"></i></a>
                         </td>
                     {%endfor%}
                     </tr>

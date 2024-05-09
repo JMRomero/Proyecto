@@ -16,23 +16,20 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
         <div class="container-fluid">
-            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de Compra<br><br> <h1 class="position-absolute start-50 top-10 translate-middle">Editar Lote</h1></a>
+            {%for p,pr in info%}
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibo de compra número {{p.0}}</a>
         </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-{%include 'Layout/Validacion.html' %}
+          {%endfor%}
 <div class="container">
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+        <br><p class="text-center fst-italic text-body fs-2">Editar lote</p>
         {%for p,pr in info%}
-        <br><center><h1>Compra N#{{p.0}}  Asociada al Proveedor {{pr.0}} Con NIT: {{p.3}} </h1></center><br>
+        <h1 class="text-center fst-italic text-body fs-3 mb-4">Compra asociada al proveedor {{pr.0}}, con NIT: {{p.3}} </h1>
         {%endfor%}
-        <br>
-        {%for p in CP%}
-        <br><center><h2>Actualizando Lote asignado al Producto N#{{p.0}}  {{p.1}}</h2></center>
-        {%endfor%}
-        <br><br>
         {%if repetido%}
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
@@ -40,7 +37,7 @@
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Codigo del lote</label>
                 <input type="text" class="form-control" name="Lote" required value="{{codigoO}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Falta Codigo Del lote</h6></div>
                 <div class="alert alert-danger" role="alert">el Lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>
             </div>
@@ -48,7 +45,7 @@
                     <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                     <label class="form-label">Cantidad</label>  
                     <input type='number' class="form-control" name='Cantidad' required value="{{cantidad}}">
-                    <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                    <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Ingrese Cantidad Del Lote</h6></div>
                     <br>
             </div>
@@ -56,7 +53,7 @@
                 <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
                 <label>Precio de Compra</label>
                 <input type="number" class="form-control" name='PrecioC' required value="{{precioC}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese El Precio De Compra</h6></div>
                     <br>
                 </div>
@@ -65,7 +62,7 @@
                 <i class="fa fa-money fa-lg" aria-hidden="true"></i>
                 <label for="">Precio de Venta</label> 
                 <input type='number' class="form-control" name='PrecioV' required value="{{precioV}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese El Precio De Venta</h6></div>
                 </div>
                 
@@ -73,7 +70,7 @@
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
                 <label for="">Fecha de Vencimiento</label> 
                 <input type='date' class="form-control" name='FechaVenci' required value="{{fechaVenci}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese La Fecha De Vencimiento</h6></div>
                 <br><br>
                 </div>
@@ -89,37 +86,37 @@
         {%for p in lote%}
             {% csrf_token %}
             <div class="col-6">
-                <i class="material-icons prefix">queue_play_next</i>
+                <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Codigo lote</label>
                 <input type="text" class="form-control" name="Lote" required value="{{p.1}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+                <div class="invalid-feedback"><h6>Digite Codigo Del Lote</h6></div>
             </div>
             <div class="col-6">
-                <i class="material-icons prefix">queue_play_next</i>
+                <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Cantidad</label>
                 <input type="text" class="form-control" name="Cantidad" required value="{{p.2}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">attach_money</i>
+                <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Precio Compra</label>
                 <input type="text" class="form-control" name="PrecioC" required value="{{p.3}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">attach_money</i>
+                <i class="fa fa-money fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Porcentaje Ganancia</label>
                 <input type="text" class="form-control" name="PrecioV" required value="{{p.9}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Precio De Venta</h6></div>
+                <div class="invalid-feedback"><h6>Digite Porcentaje De Venta</h6></div>
             </div>
             <div class="col-4">
-                <i class="material-icons prefix">today</i>
+                <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Fecha De Vencimiento</label>
-                <input type="date" class="form-control" name="FechaVenci" required value="{{p.6|date:'Y-m-d'}}">
+                <input type="date" class="form-control mb-4" name="FechaVenci" required value="{{p.6|date:'Y-m-d'}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
             </div>
@@ -129,12 +126,13 @@
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button" >
                 {%for p,pr in info%}
-                <a href="/Compra/Lista/{{p.0}}" class="btn btn-outline-danger" type="button">Cancelar</a>
+                <a href="/Compra/Lista/{{p.0}}" class="btn btn-outline-danger mb-5" type="button">Cancelar</a>
                 {%endfor%}
             </div>
             
         </form>{%endif%}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    {%include 'Layout/Validacion.html' %}
 </body>
 </html>

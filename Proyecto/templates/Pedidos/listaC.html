@@ -15,29 +15,30 @@
   {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Lista Pedidos Especiales Concluidos</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Pedidos especiales concluidos</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
           <br>
 <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="lista" class="btn btn-primary" type="button">Lista de Pedidos Por Pedir Y Realizados</a>
+        <a href="lista" class="btn btn-primary" type="button">Listado de pedidos por pedir y realizados</a>
         <form class="d-flex" method="POST" action="">
           {% csrf_token %}
           {% if busqueda %}
           <a href="/Pedidos/listaC" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
           {% endif %}
           <input class="form-control me-2" required type="text" placeholder="Buscar por Nombre/Descripcion del medicamento"  name="NM" {%if busqueda%}value="{{NM}}"{%endif%}>
-          <button class="btn btn-outline-primary" type="submit">Buscar</button>
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>
         </div>
         <br>
         <div class="container">
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-        <br><br>
+        <br>
             {%if concluidos%}
             <table class="table table-hover">
+              <p class="text-center fst-italic text-body fs-4">Listado de pedidos concluidos</p>
                 <thead>
                     <tr>
                       <th>Cedula del cajero</th>

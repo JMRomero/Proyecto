@@ -16,7 +16,7 @@
     {%include 'Layout/Menu.html' %}
   <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
     <div class="container-fluid">
-      <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar Lote</a>
+      <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar lote</a>
     </div>
     <ul class="right hide-on-med-and-down">
     </ul>
@@ -33,16 +33,16 @@
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Codigo del lote</label>
                 <input type="text" class="form-control" name="codigo" required value="{{codigoO}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Falta Codigo Del lote</h6></div>
-                <div class="alert alert-danger" role="alert">el Lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>
+                <div class="valid-feedback"><h6>Campo validado con exito</h6></div>
+                <div class="invalid-feedback"><h6>Falta codigo del lote</h6></div>
+                <div class="alert alert-danger" role="alert">El lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>
             </div>
                 <div class="col-6">
                     <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                     <label class="form-label">Cantidad</label>  
                     <input type='number' class="form-control" name='cantidad' required value="{{cantidad}}">
-                    <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                    <div class="invalid-feedback"><h6>Ingrese Cantidad Del Lote</h6></div>
+                    <div class="valid-feedback"><h6>Campo validado con exito</h6></div>
+                    <div class="invalid-feedback"><h6>Ingrese Cantidad del lote</h6></div>
                     <br>
             </div>
             <div class="col-4">
@@ -101,7 +101,7 @@
             </div>
             <div class="col-4">
                 <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
-                <label>Precio de Compra</label>
+                <label>Precio de compra</label>
                 <input type="number" class="form-control" name='precioC' required value="{{p.3}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese El Precio De Compra</h6></div>
@@ -110,7 +110,7 @@
             
             <div class="col-4">
                 <i class="fa fa-money fa-lg" aria-hidden="true"></i>
-                <label for="">Precio de Venta</label> 
+                <label for="">Precio de venta</label> 
                 <input type='number' class="form-control" name='precioV' required value="{{p.4}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese El Precio De Venta</h6></div>
@@ -118,7 +118,7 @@
                 
             <div class="col-4">
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
-                <label for="">Fecha de Vencimiento</label> 
+                <label for="">Fecha de vencimiento</label> 
                 <input type='date' class="form-control" name='fechaVenci' required value="{{p.6|date:'Y-m-d'}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese La Fecha De Vencimiento</h6></div>

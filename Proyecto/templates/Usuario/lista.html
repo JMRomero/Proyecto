@@ -16,21 +16,21 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Listado De Usuarios</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Usuarios</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
           <br>
 <div class="d-grid gap-2 col-6 mx-auto">
-    <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Usuario</a>
+    <a href="insert" class="btn btn-primary" type="button">Ingresar nuevo usuario</a>
     <form class="d-flex" method="POST" action="">
         {% csrf_token %}
         {% if busqueda %}
         <a href="/Usuario/lista" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
         {% endif %}
         <input class="form-control me-2" required type="text" placeholder="Buscar por Cedula,Nombre o Apellido del usuario"  name="NCU"{%if busqueda%}value="{{NCU}}"{%endif%}>
-        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
     </form>
     </div>
         <br>
@@ -39,6 +39,7 @@
             <br>
             {%if activos%}  
             <table class="table table-hover">
+                <p class="text-center fst-italic text-body fs-4">Listado de usuarios activos</p>
                 <thead>
                     <tr>
                         <th>Cedula</th>
@@ -103,6 +104,7 @@
             </table>
             {%if inactivos%}
             <table class="table table-hover">
+                <p class="text-center fst-italic text-body fs-4">Listado de usuarios inactivos</p>
                 <thead>
                     <tr>
                         <th>Cedula</th>
