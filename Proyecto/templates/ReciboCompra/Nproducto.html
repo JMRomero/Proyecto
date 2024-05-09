@@ -69,9 +69,11 @@
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
-                      <br><br>
-                      </div>
-              
+                    </div>
+                    <div class="col-12 form-check text-center">
+                        <label for="" class="">Producto de poca rotacion</label>br
+                      <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion" {%if rotacion == 'on' %}checked{%endif%}><br>
+                    </div>
                   <div class="d-grid gap-2 col-6 mx-auto">
                       <input type='submit' values='Subir' class="btn btn-primary" type="button">
                       <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
@@ -116,8 +118,11 @@
                 <input type='number' class="form-control" name='Min' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
-                <br><br>
-                </div>
+            </div>
+            <div class="col-12 form-check text-center">
+                <label for="" class="">Producto de poca rotacion</label><br>
+              <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion"><br>
+            </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
                 <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>

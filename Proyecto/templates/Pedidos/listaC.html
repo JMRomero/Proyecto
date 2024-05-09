@@ -43,12 +43,12 @@
                       <th>Cedula del cajero</th>
                         <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
-                        <th>Estado</th>
                         <th>Celular del cliente</th>
                         <th>Nombre/Descripcion del medicamento</th>
                         <th>Cantidad</th>
                         <th>Fecha de creacion</th>
                         <th>Fecha de Modificacion</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -62,13 +62,14 @@
                       <td>{{p.1}}</td>
                       <td>{{p.9}}</td>
                       <td>{{p.2}}</td>
-                        <td>Pedido Concluido <a href="#"><i class="fa fa-window-close fa-lg" aria-hidden="true" onclick="estadoC('{{p.0}}','{{p.2}}')"></i></a></td>
-                        <td>{{p.3}}</td>
-                        <td>{{p.4}}</td>
-                        <td>{{p.7}}</td>
-                        <td>{{p.6}}</td>
-                        <td>{{p.8}}</td>
-                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></td>
+                      <td>{{p.3}}</td>
+                      <td>{{p.4}}</td>
+                      <td>{{p.7}}</td>
+                      <td>{{p.6}}</td>
+                      <td>{{p.8}}</td>
+                      <td>Pedido Concluido{%if p.10 > 3 %}<a href="#"><i class="fa fa-window-close fa-lg" aria-hidden="true" onclick="mensaje('{{p.0}}','{{p.2}}')"></i></a>{%else%} 
+                        <a href="#"><i class="fa fa-window-close fa-lg" aria-hidden="true" onclick="estadoC('{{p.0}}','{{p.2}}')"></i></a>{%endif%}</td>
+                      <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></td>
                     {%endfor%}
                     </tr>
                 </tbody>
@@ -86,7 +87,9 @@
         location.href="/Pedidos/ER/"+id;
         }
     }
-
+    function mensaje(id,name){
+      alert("¡No se puede retroceder en el proceso del pedido del cliente '"+name+"' pues ya pasaron mas de 3 dias!");
+    }
     
 </script>
 </body>

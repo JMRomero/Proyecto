@@ -74,27 +74,19 @@
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
             </div>
-        <div class="col-4">
+        <div class="col-6">
           <i class="fa fa-home" aria-hidden="true"></i>
             <label class="form-label">Dirección</label> 
             <input type='text' class="form-control" name='direccion' required value="{{direccion}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
             </div>
-        <div class="col-4">
+        <div class="col-6">
           <i class="fa fa-calendar" aria-hidden="true"></i>
             <label class="form-label">Fecha De Nacimiento</label>
-            <input type='date' class="form-control" name='fecha_nacimiento' required value="{{fecha}}">
+            <input type='date' max="2006-12-31" min="1970-01-01" class="form-control" name='fecha_nacimiento' required value="{{fecha}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Fecha De Nacimiento</h6></div>
-        </div>
-        <div class="col-4">
-          <i class="fa fa-users" aria-hidden="true"></i>
-            <label class="form-label">Rol</label>
-            <select name="Id_rol" class="form-control form-select" required>
-                <option {%if rol == "2" %}selected{%endif%} value="2">Admin</option>
-                <option {%if rol == "1" %}selected{%endif%} value="1">Regente</option>
-            </select>
         </div>
         <div class="d-grid gap-2 col-6 mx-auto">
             <input type='submit' values='Subir' class="btn btn-primary" type="button">
@@ -153,7 +145,7 @@
             <div class="col-6">
                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
                 <label class="form-label">Fecha De Nacimiento</label>
-                <input type='date' class="form-control" name='fecha_nacimiento' required value="{{p.11|date:'Y-m-d'}}" >
+                <input type='date' max="2006-12-31" min="1970-01-01" class="form-control" name='fecha_nacimiento' required value="{{p.11|date:'Y-m-d'}}" >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Fecha De Nacimiento</h6></div>
             </div>

@@ -30,6 +30,8 @@ def inicio(request):
             if primerinicioo==None: #si no a iniciado session, debera cambiar contraseña
                 return redirect(f'/cambiarcontraseña/{username}')  # Redirige a cambiar contraseña
             else:
+                hora=connection.cursor()
+                hora.execute(f"update auth_user set hora_login=now() where username={username};")
                 login(request, user)#token que verifica el inicio
             # Usuario autenticado con éxito
             return redirect('/')  # Redirige a la página de inicio
@@ -40,6 +42,8 @@ def inicio(request):
                 activoo=activo.fetchone()[0]
                 if activoo==0:
                     messages.error(request, 'Su usuario esta Inactivo')
+                else:
+                    messages.error(request, 'Usuario o contraseña incorrectos')
             except:
             # Autenticación fallida, agregamos un mensaje de error a la URL
                 messages.error(request, 'Usuario o contraseña incorrectos')
@@ -105,6 +109,8 @@ def cambiarpassword(request,username):
                 insert=connection.cursor()
                 insert.execute("Update auth_user SET password='"+str(hashed_password)+"' where username='"+username+"'")
                 user = authenticate(request, username=username, password=password1)
+                hora=connection.cursor()
+                hora.execute(f"update auth_user set hora_login=now() where username={username};")
                 login(request, user)
                 return redirect('/')
     else:
@@ -142,6 +148,7 @@ def producto(request):
             consulta=connection.cursor()
             consulta.execute("select COUNT(nombre) from producto where id_producto="+request.POST.get('codigo')+";")
             existente=consulta.fetchone()[0]
+            rotacion=request.POST.get('rotacion')
             if existente>0:
                 codigo=request.POST.get('codigo')
                 nombre=request.POST.get('nombre')
@@ -153,11 +160,14 @@ def producto(request):
                 nombrep.execute("select nombre from producto where id_producto="+codigo+";")
                 nombrep2=nombrep.fetchone()[0]
                 grupo_actual= group_iden(request)
-                return render(request,'Producto/insertar.html',{'group':grupo_actual,'codigo':codigo,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'repetido':repetido})
+                return render(request,'Producto/insertar.html',{'group':grupo_actual,'codigo':codigo,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'rotacion':rotacion,'repetido':repetido})
             else:
             ##Captura la infromacion, conecte a la base de datos y ejecute el insert
                 insert=connection.cursor()
-                insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+")")
+                if rotacion=='on':
+                    insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min,rotacion)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+",'Baja');")
+                else:
+                    insert.execute("INSERT INTO producto (id_producto,Nombre,GramoLitro,Max,Min)VALUES("+request.POST.get('codigo')+",'"+request.POST.get('nombre')+"','"+request.POST.get('gramo_litro')+"',"+request.POST.get('Max')+","+request.POST.get('Min')+");")
                 return redirect('/Producto/lista')
     else:
         grupo_actual= group_iden(request)
@@ -219,9 +229,13 @@ def update(request,id):
     if request.method=="POST":
         if request.POST.get('codigo') and request.POST.get('nombre')  and request.POST.get('gramo_litro')  and request.POST.get('Max') and request.POST.get('Min'):
             codigoO=int(request.POST.get('codigo'))
+            rotacion=request.POST.get('rotacion')
             if codigoO==id:
                 insert=connection.cursor()
-                insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+" where id_producto="+str(id)+";")
+                if rotacion=='on':
+                    insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+",rotacion='Baja' where id_producto="+str(id)+";")
+                else:
+                    insert.execute("UPDATE producto SET id_producto="+request.POST.get('codigo')+",Nombre='"+request.POST.get('nombre')+"',GramoLitro='"+request.POST.get('gramo_litro')+"',Fecha_Modificacion=now(),Max="+request.POST.get('Max')+",Min="+request.POST.get('Min')+",rotacion='Normal' where id_producto="+str(id)+";")
                 return redirect('/Producto/lista')
             else:
                 consulta=connection.cursor()
@@ -239,7 +253,7 @@ def update(request,id):
                     nombrep.execute("select nombre from producto where id_producto="+codigoE+";")
                     nombrep2=nombrep.fetchone()[0]
                     grupo_actual= group_iden(request)
-                    return render(request,'Producto/actualizar.html',{'group':grupo_actual,'codigo':codigo,'codigoE':codigoE,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'repetido':repetido})
+                    return render(request,'Producto/actualizar.html',{'group':grupo_actual,'codigo':codigo,'codigoE':codigoE,'nombre':nombre,'nombrep':nombrep2,'gramo_litro':gramo_litro,'Max':Max,'Min':Min,'rotacion':rotacion,'repetido':repetido})
                 else:
                     ##Captura la infromacion, conecte a la base de datos y ejecute el insert
                     insert=connection.cursor()
@@ -471,7 +485,7 @@ def pedidosEstadoC(request,id):
 @login_required
 def pedidosEstadoR(request,id):
     estadoA=connection.cursor()
-    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=0 where id_pedido="+str(id)+"")
+    estadoA.execute("UPDATE pedidos_especiales SET estadoPe=0,fechaM=now() where id_pedido="+str(id)+"")
     return redirect('/Pedidos/listaC')
 @login_required
 def viewPedidosC(request):
@@ -479,10 +493,10 @@ def viewPedidosC(request):
     if request.method=='POST':
         busqueda=True
         medicamento=request.POST.get('NM')
-        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2 and descripcion LIKE '%"+medicamento+"%';")
+        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username),timestampdiff(day,fechaM,now()) FROM pedidos_especiales where estadoPe=2 and descripcion LIKE '%"+medicamento+"%';")
         Concluidos=viewC.fetchall()
     else:
-        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username) FROM pedidos_especiales where estadoPe=2;")
+        viewC.execute("SELECT *,(SELECT first_name FROM auth_user WHERE pedidos_especiales.Cedula=auth_user.username),timestampdiff(day,fechaM,now()) FROM pedidos_especiales where estadoPe=2;")
         Concluidos=viewC.fetchall()
         busqueda=False
         medicamento=0
@@ -964,8 +978,9 @@ def LoteInsert(request,idc,idp):
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
+    max=connection.cursor()
     lote=connection.cursor()
-    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
+    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto,(select nombre from producto where id_producto=temp_lote.id_producto union select nombre from temp_producto where id_producto=temp_lote.id_producto),(select max from producto where id_producto=temp_lote.id_producto union select max from temp_producto where id_producto=temp_lote.id_producto) from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
     lote2=lote.fetchall()
     info=connection.cursor()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
@@ -1084,5 +1099,9 @@ def Recibos_Cancelar(request):
 #endregion
 #logout
 def salir(request):
+    username= nombredelusuario(request)
+    with connection.cursor() as cursor:
+        cursor.execute(f"update auth_user set hora_logout=now() where username={username};")
+        cursor.execute(f"call calcularHoras('{username}');")
     logout(request)
     return redirect('login')
