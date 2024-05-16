@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Lotes del recibo</title>
 </head>
 <body>
@@ -65,23 +66,19 @@
                         <td> 
                             <a href="/Compra/loteA/{{idc}}/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg ms-4"aria-hidden="true"></i></a>
                         </td>
-                        {%if p.3 > p.8%}<td><i id="alerta{{p.0}}" onmouseout="Quitar('{{p.0}}')" onmouseover="Advertencia('{{p.0}}')" class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i>
+                        {%if p.3 > p.8%}<td><a href="#" style="color: red;" data-toggle="popover" title="Sobrepasa la cantidad maxima del producto"><i required id="alerta{{p.0}}"  class="fa fa-exclamation-triangle" aria-hidden="true"></i></a>
                         </td>{%endif%}
                     {%endfor%}
                     </tr>
                 </tbody>
             </table>
-
+            
         </div>
         <br><br>
+        
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
-    function Advertencia(id){
-        document.getElementById('alerta'+id).innerHTML="Sobre pasa el maximo del producto";
-    }
-    function Quitar(id){
-        document.getElementById('alerta'+id).innerHTML="";
-    }
+        $(document).ready(function(){$('[data-toggle="popover"]').popover();});
     </script>
 </body>
 </html>
