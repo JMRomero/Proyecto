@@ -995,18 +995,35 @@ def reciboCompraView(request,idc):
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':ListacombinadaI,'idc':idc2,'group':grupo_actual})
 @login_required
-def Recibos(request):
+def Recibos(request,pag):
     recibos=connection.cursor()
+    pagination=connection.cursor()
     if request.method=='POST':
+        paginasT=[1,2]
         busqueda=True
         proveedor=request.POST.get('NP')
         recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT where Proveedor.Nombre LIKE '%"+str(proveedor)+"%';")    
     else:
-        recibos.execute("select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT;")
+        paginasT=[]
+        pagination.execute("select count(id_compra) from compra;")
+        paginationN=pagination.fetchone()[0]
+        numeroPaginas=paginationN/10
+        if paginationN%10 <=5 and paginationN%10 !=0:
+            numeroPaginas+=1
+            numeroPaginas=round(numeroPaginas)
+        else:
+            numeroPaginas=round(numeroPaginas)
+        for i in range(numeroPaginas):
+            paginasT.append(i+1)
+        for e in paginasT:
+            print(e)
+        desd=pag-1
+        desde=str(desd)+"0"
+        recibos.execute(f"select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT order by id_compra asc limit {desde},10;")
         busqueda=False
         proveedor=0
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor})
+    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor,'paginas':paginasT,'pagina':pag})
 @login_required
 def RecibosD(request,idc):
     recibo=connection.cursor()
@@ -1083,7 +1100,7 @@ def Recibos_Finalizar(request):
     detalle_compra=connection.cursor()
     detalle_compra.execute("INSERT INTO detalle_compra SELECT * FROM temp_detalle_compra;")
     detalle_compra.execute("DELETE FROM temp_detalle_compra;")
-    return redirect('/Compra/Recibos')
+    return redirect('/Compra/Recibos/1')
 @login_required
 def Recibos_Cancelar(request):
     proveedor=connection.cursor()
@@ -1100,7 +1117,7 @@ def Recibos_Cancelar(request):
 
     detalle_compra=connection.cursor()
     detalle_compra.execute("DELETE FROM temp_detalle_compra;")
-    return redirect('/Compra/Recibos')
+    return redirect('/Compra/Recibos/1')
 #endregion
 #logout
 def salir(request):

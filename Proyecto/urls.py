@@ -43,7 +43,7 @@ urlpatterns = [
     path('Compra/lote/<int:idc>/<int:idp>',LoteInsert),
     path('Compra/loteA/<int:idc>/<str:idl>',LoteUpdate),
     path('Compra/Lista/<int:idc>',reciboCompraView),
-    path('Compra/Recibos',Recibos),
+    path('Compra/Recibos/<int:pag>',Recibos),
     path('Compra/Recibos/Finalizar',Recibos_Finalizar),
     path('Compra/Recibos/Cancelar',Recibos_Cancelar),
     path('Compra/Recibo/<int:idc>',RecibosD),
