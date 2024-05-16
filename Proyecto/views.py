@@ -1009,10 +1009,12 @@ def Recibos(request):
     return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor})
 @login_required
 def RecibosD(request,idc):
+    info=connection.cursor()
+    info.execute(f"select compra.*,proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra={idc}")
     recibo=connection.cursor()
     recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###'),format(detalle_compra.PrecioU,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/ListaRD.html',{'RC':recibo,'group':grupo_actual})
+    return render(request,'ReciboCompra/ListaRD.html',{'RC':recibo,'group':grupo_actual,'info':info})
 @login_required
 def LoteUpdate(request,idc,idl):
     if request.method == 'POST':
