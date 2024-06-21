@@ -336,6 +336,7 @@ body{
   width: 1200px;
   border-color: #000;
   overflow:auto;
+  margin-left: 40px;
 }
 /* Set header to stick to the top of the container. */
 thead tr th {

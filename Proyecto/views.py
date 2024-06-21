@@ -18,6 +18,11 @@ def group_iden(request):
 def nombredelusuario(request):
     nombreusuario=request.user.username
     return nombreusuario
+def fecha(request):
+    fecha=connection.cursor()
+    fecha.execute("select now();")
+    fechaHoy=fecha.fetchone()[0]
+    return fechaHoy
 #region inicio
 #login
 def inicio(request):
@@ -225,8 +230,10 @@ def viewP(request):
         inactivos=viewI.fetchall()
         busqueda=False
         v=0
+    nombre=nombredelusuario(request)
+    fechahoy=fecha(request)
     grupo_actual= group_iden(request)
-    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'qp':v})
+    return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'qp':v,'fecha':fechahoy,'Nombre':nombre})
 @login_required
 def viewL(request,id):
     viewLA=connection.cursor()

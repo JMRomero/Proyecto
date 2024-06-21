@@ -164,16 +164,33 @@
             alert("No puedes Desactivarte a ti mismo!")
         }
         function usuarioRolA(id, name, lastname) {
-            respuesta = confirm("Desea cambiar el rol del usuario " + name + " " + lastname + " ?");
-            if (respuesta) {
-                location.href = "/Usuario/RA/" + id;
-            }
+            Swal.fire({
+                text: "Desea cambiar el rol del usuario " + name + " " + lastname + " ?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Usuario/RA/' + id + ' " > Aceptar</a> ',
+                cancelButtonText: "No, cancelar",
+                position: 'top',
+                toast:true,
+                timer:4000,
+            });
+            
         }
         function usuarioRolR(id, name, lastname) {
-            respuesta = confirm("Desea cambiar el rol del usuario " + name + " " + lastname + " ?");
-            if (respuesta) {
-                location.href = "/Usuario/RR/" + id;
-            }
+            Swal.fire({
+                text: "Desea cambiar el rol del usuario " + name + " " + lastname + " ?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Usuario/RR/' + id + ' " > Aceptar</a> ',
+                cancelButtonText: "No, cancelar",
+                position: 'top',
+                toast:true,
+                timer:4000,
+            });
         }
         function usuarioEstadoA(id, name, lastname) {
             Swal.fire({

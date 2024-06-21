@@ -20,7 +20,7 @@
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-  <div class="container">
+  
     <br>
     <form action="" id="productos" class=" needs-validation">
       <input type="hidden" id="Primer_registo" value="1">
@@ -84,12 +84,22 @@
                 document.getElementById('Primer_registo').value=0;
               })
             }
+            if (data[0].estado<=0){
+              alert("el producto esta inactivo!")
+              document.getElementById('codigoP'+cont).value="";
+              $("#codigoP"+cont).focus()}
+              
+            else if (data[0].cantidad<=0){
+              alert("el producto no tiene existencias")
+              document.getElementById('codigoP'+cont).value="";
+              $("#codigoP"+cont).focus()
+            }else{
             document.getElementById('codigoPp'+cont).innerHTML=codigo
             document.getElementById('Nombre'+cont).innerHTML=data[0].Nombre
             document.getElementById('Miligramo'+cont).innerHTML=data[0].GramoLitro
             document.getElementById('Precio'+cont).innerHTML=data[0].precio
             document.getElementById('Cantidad'+cont).innerHTML='<input type="number" class="form-control" id="cantidadP'+cont+'" Min="1" Max="'+data[0].cantidad+'" required>'
-            $("#cantidadP"+cont).focus()
+            $("#cantidadP"+cont).focus()}
             }
         })
     }else{
