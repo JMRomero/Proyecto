@@ -1137,6 +1137,7 @@ def Recibos_Cancelar(request):
     return redirect('/Compra/Recibos/1')
 #endregion
 #region Venta
+@login_required
 def registro_venta(request):
     grupo_actual=group_iden(request)
     return render(request, 'Venta/registro.html',{'group':grupo_actual})

@@ -20,7 +20,6 @@
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-  
     <br>
     <form action="" id="productos" class=" needs-validation">
       <input type="hidden" id="Primer_registo" value="1">
@@ -28,7 +27,7 @@
       <input type="hidden" id="cedula" value='{{user}}'>
       <div class="tableWrap">
     <table class="table table-fixed">
-        <thead>
+        <thead >
             <th>codigo</th>
             <th>nombre</th>
             <th>Miligramo/ML</th>
@@ -51,10 +50,10 @@
             </tr>
         </tbody>
     </table>
-    <a class="btn" id="BotonCancelar">Cancelar Y Nuevo</a>
-    <a class="btn" id="BotonTerminar">Terminar Y Nuevo</a>
   </div>
     </form>
+    <a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-danger btn-lg" id="BotonCancelar">Cancelar y nuevo</a>
+    <a style="margin-left: 1300px; margin-top: -1000px;" class="btn btn-primary btn-lg" id="BotonTerminar">Terminar y nuevo</a>
   </div>
   {%include 'Layout/Validacion.html' %}
   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
@@ -117,8 +116,8 @@
       let c="'";
       console.log(c)
       document.getElementById('eliminar'+cont).innerHTML='<i class="fa fa-pencil-square-o fa-lg ms-4" aria-hidden="true" onclick="eliminar('+c+''+ventaid+''+c+','+c+''+posicion+''+c+')"></i>'
-      document.getElementById('BotonCancelar').innerHTML='<a class="btn" id="BotonCancelar" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar</a>'
-      document.getElementById('BotonTerminar').innerHTML='<a class="btn" id="BotonTerminar" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar</a>'
+      document.getElementById('BotonCancelar').innerHTML='<a class="btn btn-danger " id="BotonCancelar" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar y Nuevo</a>'
+      document.getElementById('BotonTerminar').innerHTML='<a class="btn btn-primary " id="BotonTerminar" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar y Nuevo</a>'
       cont=cont+1;
       $('#fila').append('\
       <tr id="'+cont+'">\
