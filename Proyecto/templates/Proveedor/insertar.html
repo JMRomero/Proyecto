@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diseñocampoobligatorio.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Insertar Proveedores</title>
 </head>
@@ -22,7 +23,7 @@
             </ul>
           </nav>
     <div class="container">
-    <br>
+    <br><br>
     {%if repetido%}
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
@@ -30,7 +31,7 @@
               {% csrf_token %}
               <div class="col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
-                    <label class="form-label">NIT Del Proveedor</label>
+                    <label class="form-label is-required">NIT Del Proveedor</label>
                     <input type="number" name='nit' class="form-control" required value="{{nit}}">
                     <div class="alert alert-danger" role="alert">el NIT "{{nit}}" ya esta registrado como el Proveedor "{{nombrepr}}"</div>
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
@@ -38,28 +39,28 @@
               </div>
               <div class="col-6">
                 <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
-                  <label class="form-label">Nombre Del Proveedor</label>
+                  <label class="form-label is-required">Nombre Del Proveedor</label>
                   <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
               </div>
               <div class="col-6">
                 <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                  <label class="form-label">Teléfono</label>
+                  <label class="form-label is-required">Teléfono</label>
                   <input type="number" max="9999999999" min="1000000000" class="form-control" name="telefono" required value="{{telefono}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
                   </div>
               <div class="col-6">
                 <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
-                  <label class="form-label">Horario de Atención</label>
+                  <label class="form-label is-required">Horario de Atención</label>
                   <input type='text' class="form-control" name='horario_atencion' required value="{{horario}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
                   </div>
               <div class="col-12">
                 <i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
-                  <label class="form-label">Política de Devolución</label>
+                  <label class="form-label is-required">Política de Devolución</label>
                   <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required>{{politica}}</textarea>
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>
@@ -77,35 +78,35 @@
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
-                    <label class="form-label">NIT Del Proveedor</label>
+                    <label class="form-label is-required">NIT Del Proveedor</label>
                     <input type="number" name='nit' class="form-control" required>
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
             </div>
             <div class="col-6">
                 <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Nombre Del Proveedor</label>
+                <label class="form-label is-required">Nombre Del Proveedor</label>
                 <input type='text' class="form-control" name='nombre' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
             </div>
             <div class="col-6">
                 <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Teléfono</label>
+                <label class="form-label is-required">Teléfono</label>
                 <input type="number" max="9999999999" min="1000000000" class="form-control" name="telefono" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
                 </div>
             <div class="col-6">
                 <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Horario de Atención</label>
+                <label class="form-label is-required">Horario de Atención</label>
                 <input type='text' class="form-control" name='horario_atencion' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
                 </div>
             <div class="col-12">
                 <i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Política de Devolución</label>
+                <label class="form-label is-required">Política de Devolución</label>
                 <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required></textarea>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>

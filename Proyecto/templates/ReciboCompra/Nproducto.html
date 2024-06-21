@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diseñocampoobligatorio.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
     <title>Crear/Selecionar Producto</title>
 </head>
@@ -35,105 +36,105 @@
                   {% csrf_token %}
                   <div class="col-6">
                     <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
-                      <label class="form-label">Codigo de Barras</label>
+                      <label class="form-label is-required">Código de barras</label>
                       <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
-                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                      <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div><br>
-                      <div class="alert alert-danger" role="alert">el codigo de Barras "{{codigo}}" ya esta registrado como el producto "{{nombrep}}"</div>
+                      <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                      <div class="invalid-feedback"><h6>Falta código de barras</h6></div><br>
+                      <div class="alert alert-danger" role="alert">el codigo de barras "{{codigo}}" ya esta registrado como el producto "{{nombrep}}"</div>
                   </div>
                       <div class="col-6">
                         <i class="fa fa-product-hunt fa-lg" aria-hidden="true"></i>
-                          <label class="form-label">Nombre del Producto</label>  
+                          <label class="form-label is-required">Nombre del producto</label>  
                           <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
-                          <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                          <div class="invalid-feedback"><h6>Ingrese Nombre Del Producto</h6></div>
+                          <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                          <div class="invalid-feedback"><h6>Ingrese nombre del producto</h6></div>
                           <br>
                   </div>
                   <div class="col-4">
                     <i class="fa fa-bitbucket fa-lg" aria-hidden="true"></i>
-                      <label>Gramo/Litro</label>
+                      <label class="form-label is-required">Gramo/Litro</label>
                       <input type="text" class="form-control" name='gramo_litro' required value="{{gramo_litro}}">
-                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                      <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Gramo/Litro</h6></div>
                           <br>
                       </div>
                   
                   <div class="col-4">
                     <i class="fa fa-hand-o-up fa-lg" aria-hidden="true"></i>
-                      <label for=""><h6>Cantidad Maxima</h6></label> 
+                      <label class="form-label is-required">Cantidad máxima</label> 
                       <input type='number' class="form-control" name='Max' required value="{{Max}}">
-                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                      <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
+                      <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                      <div class="invalid-feedback"><h6>Ingrese cantidad máxima</h6></div>
                       </div>
                   <div class="col-4">
                     <i class="fa fa-hand-o-down fa-lg" aria-hidden="true"></i>
-                      <label for="">Cantidad Minima</label> 
+                      <label class="form-label is-required">Cantidad mínima</label> 
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
-                      <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                      <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
+                      <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                      <div class="invalid-feedback"><h6>Ingrese canatidad mínima</h6></div>
                     </div>
                     <div class="col-12 form-check text-center">
-                        <label for="" class="">Producto de poca rotacion</label>br
+                        <label for="" class="">Producto de poca rotación</label>br
                       <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion" {%if rotacion == 'on' %}checked{%endif%}><br>
                     </div>
                   <div class="d-grid gap-2 col-6 mx-auto">
                       <input type='submit' values='Subir' class="btn btn-primary" type="button">
                       <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
-              </form><br><br>
+              </form>
           {%else%}
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Codigo de Barras</label>
+                <label class="form-label is-required">Código de Barras</label>
                 <input type="text" class="form-control" name="codigo" required>
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Falta código de barras</h6></div>
             </div>
                 <div class="col-6">
                     <i class="fa fa-product-hunt fa-lg" aria-hidden="true"></i>
-                    <label class="form-label">Nombre del Producto</label>  
+                    <label class="form-label is-required">Nombre del producto</label>  
                     <input type='text' class="form-control" name='nombre' required>
-                    <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                    <div class="invalid-feedback"><h6>Ingrese Nombre Del Producto</h6></div>
+                    <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                    <div class="invalid-feedback"><h6>Ingrese nombre del producto</h6></div>
                     <br>
             </div>
             <div class="col-4">
                 <i class="fa fa-bitbucket fa-lg" aria-hidden="true"></i>
-                <label>Gramo/Litro</label>
+                <label class="form-label is-required">Gramo/Litro</label>
                 <input type="text" class="form-control" name='gramo_litro' required>
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Ingrese Gramo/Litro</h6></div>
                     <br>
                 </div>
             
             <div class="col-4">
                 <i class="fa fa-hand-o-up fa-lg" aria-hidden="true"></i>
-                <label for=""><h6>Cantidad Maxima</h6></label> 
+                <label class="form-label is-required">Cantidad máxima</label> 
                 <input type='number' class="form-control" name='Max' required>
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese cantidad máxima</h6></div>
                 </div>
             <div class="col-4">
                 <i class="fa fa-hand-o-down fa-lg" aria-hidden="true"></i>
-                <label for="">Cantidad Minima</label> 
+                <label class="form-label is-required">Cantidad mínima</label> 
                 <input type='number' class="form-control mb-4" name='Min' required>
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese cantidad mínima</h6></div>
             </div>
             <div class="col-12 form-check text-center">
-                <label for="" class="">Producto de poca rotacion</label><br>
+                <label for="" class="">Producto de poca rotación</label><br>
               <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion"><br>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
                 <a href="/Compra/Producto/{{RC}}" type="button" class="btn btn-outline-danger mb-5">Cancelar</a>
-            </div></form>{%endif%}
-          </div>
+            </div>
+        </form>
+        {%endif%}
+          </div><br><br>
         </section>
-    </div>
-
-    
+    </div>   
     {%include 'Layout/Validacion.html' %}
 </body>
 </div>

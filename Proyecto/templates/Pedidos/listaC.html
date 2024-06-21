@@ -13,16 +13,16 @@
 </head>
 <body>
   {%include 'Layout/Menu.html' %}
-    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+    <nav class="navbar navbar-expand-lg" style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
               <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Pedidos especiales concluidos</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-          <br>
+          <br><br>
 <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="lista" class="btn btn-primary" type="button">Listado de pedidos por pedir y realizados</a>
+      <a href="lista" class="btn btn-primary" type="button">Listado de pedidos por pedir y realizados</a>
         <form class="d-flex" method="POST" action="">
           {% csrf_token %}
           {% if busqueda %}
@@ -30,9 +30,9 @@
           {% endif %}
           <input class="form-control me-2" required type="text" placeholder="Buscar por Nombre/Descripcion del medicamento"  name="NM" {%if busqueda%}value="{{NM}}"{%endif%}>
           <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>
-        </div>
-        <br>
+        </form>
+      </div>
+      <br><br>
         <div class="container">
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br>
@@ -41,15 +41,15 @@
               <p class="text-center fst-italic text-body fs-4">Listado de pedidos concluidos</p>
                 <thead>
                     <tr>
-                      <th>Cedula del cajero</th>
+                      <th>Cédula del cajero</th>
                         <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
                         <th>Celular del cliente</th>
-                        <th>Nombre/Descripcion del medicamento</th>
+                        <th>Nombre/Descripción del medicamento</th>
                         <th>Cantidad</th>
-                        <th>Fecha de creacion</th>
-                        <th>Fecha de Modificacion</th>
-                        <th>Estado</th>
+                        <th>Fecha de creación</th>
+                        <th>Fecha de Modificación</th>
+                        <th>Editar Pedido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -74,22 +74,38 @@
                     {%endfor%}
                     </tr>
                 </tbody>
-            </table>
-
-            
-        </div>
-        <br><br>
-        
+            </table><br>
+        </div><br><br><br>     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     function estadoC(id,name){
-      respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
-      if (respuesta){
-        location.href="/Pedidos/ER/"+id;
-        }
+      Swal.fire({
+        text: "¿Desea que el pedido del señor(a) "+name+" este en pedidos concluidos?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Pedidos/ER/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
     }
     function mensaje(id,name){
-      alert("¡No se puede retroceder en el proceso del pedido del cliente '"+name+"' pues ya pasaron mas de 3 dias!");
+      Swal.fire({
+        text:"¡No se puede retroceder en el proceso del pedido del cliente '"+name+"', pues ya pasaron más de 3 días!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        timer:5000,
+        timerProgressBar:true,
+        showConfirmButton: false,  // Oculta el botón de confirmación
+        showCancelButton: false  // Oculta el botón de cancelar
+      });
     }
     
 </script>

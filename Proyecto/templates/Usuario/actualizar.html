@@ -16,7 +16,7 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar Usuario</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Actualizar usuario</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -32,61 +32,61 @@
         {% csrf_token %}
         <div class="col-4">
           <i class="fa fa-cc" aria-hidden="true"></i>
-            <label class="form-label">No De Cédula*</label>
+            <label class="form-label">No de cédula *</label>
             <input type="number" class="form-control" name='cedula' required value="{{cedula}}">
             {%if cedulaR%}
-            <div class="alert alert-danger" role="alert">La cedula "{{cedula}}" ya esta asignada al usuario '{{nombrerc}} {{apellidorc}}' .Por favor verifique los datos</div>
+            <div class="alert alert-danger" role="alert">La cédula "{{cedula}}" ya esta asignada al usuario '{{nombrerc}} {{apellidorc}}' .Por favor verifique los datos</div>
             {%endif%}
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite número de cédula</h6></div>
         </div>
         <div class="col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label">Nombre</label>
             <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite nombre</h6></div>
         </div>
         <div class="col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label">Apellido</label>
             <input type='text' class="form-control" name='apellido' required value="{{apellido}}">
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite apellido</h6></div>
         </div>
         <div class="col-6">
           <i class="fa fa-phone" aria-hidden="true"></i>
             <label class="form-label">Teléfono</label> 
             <input type="number" max="9999999999" min="1000000000" class="form-control" name="telefono" required value="{{telefono}}">
             {%if telefonoR%}
-            <div class="alert alert-danger" role="alert">El Telefono "{{telefono}}" ya esta asignada al usuario '{{nombrert}} {{apellidort}}' .Por favor verifique los datos</div>
+            <div class="alert alert-danger" role="alert">El Teléfono "{{telefono}}" ya esta asignada al usuario '{{nombrert}} {{apellidort}}' .Por favor verifique los datos</div>
             {%endif%}
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite número de teléfono</h6></div>
             </div>
         <div class="col-6">
           <i class="fa fa-envelope" aria-hidden="true"></i>
              <label class="form-label">Correo Electrónico</label>
             <input type="text" class="form-control" name="correo" required value="{{correo}}">
             {%if correoR%}
-            <div class="alert alert-danger" role="alert">El correo electronico "{{correo}}" ya esta asignada al usuario '{{nombrerce}} {{apellidorce}}' .Por favor verifique los datos</div>
+            <div class="alert alert-danger" role="alert">El correo electrónico "{{correo}}" ya esta asignada al usuario '{{nombrerce}} {{apellidorce}}' .Por favor verifique los datos</div>
             {%endif%}
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite correo eletrónico</h6></div>
             </div>
         <div class="col-6">
           <i class="fa fa-home" aria-hidden="true"></i>
             <label class="form-label">Dirección</label> 
             <input type='text' class="form-control" name='direccion' required value="{{direccion}}">
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite dirección</h6></div>
             </div>
         <div class="col-6">
           <i class="fa fa-calendar" aria-hidden="true"></i>
-            <label class="form-label">Fecha De Nacimiento</label>
+            <label class="form-label">Fecha de nacimiento</label>
             <input type='date' max="2006-12-31" min="1970-01-01" class="form-control" name='fecha_nacimiento' required value="{{fecha}}">
-            <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-            <div class="invalid-feedback"><h6>Digite Fecha De Nacimiento</h6></div>
+            <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+            <div class="invalid-feedback"><h6>Digite fecha de nacimiento</h6></div>
         </div>
         <div class="d-grid gap-2 col-6 mx-auto">
             <input type='submit' values='Subir' class="btn btn-primary" type="button">
@@ -102,52 +102,52 @@
            
             <div class="col-4">
                 <i class="fa fa-cc" aria-hidden="true"></i>
-                <label class="form-label">No De Cédula*</label>
+                <label class="form-label">No de cédula *</label>
                 <input type="number" class="form-control" name='cedula' required value="{{p.4}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite número de cédula</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-id-card-o" aria-hidden="true"></i>
                 <label class="form-label">Nombre</label>
                 <input type='text' class="form-control" name='nombre' required value="{{p.5}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite nombre</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-id-card" aria-hidden="true"></i>
                 <label class="form-label">Apellido</label>
                 <input type='text' class="form-control" name='apellido' required value="{{p.6}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite apellido</h6></div>
             </div>
             <div class="col-6">
                 <i class="fa fa-mobile fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Teléfono</label> 
                 <input type="number" max="9999999999" min="1000000000" class="form-control" name="telefono" required value="{{p.13}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite número de teléfono</h6></div>
                 </div>
             <div class="col-6">
                 <i class="fa fa-envelope" aria-hidden="true"></i>
-                 <label class="form-label">Correo Electrónico</label>
+                 <label class="form-label">Correo electrónico</label>
                 <input type="text" class="form-control" name="correo" required value="{{p.7}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite correo eletrónico</h6></div>
                 </div>
             <div class="col-6">
                 <i class="fa fa-home" aria-hidden="true"></i>
                 <label class="form-label">Dirección</label> 
                 <input type='text' class="form-control" name='direccion' required value="{{p.12}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite dirección</h6></div>
                 </div>
             <div class="col-6">
                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
                 <label class="form-label">Fecha De Nacimiento</label>
                 <input type='date' max="2006-12-31" min="1970-01-01" class="form-control" name='fecha_nacimiento' required value="{{p.11|date:'Y-m-d'}}" >
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Fecha De Nacimiento</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite fecha de nacimiento</h6></div>
             </div>
             {%endfor%}
             <div class="d-grid gap-2 col-6 mx-auto">

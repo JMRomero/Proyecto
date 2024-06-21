@@ -24,10 +24,9 @@
         <ul class="right hide-on-med-and-down">
         </ul>
     </nav>
-    <br>
+    <br><br>
     <div class="d-grid gap-2 col-6 mx-auto">
         <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Proveedor</a>
-        <a class="navbar-brand"></a>
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {%if busqueda%}
@@ -114,25 +113,39 @@
                         {%endfor%}
                     </tr>
                 </tbody>
-            </table>
-        </div>
+            </table><br>
+        </div><br><br><br>
         </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </div>
     <script>
         function proveedorEstadoA(id, name) {
-            respuesta = confirm("Desea cambiar el estado del Proveedor " + name + " ?");
-            if (respuesta) {
-                location.href = "/Proveedor/EI/" + id;
-            }
-        }
+            Swal.fire({
+        text: "¿Desea que el proveedor " + name + " sea inactivado ?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Proveedor/EI/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
+    }
         function proveedorEstadoI(id, name) {
-            respuesta = confirm("Desea cambiar el estado del Proveedor " + name + " ?");
-            if (respuesta) {
-                location.href = "/Proveedor/EA/" + id;
-            }
-        }
+            Swal.fire({
+        text: "¿Desea que el proveedor " + name + " sea activado?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Proveedor/EA/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
+    }
     </script>
 
 

@@ -45,7 +45,7 @@
         <div class="card-body">
          <div class="botoni" style="background-color: #71f8ed"><img src="{%static 'img/pro.png'%}"  height="65px" width="65"></div>
           <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de proveedores</h5>
-          <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorA}}</p></a>
+          <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorI}}</p></a>
         </div>
       </div>
     </div>
@@ -90,13 +90,32 @@
   <center>
     <h1>Bienvenido al sistema, eres REGENTE, solo puedes hacer ventas e ingresar pedidos especiales.</h1>
   </center>
+
+  <div class="row justify-content-center text-center">
+    <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
+      <div class="card" style="box-shadow: 0 0 30px #43cabf;">
+        <div class="card-body">
+         <div class="botoni" style="background-color: #71f8ed"><img src="{%static 'img/pro.png'%}"  height="65px" width="65"></div>
+          <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de proveedores</h5>
+          <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorI}}</p></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card" style="box-shadow: 0 0 30px #FFD733;">
+        <div class="card-body">
+          <div class="botoni" style="background-color: #FFD733"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
+          <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
+          <p class="card-text text-black bg-white mb-1">Pedidos por realizar: {{realizar}}</p><p class="card-text text-black bg-white mb-1">Pedidos realizados: {{realizado}}</p></a>
+        </div>
+      </div>
+    </div>
   {%endif%}
   </div>
   <br><br>
   <hr>
-  <p class="text-secondary text-center"><small><small>Sebastian Quintero Correa - Jose Miguel Romero Castro - Samuel
-        Montoya Montoya - Juan Pablo Guerra SENA - ADSO - N° Ficha 2697890 - Centro textil y de Gestion
-        Industrial</small></small> </p>
+  <p class="text-secondary text-center"><small><small>Sebastian Quintero Correa - Jose Miguel Romero Castro - Juan Pablo Guerra SENA - ADSO - N° Ficha 2697890 - Centro textil y de Gestion
+        Industrial</small></small></p>
   <p class="text-secondary"><small><small><small><small>Derechos reservados de imagenes: href="https://www.flaticon.com/free-icons/supplier" title="supplier icons">Supplier icons created by Eucalyp - Flaticon / href="https://www.flaticon.com/free-icons/list" title="list icons">List icons created by Icongeek26 - Flaticon / href="https://www.flaticon.com/free-icons/checklist" title="checklist icons">Checklist icons created by Freepik - Flaticon / href="https://www.flaticon.com/free-icons/procurement" title="procurement icons">Procurement icons created by Uniconlabs - Flaticon / href="https://www.flaticon.com/free-icons/staff" title="staff icons">Staff icons created by Uniconlabs - Flaticon</small></small></small></small></p>
   </marquee>
   </section>
