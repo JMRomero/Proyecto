@@ -3,10 +3,12 @@ from django.shortcuts import render,redirect
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout,authenticate, login
-from django.contrib.auth.models import User,Group
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User,Group #para realizar el inicio mediante django se debe migrar mediante py manage.py migrate donde trae las tablas que necesita django para el login
+from django.contrib.auth.hashers import make_password #funcion para encriptar contraseña
 from django.contrib import messages
 from plyer import notification
+from django.core.serializers import serialize
+from django.http import HttpResponse,JsonResponse
 
 def group_iden(request):
     grupos_usuario = request.user.groups.all()
@@ -19,6 +21,8 @@ def nombredelusuario(request):
 #region inicio
 #login
 def inicio(request):
+    sesioniniciada=0
+    desactivarVencidos=connection.cursor()
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -28,11 +32,11 @@ def inicio(request):
             primerinicio.execute("select last_login from auth_user where username='"+username+"';") #buscar su ultimo login
             primerinicioo=primerinicio.fetchone()[0]
             if primerinicioo==None: #si no a iniciado session, debera cambiar contraseña
-                print('no a iniciado')
                 return redirect(f'/cambiarcontraseña/{username}')  # Redirige a cambiar contraseña
             else:
                 hora=connection.cursor()
                 hora.execute(f"update auth_user set hora_login=now() where username={username};")
+                desactivarVencidos.execute("call Desactivar_Vencidos()")
                 login(request, user)#token que verifica el inicio
             # Usuario autenticado con éxito
             return redirect('/')  # Redirige a la página de inicio
@@ -41,20 +45,26 @@ def inicio(request):
             activo.execute("select is_active from auth_user where username='"+username+"';")
             try :
                 activoo=activo.fetchone()[0]
-                print('ianctivo')
                 if activoo==0:
                     messages.error(request, 'Su usuario esta Inactivo')
                 else:
                     messages.error(request, 'Usuario o contraseña incorrectos')
             except:
-                print('error')
             # Autenticación fallida, agregamos un mensaje de error a la URL
                 messages.error(request, 'Usuario o contraseña incorrectos')
             return redirect('login')
     else:
-        return render(request, 'registration/login.html')
+        nombre=nombredelusuario(request)
+        if nombre:
+            sesioniniciada=True
+            print(nombre,"session")
+        else:
+            sesioniniciada=False
+            print("nada")
+        return render(request, 'registration/login.html',{'session':sesioniniciada})
 #cambiarcontraseña
 def cambiarpassword(request,username):
+    desactivarVencidos=connection.cursor()
     if request.method=='POST':
         if request.POST.get('new_password1') and request.POST.get('new_password2'):
             password1=request.POST.get('new_password1')
@@ -114,6 +124,7 @@ def cambiarpassword(request,username):
                 user = authenticate(request, username=username, password=password1)
                 hora=connection.cursor()
                 hora.execute(f"update auth_user set hora_login=now() where username={username};")
+                desactivarVencidos.execute("call Desactivar_Vencidos()")
                 login(request, user)
                 return redirect('/')
     else:
@@ -146,6 +157,13 @@ def menu(request):
 #endregion
 #region producto
 #producto
+def producto_API(request,codigo):
+    datosP=connection.cursor()
+    datosP.execute("call Datos_producto("+str(codigo)+")")
+    columnas = [col[0] for col in datosP.description]#mediante esto consulto los nombre de los atributos que vienen
+    resultado=datosP.fetchall()#recorro para tener todos los datos
+    datos_producto = [dict(zip(columnas, fila)) for fila in resultado]#creo un diccionario con los nomnres de los atributos y sus respectivos valores
+    return JsonResponse(datos_producto,safe=False)
 @login_required
 def producto(request):
     if request.method=="POST":
@@ -227,8 +245,6 @@ def viewL(request,id):
     grupo_actual= group_iden(request)
 
     return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':ListacombinadaI,'Diff_LA':viewLA,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
-
-
 @login_required
 def update(request,id):
     if request.method=="POST":
@@ -628,12 +644,12 @@ def usuarioInsert(request):
                 grupo_actual= group_iden(request)
                 return render(request,'Usuario/insertar.html',{'group':grupo_actual,'repetido':repetido,'cedulaR':cc,'telefonoR':tt,'correoR':ce,'cedula':cedula,'nombrerc':nombreuac,'apellidorc':apellidouac,'nombrert':nombreuat,'apellidort':apellidouat,'nombrerce':nombreuace,'apellidorce':apellidouace,'nombre':nombre,'apellido':apellido,'telefono':telefono,'correo':correo,'direccion':direccion,'fecha':fecha,'rol':rol})
             else:
-                password = (request.POST.get('contrasena'))
-                hashed_password = make_password(password)
-                insert=connection.cursor()
-                insert.execute("INSERT INTO auth_user (username,first_name,last_name,Telefono,email,Direccion,fechaNacimiento,date_joined,password) VALUES("+request.POST.get('cedula')+",'"+request.POST.get('nombre')+"','"+request.POST.get('apellido')+"',"+request.POST.get('telefono')+",'"+request.POST.get('correo')+"','"+request.POST.get('direccion')+"','"+request.POST.get('fecha_nacimiento')+"',now(),'"+str(hashed_password)+"');")
+                usuario=User.objects.create_user(request.POST.get('cedula'),request.POST.get('correo'),request.POST.get('contrasena'))
+                usuario.first_name=request.POST.get('nombre')
+                usuario.last_name=request.POST.get('apellido')
+                usuario.save()
                 insertgroup=connection.cursor()
-                insertgroup.execute("INSERT INTO auth_user_groups (user_id,group_id) values((select id from auth_user where username="+request.POST.get('cedula')+"),"+request.POST.get('Id_rol')+");")
+                insertgroup.execute("CALL User_group("+request.POST.get('cedula')+","+request.POST.get('Id_rol')+","+request.POST.get('telefono')+","+request.POST.get('fecha_nacimiento')+",'"+request.POST.get('direccion')+"');")
                 return redirect('/Usuario/lista')
     else:
         grupo_actual= group_iden(request)
@@ -964,7 +980,11 @@ def LoteInsert(request,idc,idp):
                 prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
                 ListacombinadaI=list(zip(info,prov))
                 grupo_actual= group_iden(request)
-                return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                fecha=connection.cursor()
+                fecha.execute("select CURDATE();")
+                fechaa=fecha.fetchone()[0]
+                fechau=fechaa.strftime("%Y-%m-%d")
+                return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual,'fecha':fechau})
             else:
                 lote=connection.cursor()
                 lote.execute("Insert into temp_lote (id_producto,Loteid,Cantidad,PrecioC,Estado,fechaVenci,fechaModify,fechaCreate) values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
@@ -976,10 +996,15 @@ def LoteInsert(request,idc,idp):
         info.execute("select * from temp_compra where id_compra="+str(idc)+";")
         prov=connection.cursor()
         prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        fecha=connection.cursor()
+        fecha.execute("select CURDATE();")
+        fechaa=fecha.fetchone()[0]
+        fechau=fechaa.strftime("%Y-%m-%d")
+        print(fechau)
         ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
         repetido=False
-        return render(request,'ReciboCompra/Loteinsertar.html',{'repetido':repetido,'RC':idc,'info':ListacombinadaI,'group':grupo_actual})
+        return render(request,'ReciboCompra/Loteinsertar.html',{'repetido':repetido,'RC':idc,'info':ListacombinadaI,'group':grupo_actual,'fecha':fechau})
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
@@ -1008,15 +1033,16 @@ def Recibos(request,pag):
         pagination.execute("select count(id_compra) from compra;")
         paginationN=pagination.fetchone()[0]
         numeroPaginas=paginationN/10
-        if paginationN%10 <=5 and paginationN%10 !=0:
+        if paginationN%10 <5 and paginationN%10 !=0:
             numeroPaginas+=1
             numeroPaginas=round(numeroPaginas)
+            print(numeroPaginas)
         else:
+            numeroPaginas+=0.1
             numeroPaginas=round(numeroPaginas)
+            print(numeroPaginas)
         for i in range(numeroPaginas):
             paginasT.append(i+1)
-        for e in paginasT:
-            print(e)
         desd=pag-1
         desde=str(desd)+"0"
         recibos.execute(f"select compra.*,Proveedor.Nombre,format(Compra.Total,'###.###.###.###') from compra inner join proveedor on compra.NIT=Proveedor.NIT order by id_compra asc limit {desde},10;")
@@ -1085,41 +1111,57 @@ def LoteUpdate(request,idc,idl):
 def Recibos_Finalizar(request):
     proveedor=connection.cursor()
     proveedor.execute("INSERT INTO proveedor SELECT * FROM temp_proveedor;")
-    proveedor.execute("DELETE FROM temp_proveedor;")
-
     producto=connection.cursor()
     producto.execute("INSERT INTO producto SELECT * FROM temp_producto;")
-    producto.execute("DELETE FROM temp_producto;")
-
     lote=connection.cursor()
     lote.execute("INSERT INTO lote SELECT *FROM temp_lote;")
-    lote.execute("DELETE FROM temp_lote;")
-
     compra=connection.cursor()
     compra.execute("INSERT INTO compra SELECT * FROM temp_compra;")
-    compra.execute("DELETE FROM temp_compra;")
-
     detalle_compra=connection.cursor()
     detalle_compra.execute("INSERT INTO detalle_compra SELECT * FROM temp_detalle_compra;")
-    detalle_compra.execute("DELETE FROM temp_detalle_compra;")
+    delete=connection.cursor()
+    delete.execute("call Delete_Temp;")
     return redirect('/Compra/Recibos/1')
 @login_required
 def Recibos_Cancelar(request):
-    proveedor=connection.cursor()
-    proveedor.execute("DELETE FROM temp_proveedor;")
-
-    producto=connection.cursor()
-    producto.execute("DELETE FROM temp_producto;")
-
-    lote=connection.cursor()
-    lote.execute("DELETE FROM temp_lote;")
-
-    compra=connection.cursor()
-    compra.execute("DELETE FROM temp_compra;")
-
-    detalle_compra=connection.cursor()
-    detalle_compra.execute("DELETE FROM temp_detalle_compra;")
+    delete=connection.cursor()
+    delete.execute("call Delete_Temp;")
     return redirect('/Compra/Recibos/1')
+#endregion
+#region Venta
+def registro_venta(request):
+    grupo_actual=group_iden(request)
+    return render(request, 'Venta/registro.html',{'group':grupo_actual})
+def venta_crear_factura(request,user):
+    procedimiento=connection.cursor()
+    procedimiento.execute(f"call Venta_id({str(user)});")
+    datos=procedimiento.fetchone()[0]
+    iDV=dict([('id_venta',datos)])
+    return JsonResponse(iDV,safe=False)
+def registo_detalleVenta(request,idP,Cant,Posi):
+    procedimiento=connection.cursor()
+    procedimiento.execute(f"call Venta_Registo({str(idP)},{str(Cant)},{str(Posi)});")
+    datos=procedimiento.fetchone()[0]
+    subtotal=dict([('Subtotal',datos)])
+    return JsonResponse(subtotal,safe=False)
+def venta_eliminar_API(request,idV,posi):
+    procedimiento=connection.cursor()
+    procedimiento.execute(f"call Borrar_producto_venta({str(idV)},{str(posi)})")
+    HttpResponse('Se a Eliminado correctamente')
+def venta_Cancelar_API(request,idV):
+    procedimiento=connection.cursor()
+    procedimiento.execute(f"call Cancelar_venta({str(idV)})")
+    HttpResponse('Se a cancelado Correctamente')
+def venta_DONE(request,idV,efectivo):
+    with connection.cursor() as consulta:
+        consulta.execute(f"select TotalCompra from venta where id_venta={str(idV)}")
+        total=consulta.fetchone()[0]
+        consulta.execute(f"update venta set Efectivo_Recibido={str(efectivo)} where id_venta={str(idV)};")
+    devolver=efectivo-int(total)
+    entregado=connection.cursor()
+    entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)} where id_venta={str(idV)};")
+    json=dict([('Devolver',devolver)])
+    return JsonResponse(json,safe=False)
 #endregion
 #logout
 def salir(request):

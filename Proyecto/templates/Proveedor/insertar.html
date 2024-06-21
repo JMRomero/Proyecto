@@ -51,18 +51,18 @@
                   <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
                   </div>
               <div class="col-6">
-                <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
-                  <label class="form-label">Horario de Atención</label>
-                  <input type='text' class="form-control" name='horario_atencion' required value="{{horario}}">
-                  <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                  <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
-                  </div>
-              <div class="col-12">
                 <i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
                   <label class="form-label">Política de Devolución</label>
-                  <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required>{{politica}}</textarea>
+                  <input type="number" max="13" min="1" class="form-control" name='politica_devolucion' required value="{{politica}}" placeholder="Meses antes de vencer el medicamento">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>
+                </div>
+              <div class="col-12">
+                <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
+                <label class="form-label">Horario de Atención</label>
+                <textarea type='text' class="form-control" name='horario_atencion' required>{{horario}}</textarea>
+                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
               </div>
               <div class="d-grid gap-2 col-6 mx-auto">
                   <input type='submit' values='Subir' class="btn btn-primary" type="button">
@@ -97,18 +97,18 @@
                 <div class="invalid-feedback"><h6>Digite Teléfono Del Proveedor</h6></div>
                 </div>
             <div class="col-6">
-                <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Horario de Atención</label>
-                <input type='text' class="form-control" name='horario_atencion' required >
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
-                </div>
-            <div class="col-12">
                 <i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Política de Devolución</label>
-                <textarea type="text" class="form-control" name='politica_devolucion' rows="3" required></textarea>
+                <input type="number" max="13" min="1" class="form-control" name='politica_devolucion' rows="3" required placeholder="Meses antes de vencer el medicamento">
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>
+                <div class="invalid-feedback"><h6>Digite PolÍtica De Devolución</h6></div>    
+            </div>
+            <div class="col-12">
+              <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
+              <label class="form-label">Horario de Atención</label>
+              <textarea type='text' class="form-control" name='horario_atencion' required ></textarea>
+              <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
+              <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">

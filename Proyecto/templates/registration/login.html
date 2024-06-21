@@ -23,10 +23,10 @@
       cursor: pointer;
   }
 </style>
-<script>
+<script>//Boton para mostrar la contraseña en caso de que el navegador auto complete al usuario y no se pueda
     function togglePassword() {
       var passwordField = document.getElementById("id_password");
-      if (passwordField.type === "password") {
+      if (passwordField.type === "password") {//cambiamos el tipo de input 
         passwordField.type = "text";
       } else {
         passwordField.type = "password";
@@ -34,6 +34,7 @@
     }
   </script>
 <body>
+  
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd; " data-bs-theme="green">
         <div class="container-fluid">
           <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Bienvenido a SIFHO</a>
@@ -46,7 +47,7 @@
             <div class="container">
                 <div class="row justify-content-center pt-5 mt-5 mr-1">
                     <div class="col-md-4 formulario">
-                        <form action="">
+                        <form action="">{%if session%}Guerra{%else%}
                             <div class="form-group text-center pt-3">
                                 <h3 class="text-secondary-emphasis text-center fst-italic">Iniciar Sesión</h3>
                             </div>
@@ -67,12 +68,12 @@
                             <div class="auth_alternative">
 
                                 <p class="text-secondary-emphasis">¿Olvidaste tu contraseña?</p>
-                                <h5 ><a href="../../reset_password" style="color:rgb(4, 76, 117)">Recuperar contraseña</a></h5>
+                                <h5 ><a href="../../reset_password" style="color:rgb(4, 76, 117)">Restablecer contraseña</a></h5>
                             </div>
                             <br>
                             <div class="from-control mx-sm-4 pb-5">
                                 <input type="submit" class="btn btn-block ingresar" value="Ingresar">
-                            </div>
+                            </div>{%endif%}
                         </form>
                     </div>
                 </div>

@@ -71,18 +71,18 @@
                         <td>{{p.12}}</td>
                         <td>{{p.11}}</td>
                         <td>{{p.10}}</td>
-                        {%if p.14 == "Admin" %}
+                        {%if p.16 == "Admin" %}
                             {%if usuario == p.4 %}
-                            <td><a href="#"><i onclick="usuarioRolNO('')">{{p.14}}</i></a></td>
+                            <td><a href="#"><i onclick="usuarioRolNO('')">{{p.16}}</i></a></td>
                             {%else%}
-                            <td><a href="#"><i onclick="usuarioRolR('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.14}}</i></a></td>
+                            <td><a href="#"><i onclick="usuarioRolR('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.16}}</i></a></td>
                             {%endif%}
 
                         {%else%}
                             {%if usuario == p.4 %}
-                            <td><a href="#"><i onclick="usuarioRolNO('')">{{p.14}}</i></a></td>
+                            <td><a href="#"><i onclick="usuarioRolNO('')">{{p.16}}</i></a></td>
                             {%else%}
-                            <td><a href="#"><i onclick="usuarioRolA('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.14}}</i></a></td>
+                            <td><a href="#"><i onclick="usuarioRolA('{{p.4}}','{{p.5}}','{{p.6}}')">{{p.16}}</i></a></td>
                             {%endif%}
                         {%endif%}
                         {%if usuario == p.4 %}
@@ -134,7 +134,7 @@
                         <td>{{p.12}}</td>
                         <td>{{p.11}}</td>
                         <td>{{p.10}}</td>
-                        <td>{{p.14}}</td>
+                        <td>{{p.16}}</td>
                         <td><a href="#"><i onclick="usuarioEstadoI('{{p.4}}','{{p.5}}','{{p.6}}')">Inactivo</i></a></td>
                         <td> 
                             <a href="/Usuario/actualizar/{{p.4}}"><i class="fa fa-pencil-square-o fa-lg ms-3"></i></a>

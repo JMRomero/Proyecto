@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar
+from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar,registro_venta,producto_API,registo_detalleVenta,venta_crear_factura
+from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('Producto/actualizar/<int:id>',update),
     path('Producto/EI/<int:id>',esatdoI),
     path('Producto/EA/<int:id>',esatdoA),
+    path('Producto/API/<int:codigo>',producto_API),
     #menu
     path('',menu),
     #notificacion
@@ -87,4 +89,11 @@ urlpatterns = [
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name="reset_password/reset_password_sent.html"), name = "password_reset_done"),
     path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(template_name="reset_password/reset.html"), name = 'password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name="reset_password/reset_password_complete.html"), name = 'password_reset_complete'),
+    #venta
+    path('Venta/registrar',registro_venta),
+    path('Venta/API/crear/<int:user>',venta_crear_factura),
+    path('Venta/API/detalle/<int:idP>/<int:Cant><int:Posi>',registo_detalleVenta),
+    path('Venta/API/eliminar/<int:idV><int:posi>',venta_eliminar_API),
+    path('Venta/API/Cancelar/<int:idV>',venta_Cancelar_API),
+    path('Venta/Terminar/API/<int:idV>/<int:efectivo>',venta_DONE),
 ]
