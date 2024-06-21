@@ -30,32 +30,29 @@
         <div
             style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
             <br>
-            <p class="text-center fst-italic text-body fs-2 mb-3">Seleccionar producto</p>
             {%for p,pr in info%}
             <h1 class="text-center fst-italic text-body fs-3 mb-4">Compra asociada al proveedor {{pr.0}}, con
                 NIT: {{p.3}} </h1>
             {%endfor%}
             <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary" type="button">Registrar y seleccionar nuevo producto</a>
-            </div><br>
+                <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary mb-2" type="button">Registrar y seleccionar nuevo producto</a>
+            </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="/Compra/Lista/{{RC}}" type="button" class="btn btn-outline-danger">Cancelar</a>
-            </div><br>
+                <a href="/Compra/Lista/{{RC}}" type="button" class="btn btn-outline-danger mb-2">Cancelar</a>
+            </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <form class="d-flex" method="POST" action="">
                     {% csrf_token %}
                     {% if busqueda %}
-                    <a href="/Compra/Producto/{{RC}}" class="btn"><i class="fa fa-history fa-lg"
-                            aria-hidden="true"></i></a>
+                    <a href="/Compra/Producto/{{RC}}" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
                     {% endif %}
                     <input class="form-control me-2" required type="text"
                         placeholder="Buscar por código o nombre del producto" name="qp" {%if busqueda%}value="{{qp}}"
                         {%endif%}>
                     <button class="btn btn-outline-success" type="submit">Buscar</button>
                 </form>
-            </div><br><br>
-
-
+            </div><br>
+            <p class="text-center fst-italic text-body fs-3">Seleccionar producto</p>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -76,9 +73,8 @@
                         {%endfor%}
                     </tr>
                 </tbody>
-            </table>
-        </div>
-    </div>
+            </table><br>
+        </div><br><br><br>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 

@@ -196,6 +196,7 @@ def producto(request):
         grupo_actual= group_iden(request)
         repetido=0
         return render(request,'Producto/insertar.html',{'group':grupo_actual,'repetido':repetido})
+
 @login_required
 def viewP(request):
     if request.method == 'POST':

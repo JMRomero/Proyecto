@@ -10,28 +10,32 @@
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
+    <script src="{% static 'js/jspdf.umd.min.js' %}"></script>
+    <script src="{% static 'js/jspdf.plugin.autotable.js' %}"></script>
     <title>Listado Lotes</title>
 </head>
 <body>
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Listado de lotes</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Lotes</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
           </nav>
-          <br>
+          <br><br>
 <div class="d-grid gap-2 col-6 mx-auto">
     <a href="/Producto/lista" class="btn btn-primary" type="button">Regresar lista de productos</a>
+    <a onclick="imprimir()" type="button" class="btn btn-outline-danger">Imprimir lista de productos activos e inactivos</a>
     </div>
     <br><br>
     <div class="container">
         <br>
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
-    <br><br>
+    <br>
             {%if activos%}
-            <table class="table table-hover">
+            <table id="tabla1" class="table table-hover">
+                <p class="text-center fst-italic text-body fs-4">Listado de lotes activos</p>
                 <thead>
                     <tr>
                         <th>Codigo producto </th>
@@ -69,7 +73,8 @@
                 </tbody>
             </table>
             {%if inactivos%}
-            <table class="table table-hover">
+            <table id="tabla2" class="table table-hover">
+                <p class="text-center fst-italic text-body fs-4">Listado de lotes inactivos</p>
                 <thead>
                     <tr>
                         <th>Codigo producto </th>
@@ -109,33 +114,132 @@
                     {%endfor%}
                     </tr>
                 </tbody>
-            </table>
+            </table><br>
         </div>
-        <br><br>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
 
 function estadoI(id,lote,cant){
         if (cant<=0){
-            alert("Lote Sin Existencias!")
-        }else{
-            respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
-            if (respuesta){
-                location.href="/Producto/LEI/"+id+"/"+lote;
-            }}
-    }
+            Swal.fire({
+        text:"Lote sin existencias",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        timer:5000,
+        timerProgressBar:true,
+        showConfirmButton: false,  // Oculta el botón de confirmación
+       showCancelButton: false  // Oculta el botón de cancelar
+       });
+    
+    }else{
+            Swal.fire({
+        text: "¿Desea cambiar el estado del Producto "+lote+" a activo?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Producto/LEI/'+id+'/'+lote+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
+    }}
+            
     function estadoA(id,lote){
-        respuesta=confirm("Desea cambiar el estado del Producto "+lote+" ?");
-        if (respuesta){
-            location.href="/Producto/LEA/"+id+"/"+lote;
-        }
+        Swal.fire({
+        text: "¿Desea cambiar el estado del Producto "+lote+" a inactivo?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Producto/LEA/'+id+'/'+lote+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
     }
     function mensaje(){
-        alert("No se puede realizar el cambio, Producto inactivo!")
+        Swal.fire({
+        text:"No se puede realizar el cambio, Producto inactivo!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        timer:5000,
+        timerProgressBar:true,
+        showConfirmButton: false,  // Oculta el botón de confirmación
+        showCancelButton: false  // Oculta el botón de cancelar
+      });
     }
     function mensaje2(){
-        alert("No se puede realizar el cambio, Lote Vencido!")
-    }
+        Swal.fire({
+        text:"No se puede realizar el cambio, Lote Vencido!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        timer:5000,
+        timerProgressBar:true,
+        showConfirmButton: false,  // Oculta el botón de confirmación
+        showCancelButton: false  // Oculta el botón de cancelar
+      });
+    }
+
+    function imprimir(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a3'); 
+        doc.text("Tabla de lotes activos e inactivos", 30, 100);
+        doc.setFont("roman");
+        var imageninferior = new Image();
+        imageninferior = "{% static 'img/banner/logop.png' %}"
+        doc.addImage(imageninferior,'PNG',0,10,160,70)
+        imageninferior = "{% static 'img/banner/lateral1.png' %}"
+        doc.addImage(imageninferior,'PNG',200,0,97,50)
+        imageninferior = "{% static 'img/banner/lateral2.png' %}"
+        doc.addImage(imageninferior,'PNG',0,370,80,50)
+        imageninferior = "{% static 'img/banner/flor.png' %}"
+        doc.addImage(imageninferior,'PNG',217,175,80,180)
+        doc.autoTable({
+            styles: { fillColor: [255,255,255]},
+            html: '#tabla1',
+            margin: {
+                left:30,
+                top:110
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+            
+        });
+        doc.autoTable({
+            styles: { fillColor: [114,251,249]},
+            html: '#tabla2',
+            margin: {
+                left:30,
+                top:100
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//fondo blanco
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+            
+        });
+        doc.save("a4.pdf");l
+    }
     </script>
 </body>
 </html>

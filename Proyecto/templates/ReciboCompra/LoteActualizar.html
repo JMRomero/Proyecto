@@ -35,43 +35,43 @@
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Codigo del lote</label>
+                <label class="form-label">Código del lote</label>
                 <input type="text" class="form-control" name="Lote" required value="{{codigoO}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Falta Codigo Del lote</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Falta código del lote</h6></div>
                 <div class="alert alert-danger" role="alert">el Lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>
             </div>
                 <div class="col-6">
                     <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                     <label class="form-label">Cantidad</label>  
                     <input type='number' class="form-control" name='Cantidad' required value="{{cantidad}}">
-                    <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                    <div class="invalid-feedback"><h6>Ingrese Cantidad Del Lote</h6></div>
+                    <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                    <div class="invalid-feedback"><h6>Ingrese cantidad del lote</h6></div>
                     <br>
             </div>
             <div class="col-4">
                 <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
-                <label>Precio de Compra</label>
+                <label class="form-label">Precio de compra</label>
                 <input type="number" class="form-control" name='PrecioC' required value="{{precioC}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese El Precio De Compra</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese el precio de compra</h6></div>
                     <br>
                 </div>
             
             <div class="col-4">
                 <i class="fa fa-money fa-lg" aria-hidden="true"></i>
-                <label for="">Precio de Venta</label> 
+                <label for="">Porcentaje ganancia</label> 
                 <input type='number' class="form-control" name='PrecioV' required value="{{precioV}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese El Precio De Venta</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese el precio de venta</h6></div>
                 </div>
                 
             <div class="col-4">
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
-                <label for="">Fecha de Vencimiento</label> 
+                <label for="">Fecha de vencimiento</label> 
                 <input type='date' min="2024-01-01" class="form-control" name='FechaVenci' required value="{{fechaVenci}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese La Fecha De Vencimiento</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese la fecha de vencimiento</h6></div>
                 <br><br>
                 </div>
         
@@ -87,38 +87,38 @@
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Codigo lote</label>
+                <label class="form-label">Código del lote</label>
                 <input type="text" class="form-control" name="Lote" required value="{{p.1}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Codigo Del Lote</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite código del lote</h6></div>
             </div>
             <div class="col-6">
                 <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Cantidad</label>
-                <input type="text" class="form-control" name="Cantidad" required value="{{p.2}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
+                <input type="number" class="form-control" name="Cantidad" required value="{{p.2}}">
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite la cantidad</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-usd fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Precio Compra</label>
-                <input type="text" class="form-control" name="PrecioC" required value="{{p.3}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Precio De Compra</h6></div>
+                <label class="form-label">Precio compra</label>
+                <input type="number" class="form-control" name="PrecioC" required value="{{p.3}}">
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite precio de compra</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-money fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Porcentaje Ganancia</label>
-                <input type="text" class="form-control" name="PrecioV" required value="{{p.10}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Porcentaje De Venta</h6></div>
+                <label class="form-label">Porcentaje de ganancia</label>
+                <input type="number" class="form-control" name="PrecioV" required value="{{p.10}}">
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite porcentaje de venta</h6></div>
             </div>
             <div class="col-4">
                 <i class="fa fa-calendar fa-lg" aria-hidden="true"></i>
-                <label class="form-label">Fecha De Vencimiento</label>
+                <label class="form-label">Fecha de vencimiento</label>
                 <input type="date" min="2024-01-01" class="form-control" name="FechaVenci" required value="{{p.6|date:'Y-m-d'}}">
-                <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
-                <div class="invalid-feedback"><h6>Digite Fecha De Vencimiento</h6></div>
+                <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
+                <div class="invalid-feedback"><h6>Digite fecha de vencimiento</h6></div>
             </div>
             
             {%endfor%}

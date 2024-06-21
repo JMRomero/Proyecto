@@ -26,7 +26,7 @@
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
       <br><br>
       {%for p in datos%}
-      <h1>Esta apunto de cambiar la contraseña del usuario {{p.1}} {{p.2}} con cedula {{p.0}}</h1>
+      <h1 class="text-center fst-italic text-body fs-3 mb-4">Esta apunto de cambiar la contraseña del usuario {{p.1}} {{p.2}} con cedula {{p.0}}</h1>
       {%endfor%}
       <br>
       <form class="row g-3 needs-validation" novalidate method='POST'>

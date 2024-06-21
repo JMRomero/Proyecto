@@ -45,16 +45,16 @@
                 <p class="text-center fst-italic text-body fs-4">Listado de pedidos por pedir</p>
                 <thead>
                     <tr>
-                        <th>Cedula del cajero</th>
+                        <th>Cédula del cajero</th>
                         <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
                         <th>Celular del cliente</th>
-                        <th>Nombre/Descripcion del medicamento</th>
+                        <th>Nombre/Descripción del medicamento</th>
                         <th>Cantidad</th>
-                        <th>Fecha de creacion</th>
-                        <th>Fecha de Modificacion</th>
+                        <th>Fecha de creación</th>
+                        <th>Fecha de Modificación</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Editar Pedido</th>
                     </tr>
                 </thead>
                 {%else%}
@@ -78,20 +78,21 @@
                     </tr>
                 </tbody>
             </table>
+
             {%if inactivos%}
             <table class="table table-hover mb-4">
                 <p class="text-center fst-italic text-body fs-4">Listado de pedidos realizados</p>
                 <thead>
                     <tr>
-                        <th>Cedula del cajero</th>
+                        <th>Cédula del cajero</th>
                         <th>Nombre del cajero</th>
                         <th>Nombre del cliente</th>
                         <th>Celular del cliente</th>
-                        <th>Nombre/Descripcion del medicamento</th>
+                        <th>Nombre/Descripción del medicamento</th>
                         <th>Cantidad</th>
-                        <th>Fecha de creacion</th>
-                        <th>Fecha de Modificacion</th>
-                        <th>Estado</th>
+                        <th>Fecha de creación</th>
+                        <th>Fecha de Modificación</th>
+                        <th>Editar Pedido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -114,29 +115,52 @@
                     {%endfor%}
                     </tr>
                 </tbody>
-            </table>
-          </div>
+            </table><br>
+          </div><br><br><br>
         </section> 
         </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function estadoA(id,name){
-        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido realizado?");
-        if (respuesta){
-            location.href="/Pedidos/EI/"+id;
-        }
+        Swal.fire({
+        text: "¿Desea que el pedido del señor(a) "+name+" este en pedido realizado?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Pedidos/EI/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
     }
+        
     function estadoI(id,name){
-        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido por pedir?");
-        if (respuesta){
-            location.href="/Pedidos/EA/"+id;
-        }
+        Swal.fire({
+        text: "¿Desea que el pedido del señor(a) "+name+" este en pedido por pedir?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Pedidos/EA/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
     }
+    
     function estadoC(id,name){
-        respuesta=confirm("Desea que el estado del pedido del señor@ "+name+" este en pedido concluido?");
-        if (respuesta){
-            location.href="/Pedidos/EC/"+id;
-        }
+        Swal.fire({
+        text: "¿Desea que el pedido del señor(a) "+name+" este en pedidos concluidos?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="/Pedidos/EC/'+id+' " > Aceptar</a> ',
+        cancelButtonText: "No, cancelar",
+        toast:true,
+        position:'top',
+      });
     }
 
 
