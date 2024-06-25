@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseño.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
-    <title>Registra Usuario</title>
+    <title>Registro de Venta</title>
 </head>
 <body>
   {%include 'Layout/Menu.html' %}
@@ -38,7 +38,7 @@
         </thead>
         <tbody id="fila">
           <tr id="1">
-            <td id="codigoPp1"><input type="number" class="form-control" id="codigoP1" required>
+            <td id="codigoPp1"><input type="number" class="form-control" id="codigoP1" required >
               <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div></td>
               <input type="hidden" id="PosicionTabla1" value="1">
               <td id="Nombre1"></td>
@@ -49,17 +49,28 @@
               <td id="eliminar1"></td>
             </tr>
         </tbody>
+      </div>
+      <tbody><td>Total</td><td id="Total">0</td></tbody>
+      </form>
     </table>
   </div>
-    </form>
-    <a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-danger btn-lg" id="BotonCancelar">Cancelar y nuevo</a>
-    <a style="margin-left: 1300px; margin-top: -1000px;" class="btn btn-primary btn-lg" id="BotonTerminar">Terminar y nuevo</a>
+
+    <div id="BotonCancelar"><a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-secondary btn-lg" >Cancelar y Nuevo</a></div>
+    <div  id="BotonTerminar"><a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-secondary btn-lg">Terminar y Nuevo</a></div>
+    <div id="BotonCancelar2"><a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a></div>
+    <div  id="BotonTerminar2"><a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-secondary btn-lg">Terminar y Salir</a></div>
+    {%if group == 'Admin' %}
+    <div><a style="margin-left: 1300px; margin-top: -500px;" class="btn btn-warning btn-lg" href="../Venta/Dias">Ver Ventas</a></div>
+    {%endif%}
   </div>
   {%include 'Layout/Validacion.html' %}
   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 
   <script>
+    let allowUnload = false;
     let cont=1
+    let c="'";
+    $("#codigoP"+cont).focus();
     document.getElementById('productos').addEventListener('submit', function(event){
       event.preventDefault();//prevenir el comportamiento predeterminado del formulario
       let cantidad =document.getElementById('cantidadP'+cont).value;
@@ -108,16 +119,18 @@
       fetch(url)
         .then(data=>data.json())
         .then(data=> {
-          document.getElementById('Subtotal'+(cont-1)).innerHTML=data.Subtotal;    
+          document.getElementById('Subtotal'+(cont-1)).innerHTML=data.Subtotal;
+          totalA=parseInt(document.getElementById('Total').textContent);
+          document.getElementById('Total').innerHTML=totalA+data.Subtotal;
         });
       document.getElementById('Cantidad'+cont).innerHTML=cantidad;
       ventaid=document.getElementById('ID_Venta').value;
       posicion=document.getElementById('PosicionTabla'+cont).value;
-      let c="'";
-      console.log(c)
       document.getElementById('eliminar'+cont).innerHTML='<i class="fa fa-pencil-square-o fa-lg ms-4" aria-hidden="true" onclick="eliminar('+c+''+ventaid+''+c+','+c+''+posicion+''+c+')"></i>'
-      document.getElementById('BotonCancelar').innerHTML='<a class="btn btn-danger " id="BotonCancelar" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar y Nuevo</a>'
-      document.getElementById('BotonTerminar').innerHTML='<a class="btn btn-primary " id="BotonTerminar" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar y Nuevo</a>'
+      document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-danger btn-lg" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar y Nuevo</a>'
+      document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-success btn-lg" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar y Nuevo</a>'
+      document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-danger btn-lg" onclick=Cancelar2('+c+''+ventaid+''+c+')>Cancelar y Salir</a>'
+      document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-primary btn-lg" onclick=Terminar2('+c+''+ventaid+''+c+')>Terminar y Salir</a>'
       cont=cont+1;
       $('#fila').append('\
       <tr id="'+cont+'">\
@@ -136,43 +149,181 @@
     }})
 
     function eliminar(idventa,posicion){
-      confirmar=confirm('Eliminar?')
-      if (confirmar){
+      Swal.fire({
+        text: "¿Desea Eliminar el producto de la venta?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="eliminarC('+c+''+idventa+''+c+','+c+''+posicion+''+c+')" > Aceptar</a> ',
+        cancelButtonText: "Cancelar",
+        toast:true,
+        position:'top',
+      });
+    }
+    function eliminarC(idventa,posicion){
         let url="/Venta/API/eliminar/"+idventa+posicion;
         fetch(url)
+        subtotal=parseInt(document.getElementById('Subtotal'+posicion).textContent);
+        totalA=parseInt(document.getElementById('Total').textContent);
+        document.getElementById('Total').innerHTML=totalA-subtotal;
         $('#'+posicion).remove()
-      }
+        totalA=parseInt(document.getElementById('Total').textContent);
+        if (totalA==0){
+          document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-secondary btn-lg" >Cancelar y nuevo</a>'
+          document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-secondary btn-lg">Terminar y nuevo</a>'
+          document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a>'
+          document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-secondary btn-lg">Terminar y Salir</a>'
+        }
     }
     function Cancelar(idventa){
-      confirmar=confirm('Eliminar????')
-      if (confirmar){
-        let url="/Venta/API/Cancelar/"+idventa;
+      Swal.fire({
+        text: "¿Eliminar la venta?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="CancelarC('+c+''+idventa+''+c+')" > Aceptar</a> ',
+        cancelButtonText: "Cancelar",
+        toast:true,
+        position:'top',
+      }).then((result) => {
+          if (result.isConfirmed) {
+            allowUnload = true;
+            CancelarC(idventa)
+          }});
+    }
+    function Cancelar2(idventa){
+      Swal.fire({
+        text: "¿Eliminar la venta?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="CancelarC2('+c+''+idventa+''+c+')" > Aceptar</a> ',
+        cancelButtonText: "Cancelar",
+        toast:true,
+        position:'top',
+      }).then((result) => {
+          if (result.isConfirmed) {
+            allowUnload = true;
+            CancelarC2(idventa)
+          }})
+    }
+    function CancelarC(idventa){
+      let url="/Venta/API/Cancelar/"+idventa;
         fetch(url)
         location.reload('/Venta/registar')
-      }
+    }
+    function CancelarC2(idventa){
+      let url="/Venta/API/Cancelar/"+idventa;
+        fetch(url)
+        location.href='../../';
     }
     function Terminar(idventa){
-      pago=prompt('Digite el pago recibido')
-      console.log(pago);
-      if(pago!=null){
-        if(pago<=0){
-          alert("Debe ser mayor a 0!")
-        }else{
-      let url="/Venta/Terminar/API/"+idventa+"/"+pago;
-      fetch(url)
-      .then(devolver=>devolver.json())
-      .then(devolver=>{
-        alert("debes devolver "+devolver.Devolver+"$")
-        location.reload('/Venta/registar')
-      })
+            totalA=parseInt(document.getElementById('Total').textContent);
+            Swal.fire({
+            title: "Terminar Venta",
+            text:"Ingrese el pago recibido",
+            input: "number",
+            inputAttributes: {
+              autocapitalize: "off",
+              Min:totalA,
+            },
+            showCancelButton: true,
+            confirmButtonText: "Terminar",
+            showLoaderOnConfirm: true,
+            preConfirm: async (pago) => {
+              let url="/Venta/Terminar/API/"+idventa+"/"+pago;
+                fetch(url)
+                .then(devolver=>devolver.json())
+                .then(devolver=>{
+                  console.log(devolver.Devolver)
+                  return devolver.Devolver;
+                })
+          },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((resultado) => {
+            if (resultado.isConfirmed) {
+              totalAA=resultado.value-totalA;
+              Swal.fire({
+                title: 'Total a devolver',
+                text: `${totalAA} Devolver`,
+                confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="Redireccion()" > Aceptar</a> ',
+                allowOutsideClick: false,
+                allowEnterKey: false}).then((result) => {
+          if (result.isConfirmed) {
+            allowUnload = true;
+            Redireccion();
+          }})
+              // location.reload("/Venta/registrar");
+            }
+          });
+                  }
+    function Terminar2(idventa){
+            totalA=parseInt(document.getElementById('Total').textContent);
+            Swal.fire({
+            title: "Terminar Venta",
+            text:"Ingrese el pago recibido",
+            input: "number",
+            inputAttributes: {
+              autocapitalize: "off",
+              Min:totalA,
+            },
+            showCancelButton: true,
+            confirmButtonText: "Terminar",
+            showLoaderOnConfirm: true,
+            preConfirm: async (pago) => {
+              let url="/Venta/Terminar/API/"+idventa+"/"+pago;
+                fetch(url)
+                .then(devolver=>devolver.json())
+                .then(devolver=>{
+                  console.log(devolver.Devolver)
+                  return devolver.Devolver;
+                })
+          },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((resultado) => {
+            if (resultado.isConfirmed) {
+              totalAA=resultado.value-totalA;
+              Swal.fire({
+                title: 'Total a devolver',
+                text: `${totalAA} Devolver`,
+                confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="Redireccion2()" > Aceptar</a> ',
+                allowOutsideClick: false,
+                allowEnterKey: false}).then((result) => {
+          if (result.isConfirmed) {
+            allowUnload = true;
+            Redireccion2();
+          }})
+              // location.reload("/Venta/registrar");
+            }
+          });
+                  }
+    function Redireccion(){
+      location.reload("/Venta/registrar");
+    }
+    function Redireccion2(){
+      location.href="../../";
+    }
+    function interceptExit(event) {
+      var totalA = parseInt(document.getElementById('Total').textContent);
+      if (totalA > 0) {
+        event.preventDefault();
+        event.returnValue = '';
+        Swal.fire({
+          title: 'Advertencia',
+          text: 'Debes Terminar o Cancelar la Compra.',
+          icon: 'warning',
+          allowOutsideClick: false,
+          confirmButtonText: 'Aceptar'
+        })
       }
     }
-    }
-    window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    // Mensaje personalizado utilizando un cuadro de diálogo de confirmación
-    confirmationMessage=confirm( '¿Estás seguro de que deseas recargar la página?');
-    return confirmationMessage; // Para navegadores modernos
-});
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('a, button[type="submit"]').forEach(element => {
+        element.addEventListener('click', interceptExit);
+      });
+    });
   </script>
 </body>

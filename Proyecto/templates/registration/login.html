@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/diseñologin.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'rel='stylesheet'>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Login</title>
 </head>
 <style>
@@ -42,12 +44,32 @@
         <ul class="right hide-on-med-and-down">
         </ul>
       </nav>
+      {%if session%}
+                          <script>
+                            Swal.fire({
+                            text:"¡Ya tienes iniciada Sesion!",
+                            iconColor:"#d33",
+                            icon: "warning",
+                            showCancelButton: false,
+                            toast:false,
+                            position:'center',
+                            width:'40%',
+                            padding:'2rem',
+                            confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="../../"> Volver</a> ',
+                            showCancelButton: false,  // Oculta el botón de cancelar
+                            allowOutsideClick: false,
+                            allowEnterKey: false}).then((result) => {
+                              if (result.isConfirmed) {
+                                location.href="../../";
+                              }})
+                          </script>
+                          {%else%}
         <form method="POST" class="row g-1 needs-validation text-center" novalidate>
             {% csrf_token %}
             <div class="container">
                 <div class="row justify-content-center pt-5 mt-5 mr-1">
                     <div class="col-md-4 formulario">
-                        <form action="">{%if session%}Guerra{%else%}
+                        <form action="">
                             <div class="form-group text-center pt-3">
                                 <h3 class="text-secondary-emphasis text-center fst-italic">Iniciar Sesión</h3>
                             </div>

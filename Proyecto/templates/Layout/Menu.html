@@ -81,16 +81,16 @@
       <ul class="sub-menu blank">
         <li><a class="link_name" href="/Compra/Recibos/1">Recibos de Compra</a></li>
       </ul>
-      <li>
-        <a href="/Venta/registrar">
-          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-          <span class="link_name">ventas</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/Venta/registrar">ventas</a></li>
-        </ul>
-    </li>
     {%endif%}
+    <li>
+      <a href="/Venta/registrar">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        <span class="link_name">Ventas</span>
+      </a>
+      <ul class="sub-menu blank">
+        <li><a class="link_name" href="/Venta/registrar">Ventas</a></li>
+      </ul>
+  </li>
     <li>
       <a href=#>
         <i class="fa fa-arrow-circle-o-right fa-2x" aria-hidden="true" id="cerrar" onclick="cerrar()"></i>
@@ -148,6 +148,9 @@
         confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light"href="/salir" > Aceptar</a> ',
         cancelButtonText: "No, cancelar",
         width:'30%',
-      });
+      }).then((result) => {
+          if (result.isConfirmed) {
+            location.href="/salir"
+          }})
     }
   </script>

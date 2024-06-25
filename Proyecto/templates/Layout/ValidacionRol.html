@@ -1,6 +1,26 @@
+{%load static%}
 {%if group == "Regente"%}
+<body>
+    
+</body>
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    alert("Solo los administradores pueden ingresar a esta pagina")
-    window.location.href=("/")
+    Swal.fire({
+        text:"¡Solo los Administradores pueden estar aqui!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="../../"> Volver</a> ',
+        showCancelButton: false,  // Oculta el botón de cancelar
+        allowOutsideClick: false,
+        allowEnterKey: false}).then((result) => {
+          if (result.isConfirmed) {
+            location.href="../../";
+          }})
 </script>
 {%endif%}

@@ -18,7 +18,7 @@ from django.contrib import admin
 from . import views
 from django.urls import path, include
 from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar,registro_venta,producto_API,registo_detalleVenta,venta_crear_factura
-from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE
+from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE,venta_dias,venta_Info
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
@@ -96,4 +96,6 @@ urlpatterns = [
     path('Venta/API/eliminar/<int:idV><int:posi>',venta_eliminar_API),
     path('Venta/API/Cancelar/<int:idV>',venta_Cancelar_API),
     path('Venta/Terminar/API/<int:idV>/<int:efectivo>',venta_DONE),
+    path('Venta/Dias',venta_dias),
+    path('Venta/Info/<str:fecha>',venta_Info),
 ]

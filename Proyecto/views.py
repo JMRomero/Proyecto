@@ -157,8 +157,12 @@ def menu(request):
         usuariosA=cursor.fetchone()[0]
         cursor.execute("select COUNT(id) from auth_user where is_active=False")
         usuariosI=cursor.fetchone()[0]
+        cursor.execute("select COUNT(id_venta) from venta where Fecha=CURRENT_DATE();")
+        ventas=cursor.fetchone()[0]
+        cursor.execute(f"Select SUM(TotalCompra) from venta where Fecha=CURRENT_DATE();")
+        TotalDia=cursor.fetchone()[0]
     grupo_actual= group_iden(request)
-    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI,'concluido':concluido})
+    return render(request,'Menu/menu.html',{'group':grupo_actual,'productosA':productosA,'productosI':productosI,'proveedorA':proveedorA,'proveedorI':proveedorI,'realizar':realizar,'realizado':realizado,'usuariosA':usuariosA,'usuariosI':usuariosI,'concluido':concluido,'Ventas':ventas,'Total':TotalDia})
 #endregion
 #region producto
 #producto
@@ -1018,7 +1022,7 @@ def reciboCompraView(request,idc):
     idc2=idc
     max=connection.cursor()
     lote=connection.cursor()
-    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto,(select nombre from producto where id_producto=temp_lote.id_producto union select nombre from temp_producto where id_producto=temp_lote.id_producto),(select max from producto where id_producto=temp_lote.id_producto union select max from temp_producto where id_producto=temp_lote.id_producto) from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
+    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto,(select nombre from producto where id_producto=temp_lote.id_producto union select nombre from temp_producto where id_producto=temp_lote.id_producto),(select max from producto where id_producto=temp_lote.id_producto union select max from temp_producto where id_producto=temp_lote.id_producto),((select SUM(CantidadProductos) from temp_detalle_compra where (select id_producto from producto where id_producto=temp_lote.id_producto union select id_producto from temp_producto where id_producto=temp_lote.id_producto)=(select id_producto from temp_lote where Loteid=temp_detalle_compra.Lote))+(CASE when (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True)>0 then (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True) else 0 end)) from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
     lote2=lote.fetchall()
     info=connection.cursor()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
@@ -1168,9 +1172,22 @@ def venta_DONE(request,idV,efectivo):
         consulta.execute(f"update venta set Efectivo_Recibido={str(efectivo)} where id_venta={str(idV)};")
     devolver=efectivo-int(total)
     entregado=connection.cursor()
-    entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)} where id_venta={str(idV)};")
+    entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now() where id_venta={str(idV)};")
     json=dict([('Devolver',devolver)])
     return JsonResponse(json,safe=False)
+def venta_dias(request):
+    dias=connection.cursor()
+    dias.execute("call Dias_Venta()")
+    group=group_iden(request)
+    return render(request, "Venta/Dias.html",{'dias':dias,'group':group})
+def venta_Info(request,fecha):
+    info=connection.cursor()
+    print(fecha)
+    info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}'")
+    infoV=connection.cursor()
+    infoV.execute("select detalle_venta.id_venta, lote.id_producto,producto.Nombre,detalle_venta.PrecioU,detalle_venta.Cantidad,detalle_venta.TotalProducto from detalle_venta inner join lote on lote.Loteid=detalle_venta.id_Lote INNER join producto on lote.id_producto=producto.id_producto  GROUP by detalle_venta.id_venta, detalle_venta.PosicionTabla;")
+    group=group_iden(request)
+    return render(request, "Venta/Infor_Ventas.html",{'info':info,'infoV':infoV,'group':group})
 #endregion
 #logout
 def salir(request):

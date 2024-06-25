@@ -158,10 +158,29 @@
     </div>
     <script>
         function usuarioRolNO() {
-            alert("No puedes cambiar tu Rol!")
+            Swal.fire({
+                text: "¡No Puedes cambiar tu propio Rol!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                showCancelButton:false,
+                position: 'top',
+                toast:true,
+                timer:2800,
+            });
         }
         function usuarioEstadoNO() {
-            alert("No puedes Desactivarte a ti mismo!")
+            Swal.fire({
+                text: "¡No Puedes Desactivarte a ti mismo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                position: 'top',
+                toast:true,
+                showCancelButton:false,
+                timer:2800,
+            });
         }
         function usuarioRolA(id, name, lastname) {
             Swal.fire({

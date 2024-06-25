@@ -139,7 +139,7 @@
         crossorigin="anonymous"></script>
         <script src=""></script>
     <script>
-
+        
         function estadoI(id, nom) {
         Swal.fire({
         text: "¿Desea poner el producto, " + nom + " activo?",
@@ -151,7 +151,10 @@
         cancelButtonText: "No, cancelar",
         toast:true,
         position:'top',
-      });
+      }).then((result) => {
+          if (result.isConfirmed) {
+            location.href="/Producto/EI/"+id;
+          }});
     }
         function estadoA(id, nom) {
             Swal.fire({
@@ -164,7 +167,10 @@
         cancelButtonText: "No, cancelar",
         toast:true,
         position:'top',
-      });
+      }).then((result) => {
+          if (result.isConfirmed) {
+            location.href="/Producto/EA/"+id;
+          }});
     }
 
     </script>

@@ -65,14 +65,7 @@
                         
                         {% for error in form.new_password2.errors %}
                             <div class="alert alert-danger with-close alert-dismissible fade show">
-                                {%if error == "The password is too similar to the email address." %}La contraseña es parecida al correo del usuario{%endif%}
-                                {%if error == "The password is too similar to the username." %}La contraseña es igual al número de la cédula.Por favor pon una diferente{%endif%}
-                                {%if error == "This password is too short. It must contain at least 8 characters." %}La contraseña es muy corta, debe tener mínimo 8 caracteres{%endif%}
-                                {%if error == "This password is too common." %}La contraseña es muy simple.Intenta algo mejor{%endif%}
-                                {%if error == "This password is entirely numeric." %}La contraseña debe tener letras, no solo números{%endif%}
-                                {%if error == "The two password fields didn’t match." %}Las contraseñas no coninsiden{%endif%}
-                                {%if error == "The password is too similar to the first name." %}La contraseña es parecida al nombre del usuario{%endif%}
-                                {%if error == "The password is too similar to the last name." %}La contraseña es parecida al apellido del usuario{%endif%}
+                                {{error}}
                             </div>
                         {% endfor %}
                         
