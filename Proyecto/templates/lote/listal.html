@@ -26,9 +26,7 @@
           <br><br>
 <div class="d-grid gap-2 col-6 mx-auto">
     <a href="/Producto/lista" class="btn btn-primary" type="button">Regresar lista de productos</a>
-    <a onclick="imprimir()" type="button" class="btn btn-outline-danger">Imprimir lista de productos activos e inactivos</a>
-    <! -- a onclick="imprimirA()" type="button" class="btn btn-outline-danger" --><! --Imprimir lista de productos activos --> 
-    <! -- a onclick="imprimirI()" type="button" class="btn btn-outline-danger" --><! --Imprimir lista de productos inactivos -->
+    <a onclick="imprimir()" type="button" class="btn btn-outline-danger">Imprimir lista de Lotes Activos e Inactivos</a>
     </div>
     <br><br>
     <div class="container">
@@ -36,7 +34,7 @@
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
     <br>
             {%if activos%}
-            <table id="tabla1" class="table table-hover">
+            <table class="table table-hover">
                 <p class="text-center fst-italic text-body fs-4">Listado de lotes activos</p>
                 <thead>
                     <tr>
@@ -75,7 +73,7 @@
                 </tbody>
             </table>
             {%if inactivos%}
-            <table id="tabla2" class="table table-hover">
+            <table class="table table-hover">
                 <p class="text-center fst-italic text-body fs-4">Listado de lotes inactivos</p>
                 <thead>
                     <tr>
@@ -118,6 +116,7 @@
                 </tbody>
             </table><br>
         </div>
+        {%include "Layout/pdflistaLotes.html"%}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
 
@@ -198,111 +197,6 @@ function estadoI(id,lote,cant){
       });
     }
 
-    function imprimir(){
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a3'); 
-        doc.text("Tabla de lotes activos e inactivos", 30, 100);
-        doc.setFont("roman");
-        var imageninferior = new Image();
-        imageninferior = "{% static 'img/banner/logop.png' %}"
-        doc.addImage(imageninferior,'PNG',0,10,160,70)
-        imageninferior = "{% static 'img/banner/lateral1.png' %}"
-        doc.addImage(imageninferior,'PNG',200,0,97,50)
-        imageninferior = "{% static 'img/banner/lateral2.png' %}"
-        doc.addImage(imageninferior,'PNG',0,370,80,50)
-        imageninferior = "{% static 'img/banner/flor.png' %}"
-        doc.addImage(imageninferior,'PNG',217,175,80,180)
-        doc.autoTable({
-            styles: { fillColor: [255,255,255]},
-            html: '#tabla1',
-            margin: {
-                left:30,
-                top:110
-            },
-            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
-            alternateRowStyles: { fillColor: [255, 255, 255] },
-            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
-            tableLineColor: [0,0,0], // Border color
-            tableLineWidth: 0.0 // Quita el borde de la tabla
-            
-        });
-        doc.autoTable({
-            styles: { fillColor: [114,251,249]},
-            html: '#tabla2',
-            margin: {
-                left:30,
-                top:100
-            },
-            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//fondo blanco
-            alternateRowStyles: { fillColor: [255, 255, 255] },
-            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
-            tableLineColor: [0,0,0], // Border color
-            tableLineWidth: 0.0 // Quita el borde de la tabla
-            
-        });
-        doc.save("Reporte lotes.pdf");
-    }
-
-    function imprimirA(){
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a3'); 
-        doc.text("Tabla de lotes activos", 30, 100);
-        doc.setFont("roman");
-        var imageninferior = new Image();
-        imageninferior = "{% static 'img/banner/logop.png' %}"
-        doc.addImage(imageninferior,'PNG',0,10,160,70)
-        imageninferior = "{% static 'img/banner/lateral1.png' %}"
-        doc.addImage(imageninferior,'PNG',200,0,97,50)
-        imageninferior = "{% static 'img/banner/lateral2.png' %}"
-        doc.addImage(imageninferior,'PNG',0,370,80,50)
-        imageninferior = "{% static 'img/banner/flor.png' %}"
-        doc.addImage(imageninferior,'PNG',217,175,80,180)
-        doc.autoTable({
-            styles: { fillColor: [255,255,255]},
-            html: '#tabla1',
-            margin: {
-                left:30,
-                top:110
-            },
-            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
-            alternateRowStyles: { fillColor: [255, 255, 255] },
-            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
-            tableLineColor: [0,0,0], // Border color
-            tableLineWidth: 0.0 // Quita el borde de la tabla
-            
-        });
-        doc.save("Reporte lotes.pdf");
-    }
-    function imprimirI(){
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a3'); 
-        doc.text("Tabla de lotes inactivos", 30, 100);
-        doc.setFont("roman");
-        var imageninferior = new Image();
-        imageninferior = "{% static 'img/banner/logop.png' %}"
-        doc.addImage(imageninferior,'PNG',0,10,160,70)
-        imageninferior = "{% static 'img/banner/lateral1.png' %}"
-        doc.addImage(imageninferior,'PNG',200,0,97,50)
-        imageninferior = "{% static 'img/banner/lateral2.png' %}"
-        doc.addImage(imageninferior,'PNG',0,370,80,50)
-        imageninferior = "{% static 'img/banner/flor.png' %}"
-        doc.addImage(imageninferior,'PNG',217,175,80,180)
-        doc.autoTable({
-            styles: { fillColor: [255,255,255]},
-            html: '#tabla2',
-            margin: {
-                left:30,
-                top:110
-            },
-            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
-            alternateRowStyles: { fillColor: [255, 255, 255] },
-            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
-            tableLineColor: [0,0,0], // Border color
-            tableLineWidth: 0.0 // Quita el borde de la tabla
-            
-        });
-        doc.save("Reporte lotes.pdf");
-    }
     </script>
 </body>
 </html>

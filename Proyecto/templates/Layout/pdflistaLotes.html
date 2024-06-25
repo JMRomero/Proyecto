@@ -1,0 +1,115 @@
+{%load static%}
+{%if activos%}
+<table id="tabla1" class="table table-hover" hidden>
+    <thead>
+        <tr>
+            <th>Codigo producto </th>
+            <th>Codigo lote</th>
+            <th>Cantidad</th>
+            <th>Precio Compra</th>
+            <th>Precio Venta</th>
+            <th>Fecha Vencimiento</th>
+            <th>Fecha Modificacion</th>
+            <th>Fecha Creacion</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    {%else%}
+    {%endif%}
+    <tbody>
+        {% for p in Diff_LA%}
+        <tr>
+            <td>{{p.0}}</td>
+            <td>{{p.1}}</td>
+            <td>{{p.2}}</td>
+            <td>{{p.10}}</td>
+            <td>{{p.11}}</td>
+            <td>{{p.6}}</td>
+            <td>{{p.7}}</td>
+            <td>{{p.8}}</td>
+            <td>Activo</td>
+        {%endfor%}
+        </tr>
+    </tbody>
+</table>
+{%if inactivos%}
+<table id="tabla2" class="table table-hover" hidden>
+    <thead>
+        <tr>
+            <th>Codigo producto </th>
+            <th>Codigo lote</th>
+            <th>Cantidad</th>
+            <th>Precio Compra</th>
+            <th>Precio Venta</th>
+            <th>Fecha Vencimiento</th>
+            <th>Fecha Modificacion</th>
+            <th>Fecha Creacion</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    {%else%}
+    {%endif%}
+    <tbody>
+        {% for p,v in Diff_L%}
+        <tr>
+            <td>{{p.0}}</td>
+            <td>{{p.1}}</td>
+            <td>{{p.2}}</td>
+            <td>{{p.10}}</td>
+            <td>{{p.11}}</td>
+            <td>{{p.6}}</td>
+            <td>{{p.7}}</td>
+            <td>{{p.8}}</td>
+            <td>Inactivo</td>
+        {%endfor%}
+        </tr>
+    </tbody>
+</table>
+
+<script>    function imprimir(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a3'); 
+    doc.text("Tabla de lotes Activos e Inactivos                  Producto : {{Nproducto}}", 30, 100);
+    doc.setFont("roman");
+    var imageninferior = new Image();
+    imageninferior = "{% static 'img/banner/logop.png' %}"
+    doc.addImage(imageninferior,'PNG',0,10,160,70)
+    imageninferior = "{% static 'img/banner/lateral1.png' %}"
+    doc.addImage(imageninferior,'PNG',200,0,97,50)
+    imageninferior = "{% static 'img/banner/lateral2.png' %}"
+    doc.addImage(imageninferior,'PNG',0,370,80,50)
+    imageninferior = "{% static 'img/banner/flor.png' %}"
+    doc.addImage(imageninferior,'PNG',217,175,80,180)
+    doc.autoTable({
+        styles: { fillColor: [255,255,255]},
+        html: '#tabla1',
+        margin: {
+            left:30,
+            top:110
+        },
+        styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
+        alternateRowStyles: { fillColor: [255, 255, 255] },
+        headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+        tableLineColor: [0,0,0], // Border color
+        tableLineWidth: 0.0 // Quita el borde de la tabla
+        
+    });
+    doc.autoTable({
+        styles: { fillColor: [114,251,249]},
+        html: '#tabla2',
+        margin: {
+            left:30,
+            top:100
+        },
+        styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//fondo blanco
+        alternateRowStyles: { fillColor: [255, 255, 255] },
+        headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+        tableLineColor: [0,0,0], // Border color
+        tableLineWidth: 0.0 // Quita el borde de la tabla
+        
+    });
+    doc.setFontSize(15)
+    doc.text("Empleado que descargo reporte : {{Nombre}} CC: {{user}}",40,65)
+    doc.text("Fecha de descarga del reporte : {{fecha}}",40,73)
+    doc.save("Reporte lotes.pdf");
+}</script>
