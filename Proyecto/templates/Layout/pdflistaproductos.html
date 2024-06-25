@@ -104,8 +104,76 @@
             tableLineWidth: 0.0 // Quita el borde de la tabla
         });
         doc.setFontSize(15)
-        doc.text("Empleado que descargo reporte : {{Nombre}} CC: {{user}}",30,350)
-        doc.text("Fecha de Reporte : {{fecha}}",30,360)
+        doc.text("Empleado que descargo reporte : {{Nombre}} CC: {{user}}",40,65)
+        doc.text("Fecha de descarga del reporte : {{fecha}}",40,73)
+        doc.save("Reporte Productos.pdf");
+    }
+
+    function imprimirI(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a3'); 
+        doc.text("Tabla de productos inactivos", 30, 100);
+        doc.setFont("roman");
+        var imageninferior = new Image();
+        imageninferior = "{% static 'img/banner/logop.png' %}"
+        doc.addImage(imageninferior,'PNG',0,10,160,70)
+        imageninferior = "{% static 'img/banner/lateral1.png' %}"
+        doc.addImage(imageninferior,'PNG',200,0,97,50)
+        imageninferior = "{% static 'img/banner/lateral2.png' %}"
+        doc.addImage(imageninferior,'PNG',0,370,80,50)
+        imageninferior = "{% static 'img/banner/flor.png' %}"
+        doc.addImage(imageninferior,'PNG',217,175,80,180)
+        doc.autoTable({
+            styles: { fillColor: [114,251,249]},
+            html: '#tablaimprimir2',
+            margin: {
+                left:30,
+                top:105
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//quita el color alternado entre cada linea de la tabla
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+        });
+        doc.setFontSize(15)
+        doc.text("Empleado que descargo reporte : {{Nombre}} CC: {{user}}",40,65)
+        doc.text("Fecha de descarga del reporte : {{fecha}}",40,73)
+        doc.save("Reporte Productos.pdf");
+    }
+
+    function imprimirA(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a3'); 
+        doc.text("Tabla de productos activos e inactivos", 30, 100);
+        doc.setFont("roman");
+        var imageninferior = new Image();
+        imageninferior = "{% static 'img/banner/logop.png' %}"
+        doc.addImage(imageninferior,'PNG',0,10,160,70)
+        imageninferior = "{% static 'img/banner/lateral1.png' %}"
+        doc.addImage(imageninferior,'PNG',200,0,97,50)
+        imageninferior = "{% static 'img/banner/lateral2.png' %}"
+        doc.addImage(imageninferior,'PNG',0,370,80,50)
+        imageninferior = "{% static 'img/banner/flor.png' %}"
+        doc.addImage(imageninferior,'PNG',217,175,80,180)
+        doc.autoTable({
+            styles: { fillColor: [255,255,255]},
+            html: '#tablaimprimir1',
+            margin: {
+                left:30,
+                top:110
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//quita el color alternado entre cada linea de la tabla
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+            
+        });
+        
+        doc.setFontSize(15)
+        doc.text("Empleado que descargo reporte : {{Nombre}} CC: {{user}}",40,65)
+        doc.text("Fecha de descarga del reporte : {{fecha}}",40,73)
         doc.save("Reporte Productos.pdf");
     }
 
