@@ -27,6 +27,8 @@
 <div class="d-grid gap-2 col-6 mx-auto">
     <a href="/Producto/lista" class="btn btn-primary" type="button">Regresar lista de productos</a>
     <a onclick="imprimir()" type="button" class="btn btn-outline-danger">Imprimir lista de productos activos e inactivos</a>
+    <! -- a onclick="imprimirA()" type="button" class="btn btn-outline-danger" --><! --Imprimir lista de productos activos --> 
+    <! -- a onclick="imprimirI()" type="button" class="btn btn-outline-danger" --><! --Imprimir lista de productos inactivos -->
     </div>
     <br><br>
     <div class="container">
@@ -238,7 +240,68 @@ function estadoI(id,lote,cant){
             tableLineWidth: 0.0 // Quita el borde de la tabla
             
         });
-        doc.save("a4.pdf");l
+        doc.save("Reporte lotes.pdf");
+    }
+
+    function imprimirA(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a3'); 
+        doc.text("Tabla de lotes activos", 30, 100);
+        doc.setFont("roman");
+        var imageninferior = new Image();
+        imageninferior = "{% static 'img/banner/logop.png' %}"
+        doc.addImage(imageninferior,'PNG',0,10,160,70)
+        imageninferior = "{% static 'img/banner/lateral1.png' %}"
+        doc.addImage(imageninferior,'PNG',200,0,97,50)
+        imageninferior = "{% static 'img/banner/lateral2.png' %}"
+        doc.addImage(imageninferior,'PNG',0,370,80,50)
+        imageninferior = "{% static 'img/banner/flor.png' %}"
+        doc.addImage(imageninferior,'PNG',217,175,80,180)
+        doc.autoTable({
+            styles: { fillColor: [255,255,255]},
+            html: '#tabla1',
+            margin: {
+                left:30,
+                top:110
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+            
+        });
+        doc.save("Reporte lotes.pdf");
+    }
+    function imprimirI(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a3'); 
+        doc.text("Tabla de lotes inactivos", 30, 100);
+        doc.setFont("roman");
+        var imageninferior = new Image();
+        imageninferior = "{% static 'img/banner/logop.png' %}"
+        doc.addImage(imageninferior,'PNG',0,10,160,70)
+        imageninferior = "{% static 'img/banner/lateral1.png' %}"
+        doc.addImage(imageninferior,'PNG',200,0,97,50)
+        imageninferior = "{% static 'img/banner/lateral2.png' %}"
+        doc.addImage(imageninferior,'PNG',0,370,80,50)
+        imageninferior = "{% static 'img/banner/flor.png' %}"
+        doc.addImage(imageninferior,'PNG',217,175,80,180)
+        doc.autoTable({
+            styles: { fillColor: [255,255,255]},
+            html: '#tabla2',
+            margin: {
+                left:30,
+                top:110
+            },
+            styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },//todo el fondo blanco
+            alternateRowStyles: { fillColor: [255, 255, 255] },
+            headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] }, // Color de texto del encabezado negro
+            tableLineColor: [0,0,0], // Border color
+            tableLineWidth: 0.0 // Quita el borde de la tabla
+            
+        });
+        doc.save("Reporte lotes.pdf");
     }
     </script>
 </body>
