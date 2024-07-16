@@ -68,9 +68,7 @@ def inicio(request):
         if nombre:
             sesioniniciada=True
             print(nombre,"session")
-        else:
-            sesioniniciada=False
-            print("nada")
+
         return render(request, 'registration/login.html',{'session':sesioniniciada})
 #cambiarcontraseña
 def cambiarpassword(request,username):
@@ -162,7 +160,7 @@ def menu(request):
         usuariosA=cursor.fetchone()[0]
         cursor.execute("select COUNT(id) from auth_user where is_active=False")
         usuariosI=cursor.fetchone()[0]
-        cursor.execute("select COUNT(id_venta) from venta where Fecha=CURRENT_DATE();")
+        cursor.execute("select COUNT(id_venta) from venta where Fecha=CURRENT_DATE() and TotalCompra>0;")
         ventas=cursor.fetchone()[0]
         cursor.execute(f"Select SUM(TotalCompra) from venta where Fecha=CURRENT_DATE();")
         TotalDia=cursor.fetchone()[0]
@@ -1194,7 +1192,7 @@ def venta_dias(request):
 def venta_Info(request,fecha):
     info=connection.cursor()
     print(fecha)
-    info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}'")
+    info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}' and TotalCompra>0;")
     infoV=connection.cursor()
     infoV.execute("select detalle_venta.id_venta, lote.id_producto,producto.Nombre,detalle_venta.PrecioU,detalle_venta.Cantidad,detalle_venta.TotalProducto from detalle_venta inner join lote on lote.Loteid=detalle_venta.id_Lote INNER join producto on lote.id_producto=producto.id_producto  GROUP by detalle_venta.id_venta, detalle_venta.PosicionTabla;")
     group=group_iden(request)

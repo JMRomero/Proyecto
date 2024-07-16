@@ -18,7 +18,8 @@
         confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" href="../../"> Volver</a> ',
         showCancelButton: false,  // Oculta el botón de cancelar
         allowOutsideClick: false,
-        allowEnterKey: false}).then((result) => {
+        allowEnterKey: false,
+        allowEscapeKey: false}).then((result) => {
           if (result.isConfirmed) {
             location.href="../../";
           }})
