@@ -103,7 +103,7 @@
         <div class="card-body">
          <div class="botoni" style="box-shadow: 0 0 10px #000000; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
           <a href="/Venta/registrar" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ventas</h5>
-          <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">Total del Dia: {%if Total != None %}{{Total}}{%else%}0{%endif%}</p></a>
+          <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">{%if Total == None %} Total del Dia: 0 {%else%}Total del Dia: {{Total}}{%endif%}</p></a>
         </div>
       </div>
     </div>

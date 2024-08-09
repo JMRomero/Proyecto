@@ -83,7 +83,16 @@
         .then(data=>data.json())
         .then(data=> {
             if (data.length==0){
-                alert("No existe un producto con esta Codigo! ")
+              Swal.fire({
+                text: "¡No existe un Producto con este codigo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                showCancelButton:false,
+                position: 'top',
+                toast:true,
+                timer:2800,
+            });
             }else{    
             if (crearventa==1){
               let url="/Venta/API/crear/"+usuario
@@ -95,12 +104,30 @@
               })
             }
             if (data[0].estado<=0){
-              alert("el producto esta inactivo!")
+              Swal.fire({
+                text: "¡El producto esta inactivo!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                showCancelButton:false,
+                position: 'top',
+                toast:true,
+                timer:2800,
+            });
               document.getElementById('codigoP'+cont).value="";
               $("#codigoP"+cont).focus()}
               
             else if (data[0].cantidad<=0){
-              alert("el producto no tiene existencias")
+              Swal.fire({
+                text: "¡El producto no tiene existencias!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                showCancelButton:false,
+                position: 'top',
+                toast:true,
+                timer:2800,
+            });
               document.getElementById('codigoP'+cont).value="";
               $("#codigoP"+cont).focus()
             }else{

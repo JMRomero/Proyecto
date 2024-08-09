@@ -18,6 +18,11 @@ def group_iden(request):
 def nombredelusuario(request):
     nombreusuario=request.user.username
     return nombreusuario
+def nombredelusuario2(request):
+    nombreusuario=request.user.first_name
+    apellidousuario=request.user.last_name
+    nombreC=nombreusuario+" "+apellidousuario
+    return nombreC
 def fecha(request):
     fecha=connection.cursor()
     fecha.execute("select now();")
@@ -63,9 +68,7 @@ def inicio(request):
         if nombre:
             sesioniniciada=True
             print(nombre,"session")
-        else:
-            sesioniniciada=False
-            print("nada")
+
         return render(request, 'registration/login.html',{'session':sesioniniciada})
 #cambiarcontraseña
 def cambiarpassword(request,username):
@@ -157,7 +160,7 @@ def menu(request):
         usuariosA=cursor.fetchone()[0]
         cursor.execute("select COUNT(id) from auth_user where is_active=False")
         usuariosI=cursor.fetchone()[0]
-        cursor.execute("select COUNT(id_venta) from venta where Fecha=CURRENT_DATE();")
+        cursor.execute("select COUNT(id_venta) from venta where Fecha=CURRENT_DATE() and TotalCompra>0;")
         ventas=cursor.fetchone()[0]
         cursor.execute(f"Select SUM(TotalCompra) from venta where Fecha=CURRENT_DATE();")
         TotalDia=cursor.fetchone()[0]
@@ -234,7 +237,8 @@ def viewP(request):
         inactivos=viewI.fetchall()
         busqueda=False
         v=0
-    nombre=nombredelusuario(request)
+    nombre=nombredelusuario2(request)
+    print(nombre)
     fechahoy=fecha(request)
     grupo_actual= group_iden(request)
     return render(request,'Producto/lista.html',{'busqueda':busqueda,'productoA':viewA,'productoI':viewI,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'qp':v,'fecha':fechahoy,'Nombre':nombre})
@@ -254,9 +258,13 @@ def viewL(request,id):
         dias = [row[0] for row in cursor.fetchall()]
         Lvenci=[valor<0 if valor is not None else False for valor in dias]
     ListacombinadaI=list(zip(viewLI,Lvenci))
+    producto=connection.cursor()
+    producto.execute(f"select Nombre from producto where id_producto={str(id)}")
+    productoN=producto.fetchone()[0]
     grupo_actual= group_iden(request)
-
-    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':ListacombinadaI,'Diff_LA':viewLA,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual})
+    nombre=nombredelusuario2(request)
+    fechaH=fecha(request)
+    return render(request,'lote/listaL.html',{'LoteA':viewLA,'Diff_L':ListacombinadaI,'Diff_LA':viewLA,'estado':impEA,'fvenci':Lvenci,'activos':activos,'inactivos':inactivos,'group':grupo_actual,'fecha':fechaH,'Nombre':nombre,'Nproducto':productoN})
 @login_required
 def update(request,id):
     if request.method=="POST":
@@ -1142,6 +1150,7 @@ def Recibos_Finalizar(request):
     compra.execute("INSERT INTO compra SELECT * FROM temp_compra;")
     detalle_compra=connection.cursor()
     detalle_compra.execute("INSERT INTO detalle_compra SELECT * FROM temp_detalle_compra;")
+
     delete=connection.cursor()
     delete.execute("call Delete_Temp;")
     return redirect('/Compra/Recibos/1')
@@ -1194,7 +1203,7 @@ def venta_dias(request):
 def venta_Info(request,fecha):
     info=connection.cursor()
     print(fecha)
-    info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}'")
+    info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}' and TotalCompra>0;")
     infoV=connection.cursor()
     infoV.execute("select detalle_venta.id_venta, lote.id_producto,producto.Nombre,detalle_venta.PrecioU,detalle_venta.Cantidad,detalle_venta.TotalProducto from detalle_venta inner join lote on lote.Loteid=detalle_venta.id_Lote INNER join producto on lote.id_producto=producto.id_producto  GROUP by detalle_venta.id_venta, detalle_venta.PosicionTabla;")
     group=group_iden(request)
