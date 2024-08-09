@@ -31,7 +31,7 @@
       <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
         {% csrf_token %}
-        <div class="col-4">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-4">
           <i class="fa fa-cc" aria-hidden="true"></i>
             <label class="form-label is-required">No de cédula</label>
             <input type="number" class="form-control" name='cedula' required value="{{cedula}}">
@@ -41,21 +41,21 @@
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
         </div>
-        <div class="col-4">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Nombre</label>
             <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
         </div>
-        <div class="col-4">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Apellido</label>
             <input type='text' class="form-control" name='apellido' required value="{{apellido}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
         </div>
-        <div class="col-6">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
           <i class="fa fa-phone" aria-hidden="true"></i>
             <label class="form-label is-required">Teléfono</label> 
             <input type="number" max="3999999999" min="3000000000" class="form-control" name="telefono" required value="{{telefono}}">
@@ -65,7 +65,7 @@
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
             </div>
-        <div class="col-6">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
           <i class="fa fa-envelope" aria-hidden="true"></i>
              <label class="form-label is-required">Correo electrónico</label>
             <input type="text" class="form-control" name="correo" required value="{{correo}}">
@@ -75,7 +75,7 @@
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
             </div>
-        <div class="col-4">
+        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-4">
           <i class="fa fa-home" aria-hidden="true"></i>
             <label class="form-label is-required">Dirección</label> 
             <input type='text' class="form-control" name='direccion' required value="{{direccion}}">
@@ -121,35 +121,35 @@
       <br><br>
       <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
               <i class="fa fa-cc" aria-hidden="true"></i>
                 <label class="form-label is-required">No de cédula*</label>
                 <input type="number" class="form-control" name='cedula' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4 p-4 col-4">
               <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <label class="form-label is-required">Nombre</label>
                 <input type='text' class="form-control" name='nombre' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
             </div>
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4 p-4 col-4">
               <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <label class="form-label is-required">Apellido</label>
                 <input type='text' class="form-control" name='apellido' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
             </div>
-            <div class="col-6">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 col-6 p-4 col-6">
               <i class="fa fa-phone" aria-hidden="true"></i>
                 <label class="form-label is-required">Teléfono</label> 
                 <input type="number" max="3999999999" min="3000000000" class="form-control" name="telefono" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Teléfono</h6></div>
                 </div>
-            <div class="col-6">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 col-6 p-4 col-6">
               <i class="fa fa-envelope" aria-hidden="true"></i>
                  <label class="form-label is-required">Correo electrónico</label>
                 <input type="email" class="form-control" name="correo" required >

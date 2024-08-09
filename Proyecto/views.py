@@ -1049,6 +1049,17 @@ def reciboCompraView(request,idc):
     return render(request,'ReciboCompra/CompraVisualizar.html',{'RC':lote2,'info':ListacombinadaI,'idc':idc2,'group':grupo_actual})
 @login_required
 def Recibos(request,pag):
+    validacion=connection.cursor()
+    validacion.execute("select count(id_compra) from temp_compra;")
+    ncompra=validacion.fetchone()[0]
+    if ncompra>0:
+        compra=True
+        seguircompra=connection.cursor()
+        seguircompra.execute("select (id_compra) from temp_compra;")
+        idc=seguircompra.fetchone()[0]
+    else:
+        compra=False
+        idc=0
     recibos=connection.cursor()
     pagination=connection.cursor()
     if request.method=='POST':
@@ -1077,7 +1088,7 @@ def Recibos(request,pag):
         busqueda=False
         proveedor=0
     grupo_actual= group_iden(request)
-    return render(request,'ReciboCompra/ListaR.html',{'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor,'paginas':paginasT,'pagina':pag})
+    return render(request,'ReciboCompra/ListaR.html',{'idc':idc,'compra':compra,'RC':recibos,'group':grupo_actual,'busqueda':busqueda,'NP':proveedor,'paginas':paginasT,'pagina':pag})
 @login_required
 def RecibosD(request,idc):
     info=connection.cursor()
@@ -1215,3 +1226,11 @@ def salir(request):
         cursor.execute(f"call calcularHoras('{username}');")
     logout(request)
     return redirect('login')
+
+
+@login_required
+def estadisticas(request):
+    with connection.cursor() as cursor:
+        cursor.execute("select v.Fecha, SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(v.Fecha, 1) = WEEK(CURDATE(), 1) AND YEAR(v.Fecha) = YEAR(CURDATE()) group by p.nombre order by cantidad desc;")
+        productovsemana = connection.cursor()
+    return render(request,'Estadisticas/estadisticas.html',{'productovsemana':productovsemana})

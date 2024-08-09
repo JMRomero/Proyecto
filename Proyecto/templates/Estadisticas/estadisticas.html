@@ -40,16 +40,16 @@
   <br><br>
   <div class="row justify-content-center text-center">
     <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #0d6efd;">
         <div class="card-body">
          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/pro.png'%}"  height="65px" width="65"></div>
           <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de proveedores</h5>
-          <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorI}}</p></a>
+          <p class="card-text text-black bg-white mb-1">Activos: {{productovsemana}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorI}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #0d6efd;">
         <div class="card-body">
           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #0d6efd;">
         <div class="card-body">
           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/concluidos.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/listaC" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-2"><br><br>Listado de pedidos concluidos</h5>
@@ -67,7 +67,7 @@
       </div>
     </div><br><br><br><br>
   <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #0d6efd;">
         <div class="card-body">
           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/proveedores.png'%}" height="65px" width="65"></div>
           <a href="/Producto/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de productos</h5>
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #0d6efd;">
         <div class="card-body">
           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/usuarios.png'%}"  height="65px" width="65"></div>
           <a href="/Usuario/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ususarios</h5>
@@ -84,33 +84,26 @@
         </div>
       </div>
     </div>
-      <div class="col-sm-4">
-        <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
-          <div class="card-body">
-           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
-            <a href="/Venta/registrar" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ventas</h5>
-            <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">Total del Dia: {%if Total != None %}{{Total}}{%else%}0{%endif%}</p></a>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   {%else%}
-  <br><br>
+  <center>
+    <h1>Bienvenido al sistema, eres REGENTE, solo puedes hacer ventas e ingresar pedidos especiales.</h1>
+  </center>
+
   <div class="row justify-content-center text-center">
     <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
-      <div class="card" style="box-shadow: 0 0 30px #000000;">
+      <div class="card" style="box-shadow: 0 0 30px #43cabf;">
         <div class="card-body">
-         <div class="botoni" style="box-shadow: 0 0 10px #000000; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
+         <div class="botoni" style="background-color: #dd71f8"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
           <a href="/Venta/registrar" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ventas</h5>
-          <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">{%if Total == None %} Total del Dia: 0 {%else%}Total del Dia: {{Total}}{%endif%}</p></a>
+          <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">Total del Dia: {{Total}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #000000;">
+      <div class="card" style="box-shadow: 0 0 30px #FFD733;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
+          <div class="botoni" style="background-color: #FFD733"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
           <p class="card-text text-black bg-white mb-1">Pedidos por realizar: {{realizar}}</p><p class="card-text text-black bg-white mb-1">Pedidos realizados: {{realizado}}</p></a>
         </div>
@@ -158,24 +151,6 @@
     });
   </script>
   
-  {%if group != 'Admin'%}
-  <script>
-Swal.fire({
-        text:"¡Eres REHENTE, solo puedes hacer ventas e ingresar pedidos especiales!",
-        
-        icon: "info",
-        showCancelButton: false,
-        toast:false,
-        position:'center',
-        width:'40%',
-        padding:'2rem',
-        timer:5000,
-        timerProgressBar:true,
-        showConfirmButton: false,  // Oculta el botón de confirmación
-        showCancelButton: false  // Oculta el botón de cancelar
-      });
-  </script>
-  {%endif%}
 </body>
 </div>
 
