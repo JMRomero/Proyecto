@@ -15,6 +15,29 @@
 </head>
 <body>
     {%include 'layout/Menu.html'%}
+    {%if compra%}
+    <script>
+            Swal.fire({
+        text:"¡tienes registrado una compra sin completar deseas seguir!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        confirmButtonText: ' Volver ',
+        confirmButtonText: ' Seguir ',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        allowEnterKey: false}).then((result) => {
+          if (result.isConfirmed) {
+            location.href="/Compra/Lista/{{idc}}";  
+          }else if(result.isDismissed){
+            location.href="/Compra/Recibos/Cancelar";
+        }})
+    </script>
+    {%endif%}
     <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
               <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Recibos de compra</a>
