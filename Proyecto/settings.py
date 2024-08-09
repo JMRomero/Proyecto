@@ -144,8 +144,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sifhorecovery@gmail.com'
-EMAIL_HOST_PASSWORD = 'uvxx ixgu kuza afek'
+EMAIL_HOST_USER = 'restablecimientosifhox@gmail.com'
+EMAIL_HOST_PASSWORD = 'gspi rbie osmq ajvp'
 
 #cierre sesion automatico despues de cerrar el aplocativo 
 SESSION_COOKIE_AGE = 28800

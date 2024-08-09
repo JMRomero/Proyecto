@@ -253,10 +253,10 @@
             title: "Terminar Venta",
             text:"Ingrese el pago recibido",
             input: "number",
-            inputAttributes: {
-              autocapitalize: "off",
-              Min:totalA,
-            },
+            inputValidator: (pago) => {
+            if (!pago || pago<totalA) {
+              return "El dinero debe ser mayor a "+ totalA;
+            }},
             showCancelButton: true,
             confirmButtonText: "Terminar",
             showLoaderOnConfirm: true,
@@ -265,7 +265,6 @@
                 fetch(url)
                 .then(devolver=>devolver.json())
                 .then(devolver=>{
-                  console.log(devolver.Devolver)
                   return devolver.Devolver;
                 })
           },
@@ -276,9 +275,9 @@
               Swal.fire({
                 title: 'Total a devolver',
                 text: `${totalAA} Devolver`,
-                confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light" onclick="Redireccion()" > Aceptar</a> ',
+                confirmButtonText: 'Aceptar',
                 allowOutsideClick: false,
-                allowEnterKey: false}).then((result) => {
+                allowEnterKey: true}).then((result) => {
           if (result.isConfirmed) {
             allowUnload = true;
             Redireccion();
@@ -333,7 +332,7 @@
     function Redireccion2(){
       location.href="../../";
     }
-    function interceptExit(event) {
+    function evitarSalir(event) {
       var totalA = parseInt(document.getElementById('Total').textContent);
       if (totalA > 0) {
         event.preventDefault();
@@ -349,7 +348,7 @@
     }
     document.addEventListener('DOMContentLoaded', (event) => {
       document.querySelectorAll('a, button[type="submit"]').forEach(element => {
-        element.addEventListener('click', interceptExit);
+        element.addEventListener('click', evitarSalir);
       });
     });
   </script>
