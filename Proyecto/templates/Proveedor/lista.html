@@ -19,7 +19,7 @@
     </nav>
     <br><br>
     <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Proveedor</a>
+        <a href="insert" class="btn btn-primary" type="button">Ingresar nuevo proveedor</a>
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {%if busqueda%}
@@ -43,16 +43,16 @@
                     <tr>
                         <th>NIT</th>
                         <th>Nombre</th>
-                        <th>Telefono</th>
-                        <th>Horario de Atencion</th>
-                        <th>Politica de Devolucion</th>
+                        <th>Teléfono</th>
+                        <th>Horario de atención</th>
+                        <th>Política de devolución</th>
                         <th>Estado</th>
-                        <th>Editar Proveedor</th>
+                        <th>Editar proveedor</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun proveedor Con ese NIT/Nombre</p>{%else%}
-                <p>No hay ningun proveedor activo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun proveedor con ese NIT/Nombre</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun proveedor activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in proveedorA%}
@@ -66,7 +66,6 @@
                         <td>
                             <a href="/Proveedor/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg ms-5"
                                     aria-hidden="true"></i></a>
-
                         </td>
                         {%endfor%}
                     </tr>
@@ -79,16 +78,16 @@
                     <tr>
                         <th>NIT</th>
                         <th>Nombre</th>
-                        <th>Telefono</th>
-                        <th>Horario de Atencion</th>
-                        <th>Politica de Devolucion</th>
+                        <th>Teléfono</th>
+                        <th>Horario de atención</th>
+                        <th>Política de devolución</th>
                         <th>Estado</th>
                         <th>Editar Proveedor</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun proveedor Con ese NIT/Nombre</p>{%else%}
-                <p>No hay ningun proveedor inactivo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun proveedor con ese NIT/Nombre</p>{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun proveedor inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in proveedorI%}

@@ -5,14 +5,26 @@
   {%include "Layout/head.html" %}
   <title>Menu</title>
   <style>
+    body 
+
+    
     .botoni {
       width: 80px;
-      height: 70px;
-      border-radius: 20px; /* Esta línea crea la forma ovalada */
+      height: 80px;
+      border-radius: 50px; /* Esta línea crea la forma ovalada */
       position: absolute;
-      top: -30px;
+      top: -40px;
       left: calc(47% - 30px);
       ;
+    }
+    .botoni img {
+    width: 55px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: 55px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centra la imagen dentro del div */
+    object-fit: cover; /* Asegura que la imagen mantenga sus proporciones */
     }
   </style>
 </head>
@@ -23,7 +35,7 @@
   
   <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
     <div class="container-fluid">
-      <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Bienvenido a SIFHO</a>
+      <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2 "style="font-weight: bold;">BIENVENIDO A SIFHO</a>
     </div>
     <ul class="right hide-on-med-and-down">
     </ul>
@@ -33,54 +45,54 @@
   <br><br>
   <div class="row justify-content-center text-center">
     <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-         <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/pro.png'%}"  height="65px" width="65"></div>
+         <div class="botoni" style="box-shadow: 0 0 20px #47d2f5; background-color: #ffffff"><img src="{%static 'img/pro.png'%}"  height="55px" width="55"></div>
           <a href="/Proveedor/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de proveedores</h5>
           <p class="card-text text-black bg-white mb-1">Activos: {{proveedorA}}</p><p class="card-text text-black bg-white">Inactivos: {{proveedorI}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
+          <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
           <p class="card-text text-black bg-white mb-1">Pedidos por realizar: {{realizar}}</p><p class="card-text text-black bg-white mb-1">Pedidos realizados: {{realizado}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/concluidos.png'%}"  height="65px" width="65"></div>
+          <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/concluidos.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/listaC" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-2"><br><br>Listado de pedidos concluidos</h5>
           <p class="card-text text-black bg-white mb-4">Pedidos concluidos: {{concluido}}</p>
         </div>
       </div>
     </div><br><br><br><br>
   <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/proveedores.png'%}" height="65px" width="65"></div>
+          <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/proveedores.png'%}" height="65px" width="65"></div>
           <a href="/Producto/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de productos</h5>
           <p class="card-text text-black bg-white mb-1">Productos activos: {{productosA}}</p><p class="card-text text-black bg-white">Inactivos: {{productosI}}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/usuarios.png'%}"  height="65px" width="65"></div>
+          <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/usuarios.png'%}"  height="65px" width="65"></div>
           <a href="/Usuario/lista" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ususarios</h5>
           <p class="card-text text-black bg-white mb-1">Usuarios activos: {{usuariosA}}</p><p class="card-text text-black bg-white">Usuarios activos: {{usuariosI}}</p></a>
         </div>
       </div>
     </div>
       <div class="col-sm-4">
-        <div class="card" style="box-shadow: 0 0 30px #5b9af8;">
+        <div class="card" style="box-shadow: 0 0 30px #438bf7;">
           <div class="card-body">
-           <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
+           <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
             <a href="/Venta/registrar" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ventas</h5>
             <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">Total del Dia: {%if Total != None %}{{Total}}{%else%}0{%endif%}</p></a>
           </div>
@@ -92,18 +104,18 @@
   <br><br>
   <div class="row justify-content-center text-center">
     <div class="col-sm-4 mb-3 mb-sm-0 border-secondary">
-      <div class="card" style="box-shadow: 0 0 30px #000000;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-         <div class="botoni" style="box-shadow: 0 0 10px #000000; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
+         <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/Carrito.png'%}"  height="65px" width="65"></div>
           <a href="/Venta/registrar" style="text-decoration:none;"><h5 class="card-title text-black bg-white mb-1"><br><br>Ventas</h5>
           <p class="card-text text-black bg-white mb-1">Ventas del dia: {{Ventas}}</p><p class="card-text text-black bg-white mb-1">{%if Total == None %} Total del Dia: 0 {%else%}Total del Dia: {{Total}}{%endif%}</p></a>
         </div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="card" style="box-shadow: 0 0 30px #000000;">
+      <div class="card" style="box-shadow: 0 0 30px #438bf7;">
         <div class="card-body">
-          <div class="botoni" style="box-shadow: 0 0 10px #0d6efd; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
+          <div class="botoni" style="box-shadow: 0 0 10px #47d2f5; background-color: #ffffff"><img src="{%static 'img/realizar.png'%}"  height="65px" width="65"></div>
           <a href="/Pedidos/lista" style="text-decoration:none; "><h5 class="card-title text-black bg-white mb-1"><br><br>Listado de pedidos especiales</h5>
           <p class="card-text text-black bg-white mb-1">Pedidos por realizar: {{realizar}}</p><p class="card-text text-black bg-white mb-1">Pedidos realizados: {{realizado}}</p></a>
         </div>

@@ -9,7 +9,7 @@
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg sidevar close " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Pedidos Especiales</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Pedidos especiales</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -17,8 +17,8 @@
 {%include 'Layout/Validacion.html'%}
 <br>
 <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Pedido Especial</a>
-        <a href="listaC" class="btn btn-primary" type="button">Lista de Pedidos Concluidos</a>
+        <a href="insert" class="btn btn-primary" type="button">Ingresar nuevo pedido especial</a>
+        <a href="listaC" class="btn btn-primary" type="button">Lista de pedidos concluidos</a>
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {% if busqueda %}
@@ -46,14 +46,14 @@
                         <th>Nombre/Descripción del medicamento</th>
                         <th>Cantidad</th>
                         <th>Fecha de creación</th>
-                        <th>Fecha de Modificación</th>
+                        <th>Fecha de modificación</th>
                         <th>Estado</th>
-                        <th>Editar Pedido</th>
+                        <th>Editar pedido</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun pedido por pedir con el Producto</p>{%else%}
-                <p>No hay ningun pedido por pedir</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir con el nombre o descripción de ese producto</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosA%}
@@ -86,12 +86,12 @@
                         <th>Cantidad</th>
                         <th>Fecha de creación</th>
                         <th>Fecha de Modificación</th>
-                        <th>Editar Pedido</th>
-                        <th>Acciones</th>
+                        <th>Editar pedido</th>
+                        <th>Editar pedido</th>
                     </tr>
                 </thead>
-                {%else%}{%if busqueda%}<p>No hay ningun pedido realizado con el Producto</p>{%else%}
-                <p>No hay ningun pedido realizado</p>{%endif%}
+                {%else%}{%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado con el nombre o descripción de ese producto</p>{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosI%}

@@ -22,7 +22,7 @@
           {% if busqueda %}
           <a href="/Pedidos/listaC" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true"></i></a>
           {% endif %}
-          <input class="form-control me-2" required type="text" placeholder="Buscar por Nombre/Descripcion del medicamento"  name="NM" {%if busqueda%}value="{{NM}}"{%endif%}>
+          <input class="form-control me-2" required type="text" placeholder="Buscar por nombre/Descripción del medicamento"  name="NM" {%if busqueda%}value="{{NM}}"{%endif%}>
           <button class="btn btn-outline-success" type="submit">Buscar</button>
         </form>
       </div>
@@ -42,14 +42,14 @@
                         <th>Nombre/Descripción del medicamento</th>
                         <th>Cantidad</th>
                         <th>Fecha de creación</th>
-                        <th>Fecha de Modificación</th>
-                        <th>Editar Pedido</th>
-                        <th>Acciones</th>
+                        <th>Fecha de modificación</th>
+                        <th>Editar pedido</th>
+                        <th>Editar pedido</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun pedido concluido con el Producto</p>{%else%}
-                <p>No hay ningun pedido concluido</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido concluido con el nombre o descripción de ese produto</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido concluido</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosC%}

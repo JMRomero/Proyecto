@@ -27,7 +27,7 @@
               <br><br>
               <form class="row g-3 needs-validation" novalidate method='POST'>
                   {% csrf_token %}
-                  <div class="col-6">
+                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                     <i class="fa fa-barcode" aria-hidden="true"></i>
                       <label class="form-label">Codigo de Barras</label>
                       <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
@@ -35,7 +35,7 @@
                       <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div><br>
                       <div class="alert alert-danger" role="alert">el codigo de Barras "{{codigoE}}" ya esta registrado como el producto {{nombrep}}. Por favor intente otro</div>
                   </div>
-                      <div class="col-6">
+                      <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                         <i class="fa fa-product-hunt" aria-hidden="true"></i>
                           <label class="form-label">Nombre del Producto</label>  
                           <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
@@ -43,7 +43,7 @@
                           <div class="invalid-feedback"><h6>Ingrese Nombre Del Producto</h6></div>
                           <br>
                   </div>
-                  <div class="col-4">
+                  <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4">
                     <i class="fa fa-bitbucket" aria-hidden="true"></i>
                       <label>Miligramo/ML</label>
                       <input type="text" class="form-control" name='gramo_litro' required value="{{gramo_litro}}">
@@ -52,21 +52,21 @@
                           <br>
                       </div>
                   
-                  <div class="col-4">
+                  <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4">
                     <i class="fa fa-hand-o-up" aria-hidden="true"></i>
                       <label for=""><h6>Cantidad Maxima</h6></label> 
                       <input type='number' class="form-control" name='Max' required value="{{Max}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
                       </div>
-                  <div class="col-4">
+                  <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4">
                     <i class="fa fa-hand-o-down" aria-hidden="true"></i>
                       <label for="">Cantidad Minima</label> 
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
                   </div>
-                  <div class="col-12 form-check text-center">
+                  <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12 form-check text-center">
                     <label for="" class="">Producto de poca rotacion</label><br>
                     <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion" {%if rotacion == 'on' %}checked{%endif%}><br>
                   </div>
@@ -84,22 +84,22 @@
         {% for p in datos %}
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
-            <div class="col-6">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-barcode" aria-hidden="true"></i>
-                <label class="form-label">Codigo de Barras</label>
+                <label class="form-label">Código de barras</label>
                 <input type="text" class="form-control" name="codigo" required value="{{p.0}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div>
+                <div class="invalid-feedback"><h6>Falta Código De Barras</h6></div>
             </div>
-                <div class="col-6">
+                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                     <i class="fa fa-product-hunt" aria-hidden="true"></i>
-                    <label class="form-label">Nombre del Producto</label>  
+                    <label class="form-label">Nombre del producto</label>  
                     <input type='text' class="form-control" name='nombre' required value="{{p.1}}">
                     <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                     <div class="invalid-feedback"><h6>Ingrese Nombre Del Producto</h6></div>
                     <br>
             </div>
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
                 <i class="fa fa-bitbucket" aria-hidden="true"></i>
                 <label>Miligramo/ML</label>
                 <input type="text" class="form-control" name='gramo_litro' required value="{{p.3}}">
@@ -108,26 +108,25 @@
                     <br>
                 </div>
             
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
                 <i class="fa fa-hand-o-up" aria-hidden="true"></i>
-                <label for=""><h6>Cantidad Maxima</h6></label> 
+                <label for=""><h6>Cantidad máxima</h6></label> 
                 <input type='number' class="form-control" name='Max' required value="{{p.5}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese Cantidad Maxima</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese Cantidad Máxima</h6></div>
                 </div>
-            <div class="col-4">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
                 <i class="fa fa-hand-o-down" aria-hidden="true"></i>
-                <label for="">Cantidad Minima</label> 
+                <label for="">Cantidad mínima</label> 
                 <input type='number' class="form-control" name='Min' required value="{{p.6}}">
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
-                <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
+                <div class="invalid-feedback"><h6>Ingrese Canatidad Mínima</h6></div>
               </div>
               <div class="col-12 form-check text-center">
-                <label for="" class="">Producto de poca rotacion</label><br>
+                <label for="" class="">Producto de poca rotación</label><br>
                 <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion" {%if p.7 == 'Baja' %}checked{%endif%}><br>
-              </div>
+              </div><br><br><br>
                 {%endfor%}
-        
             <div class="d-grid gap-2 col-6 mx-auto">
                 <input type='submit' values='Subir' class="btn btn-primary" type="button">
                 <a href="/Producto/lista" type="button" class="btn btn-outline-danger">Cancelar</a>

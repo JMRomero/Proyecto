@@ -21,9 +21,7 @@
     </nav>
     <br><br>
     <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="insert" class="btn btn-primary" type="button">Ingresar Nuevo Producto</a>
-        <a onclick="imprimir()" type="button" class="btn btn-outline-danger">Imprimir lista de Productos Activos e Inactivos</a>
-        
+        <a href="insert" class="btn btn-primary" type="button">Ingresar nuevo producto</a>
             <form class="d-flex" method="POST" action="">
                 {% csrf_token %}
                 {% if busqueda %}
@@ -47,17 +45,17 @@
                         <th>Nombre</th>
                         <th>Gramo/Litro</th>
                         <th>Rotación</th>
-                        <th>Cantidad Máxima</th>
-                        <th>Cantidad Mínima</th>
+                        <th>Cantidad máxima</th>
+                        <th>Cantidad mínima</th>
                         <th>Unidades</th>
-                        <th>Ver Lotes</th>
+                        <th>Ver lotes</th>
                         <th>Estado</th>
-                        <th>Editar Producto</th>
+                        <th>Editar producto</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun producto con ese Codigo/Nombre</p>{%else%}
-                <p>No hay ningun producto activo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun producto con ese Código/Nombre</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun producto activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in productoA%}
@@ -89,17 +87,17 @@
                         <th>Nombre</th>
                         <th>Gramo/Litro</th>
                         <th>Rotación</th>
-                        <th>Cantidad Máxima</th>
-                        <th>Cantidad Mínima</th>
+                        <th>Cantidad máxima</th>
+                        <th>Cantidad mínima</th>
                         <th>Unidades</th>
-                        <th>Ver Lotes</th>
+                        <th>Ver lotes</th>
                         <th>Estado</th>
-                        <th>Editar Producto</th>
+                        <th>Editar producto</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun producto con ese Codigo/Nombre</p>{%else%}
-                <p>No hay ningun producto inactivo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun producto con ese Código/Nombre</p>{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun producto inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in productoI%}
@@ -122,8 +120,10 @@
                     </tr>
                 </tbody>
             </table><br>
-            
-        </div><br><br><br>
+        </div><br><br>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a onclick="imprimir()" type="button" class="btn btn-primary center">Descargar reporte de lista de productos activos e inactivos</a>
+          </div>
     </div>
 {% include 'Layout/pdflistaproductos.html'%}
     </section>
