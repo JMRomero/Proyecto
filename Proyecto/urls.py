@@ -18,7 +18,7 @@ from django.contrib import admin
 from . import views
 from django.urls import path, include
 from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar,registro_venta,producto_API,registo_detalleVenta,venta_crear_factura, estadisticas
-from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE,venta_dias,venta_Info
+from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE,venta_dias,venta_Info,retiro_api
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
@@ -82,6 +82,7 @@ urlpatterns = [
     path('Producto/actualizarL/<int:id>/<str:lote>',updateLote),
     #login
     path('accounts/login/',inicio, name='login'),
+    path('retiro/API/<int:retiro>/<int:final>',retiro_api),
     path('salir/', views.salir, name="salir"),
     path('cambiarcontraseña/<str:username>',cambiarpassword),
     #recuperacion de contraseña 

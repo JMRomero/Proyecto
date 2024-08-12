@@ -9,7 +9,11 @@ from django.contrib import messages
 from plyer import notification
 from django.core.serializers import serialize
 from django.http import HttpResponse,JsonResponse
-
+def caja_N(request):
+    dinero=connection.cursor()
+    dinero.execute("select dinero from caja;")
+    dineroc=dinero.fetchone()[0]
+    return dineroc
 def group_iden(request):
     grupos_usuario = request.user.groups.all()
     for grupo in grupos_usuario:
@@ -1172,7 +1176,8 @@ def Recibos_Cancelar(request):
 @login_required
 def registro_venta(request):
     grupo_actual=group_iden(request)
-    return render(request, 'Venta/registro.html',{'group':grupo_actual})
+    dinero=caja_N(request)
+    return render(request, 'Venta/registro.html',{'group':grupo_actual,'dinero':dinero})
 def venta_crear_factura(request,user):
     procedimiento=connection.cursor()
     procedimiento.execute(f"call Venta_id({str(user)});")
@@ -1218,7 +1223,19 @@ def venta_Info(request,fecha):
     return render(request, "Venta/Infor_Ventas.html",{'info':info,'infoV':infoV,'group':group})
 #endregion
 #logout
-
+def retiro_api(request,retiro,final):
+    
+    id=connection.cursor()
+    id.execute("select max(id) from historia_caja;")
+    idc=id.fetchone()[0]
+    username= nombredelusuario(request)
+    retirobd=connection.cursor()
+    retirobd.execute(f"update historia_caja set cedula={username}, final={final}, retiro={retiro}, fecha=now() where id={idc}")
+    updatecaja=connection.cursor()
+    updatecaja.execute(f"update caja set dinero ={final};")
+    nuevo=connection.cursor()
+    nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
+    HttpResponse('retiro exitoso')
 def salir(request):
     username= nombredelusuario(request)
     with connection.cursor() as cursor:

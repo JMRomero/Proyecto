@@ -1,5 +1,5 @@
 {%load static%}
-
+ 
 <div class="sidebar close">
   <div class="logo-details">
     <i><img src="{%static 'img/logo2.png'%}" alt="profileImg" height="70px" width="70"></i>
@@ -9,11 +9,12 @@
     <br><br>
     <li>
       <section>
-        <a href="#">
-          <i class='bx bx-menu position-absolute start-50 top-1 translate-middle'></i>
+        <a href="#" class="barra">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+          <span class="link_name">Contraer</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name">Desplegar Menu</a></li>
+          <li><e class="link_name" style="color: aliceblue;">Desplegar Menu</e></li>
         </ul>
     </li>
     <li>
@@ -66,7 +67,7 @@
     </li>
     <li>
       <a href="/Notificacion">
-        <i class="fa fa-bell" aria-hidden="true"></i>
+        <i class="fa fa-bell" aria-hidden="true"><e style="color: red;">2</e></i>
         <span class="link_name">Notificacion</span>
       </a>
       <ul class="sub-menu blank">
@@ -120,8 +121,7 @@
   <div class="home-content">
 
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  <script src="{%static 'js/sweetalert2.js' %}"></script>
   <script>
     let arrow = document.querySelectorAll(".arrow");
     for (var i = 0; i < arrow.length; i++) {
@@ -132,15 +132,55 @@
     }
 
     let sidebar = document.querySelector(".sidebar");
-    let sidebarBtn = document.querySelector(".bx-menu");
-    console.log(sidebarBtn);
+    let sidebarBtn = document.querySelector(".barra");
     sidebarBtn.addEventListener("click", () => {
       sidebar.classList.toggle("close");
     });
+    </script>
+    {%if group == "Admin"%}
+    <script>
+      function cerrar(){
+        dinero=parseInt("{{dinero}}");
+        recomendacion=dinero-50000;
+        Swal.fire({
+            title: "¿Desea terminar la jornada?",
+            text: "el total de la caja es: {{dinero}} Ingrese el dinero a retirar te recomendamos retirar "+recomendacion+" para que la base de la caja sea 50000",
+            input: "number",
+            inputValidator: (valor) => {
+            if (!valor || valor>dinero) {
+              return "¡Debes ingresar un valor valido!";
+            }},
+            showCancelButton: true,
+            confirmButtonText: "Terminar",
+            showLoaderOnConfirm: true,
+            preConfirm: async (valor) => {
+              final=dinero-valor;
+              let url="../../retiro/API/"+valor+"/"+final;
+              fetch(url)
+              return final
+          },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((resultado) => {
+            if (resultado.isConfirmed) {
+              Swal.fire({
+                title: 'Total en la caja',
+                text: `${final}`,
+                confirmButtonText: 'Terminar jornada',
+                allowOutsideClick: false,
+                allowEnterKey: true}).then((result) => {
+          if (result.isConfirmed) {
+            location.href="/salir";
+          }})
+            }
+          });
+      }
+    </script>
+    {%else%}
+    <script>
     function cerrar() {
       Swal.fire({
-        title: "¿Deseas cerrar sesión?",
-        text: "Fue un gusto tenerte con nosotros",
+        title: "¿Desea terminar la jornada?",
+        text: "el total de la caja es: {{dinero}}",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -154,3 +194,4 @@
           }})
     }
   </script>
+  {%endif%}
