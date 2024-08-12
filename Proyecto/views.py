@@ -1006,10 +1006,18 @@ def LoteInsert(request,idc,idp):
                 fechau=fechaa.strftime("%Y-%m-%d")
                 return render(request,'ReciboCompra/Loteinsertar.html',{'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual,'fecha':fechau})
             else:
+                cantidad=request.POST.get('Cantidad')
+                precioC=request.POST.get('PrecioC')
+                precioV=request.POST.get('PrecioV')
+                ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                ganancia=round(ganancia)
+                if ganancia%50!=0:    
+                    while ganancia%50 !=0:
+                        ganancia=ganancia+1
                 lote=connection.cursor()
-                lote.execute("Insert into temp_lote (id_producto,Loteid,Cantidad,PrecioC,Estado,fechaVenci,fechaModify,fechaCreate) values("+str(idp)+",'"+request.POST.get('Lote')+"',"+request.POST.get('Cantidad')+","+request.POST.get('PrecioC')+",True,'"+request.POST.get('FechaVenci')+"',Now(),now());")
+                lote.execute("Insert into temp_lote values("+str(idp)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",True,'"+request.POST.get('FechaVenci')+"',Now(),now(),1);")
                 detalle=connection.cursor()
-                detalle.execute("Insert into temp_detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+request.POST.get('Cantidad')+","+str(idc)+");")
+                detalle.execute("Insert into temp_detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+str(ganancia)+","+request.POST.get('Cantidad')+","+str(idc)+");")
                 return redirect (f'/Compra/Lista/{idc}')
     else:
         info=connection.cursor ()
@@ -1086,7 +1094,7 @@ def RecibosD(request,idc):
     info=connection.cursor()
     info.execute(f"select compra.*,proveedor.Nombre from compra inner join proveedor on compra.NIT=proveedor.NIT where compra.id_compra={idc}")
     recibo=connection.cursor()
-    recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###'),format(detalle_compra.PrecioU,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
+    recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
     grupo_actual= group_iden(request)
     return render(request,'ReciboCompra/ListaRD.html',{'RC':recibo,'group':grupo_actual,'info':info})
 @login_required
@@ -1210,6 +1218,7 @@ def venta_Info(request,fecha):
     return render(request, "Venta/Infor_Ventas.html",{'info':info,'infoV':infoV,'group':group})
 #endregion
 #logout
+
 def salir(request):
     username= nombredelusuario(request)
     with connection.cursor() as cursor:

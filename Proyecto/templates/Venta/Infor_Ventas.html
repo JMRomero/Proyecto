@@ -32,7 +32,7 @@
     <div class="container-fluid bg-trasparent my-4 p-3" style="position: relative;">
         <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
         {%for i in info%}
-          <div class="card" style="width: 26rem;">
+          <div class="card" style="width: 26rem;" id="{{i.0}}">
             <div class="card-body">
               <h5 class="card-title">{{i.0}}</h5>
               <p class="card-text">Vendedor : {{i.7}} {{i.8}}. CC:{{i.6}} <br> Hora:{{i.3}}</p>
@@ -73,7 +73,8 @@
                     </div>
             </ul>
             <div class="card-body">
-                <p class="card-text">Efectivo Recibido: {{i.4}}. <br> Efectivo Entregado {{i.5}}$. </p>
+                <p class="card-text">Efectivo Recibido: {{i.4}}. <br> Efectivo Entregado {{i.5}}$. </p><br>
+                <a href="#" onclick="Imprimir('{{i.0}}')">Imprimir</a>
             </div>
           </div>
           {%endfor%}
@@ -85,41 +86,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     
     </div>
+    <script>
+      function Imprimir(id){
+        var contenido =document.getElementById(id).innerHTML;
+        var contenidoor = document.body.innerHTML;
+        document.body.innerHTML=contenido;
+        window.print();
+        document.body.innerHTML=contenidoor;
+      }
+    </script>
 </body>
 
 </html>
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<body>
-
-<div class="container">
-  <h2>Modal Example</h2>
-
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
- 
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-     
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-          <p>Some text in the modal.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
-</div>
-
-</body>
-</html> -->
