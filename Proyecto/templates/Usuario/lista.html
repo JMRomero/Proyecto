@@ -48,23 +48,23 @@
                 <p class="text-center fst-italic text-body fs-4">Listado de usuarios activos</p>
                 <thead>
                     <tr>
-                        <th>Cedula</th>
+                        <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Telefono</th>
-                        <th>Correo Electronico</th>
-                        <th>Direccion</th>
+                        <th>Teléfono</th>
+                        <th>Correo electrónico</th>
+                        <th>Dirección</th>
                         <th>Fecha de nacimiento</th>
-                        <th>Fecha de creacion</th>
+                        <th>Fecha de creación</th>
                         <th>Rol</th>
                         <th>Estado</th>
-                        <th>Editar</th>
-                        <th>Cambiar Contraseña</th>
+                        <th>Editar usuario</th>
+                        <th>Cambiar contraseña</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun usuario activo con es@ Nombre/Cedula</p>{%else%}
-                <p>No hay ningun usuario activo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun usuario activo con es@ Nombre/Cédula</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun usuario activo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in usuarioA%}
@@ -114,22 +114,22 @@
                 <p class="text-center fst-italic text-body fs-4">Listado de usuarios inactivos</p>
                 <thead>
                     <tr>
-                        <th>Cedula</th>
+                        <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Telefono</th>
-                        <th>Correo Electronico</th>
-                        <th>Direccion</th>
+                        <th>Teléfono</th>
+                        <th>Correo electrénico</th>
+                        <th>Dirección</th>
                         <th>Fecha de nacimiento</th>
-                        <th>Fecha de creacion</th>
+                        <th>Fecha de creación</th>
                         <th>Rol</th>
                         <th>Estado</th>
-                        <th>Editar</th>
+                        <th>Editar usuario</th>
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p>No hay ningun usuario inactivo con es@ Nombre/Cedula</p>{%else%}
-                <p>No hay ningun usuario inactivo</p>{%endif%}
+                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun usuario inactivo con es@ Nombre/Cédula</p>{%else%}
+                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun usuario inactivo</p>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in usuarioI%}

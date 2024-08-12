@@ -28,7 +28,7 @@
         <form class="row g-3 needs-validation" novalidate method='POST'>
             {% csrf_token %}
             
-                <div class="col-6">
+                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-user fa-lg" aria-hidden="true"></i>
                 <label class="form-label is-required">Nombre del cliente</label> 
                 <input type='text' class="form-control" name='nombreClie' required>
@@ -36,7 +36,7 @@
                 <div class="invalid-feedback"><h6>Digite Nombre Del Cliente</h6></div>
                 </div>
 
-            <div class="col-6">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
                 <label class="form-label is-required">Celular del Cliente</label>
                 <input type="number" max="9999999999" min="1000000000" class="form-control" name="celularClie" required>
@@ -44,7 +44,7 @@
                 <div class="invalid-feedback"><h6>Digite Celular Del Cliente.Deben ser 10 numeros</h6></div>
                 </div>
 
-                <div class="col-6">
+                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                   <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
                   <label class="form-label is-required">Cantidad</label>
                   <input type="number" max="99" min="1" class="form-control" name="cantidad" required>
@@ -52,7 +52,7 @@
                   <div class="invalid-feedback"><h6>Digite La Cantidad</h6></div>
                   </div>
 
-                <div class="col-6">
+                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                 <label for="descripcion is-required" class="form-label is-required">Nombre/Descripcion del medicamento</label>
                 <textarea type="text" class="form-control" name="descripcion" rows="3" required></textarea>
