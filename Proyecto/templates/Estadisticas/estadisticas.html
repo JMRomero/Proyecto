@@ -2,32 +2,56 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  {%include 'Layout/head.html'}
+  {%include 'Layout/ValidacionRol.html' %}   
+  {%include "Layout/head.html" %}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
 </head>
 <body>
-  <div style="height: 800px; width: 800px;">
-  <canvas id="grafica"></canvas>
-  </div>
+    {%include 'Layout/Menu.html' %}
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <div class="container-fluid">
+          <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Estadisticas</a>
+        </div>
+        <ul class="right hide-on-med-and-down">
+        </ul>
+      </nav><br><br><br>
+<div class="row">
+    <div class="col-6">
+        <div style="height: 400px; width: 800px; margin-left: 30px;">
+        <canvas id="grafica1"></canvas>
+        </div>
+    </div>
+    <div class="col-6">
+        <div style="height: 400px; width: 800px;">
+            <canvas id="grafica2"></canvas>
+        </div>
+    </div>    
+</div>
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
   <script>
     // Obtener una referencia al elemento canvas del DOM
-const $grafica = document.querySelector("#grafica");
-// Las etiquetas son las que van en el eje X. 
-const etiquetas = ["acetaminofen", "ibuprofeno", "arroz"]
+let url1='/productovmes_API/2020';
+let url2="/productovsem_API/2020"
+fetch(url1)
+.then(data=>data.json())
+.then(data=>{
+const $grafica = document.querySelector("#grafica1");
+// Las etiquetas son las que van en el eje X.
+const etiquetas = [""+data.producto1[1]+"",""+data.producto2[1]+""]
 // Podemos tener varios conjuntos de datos. Comencemos con uno
-const datosVentas2020 = {
-    label: "Ventas por mes",
-    data: [5000, 8000, 10], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
-    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+const datosVentasM = {
+    label: "Ventas del Mes",
+    data: [data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'hsla(192, 59%, 51%, 0.377)', // Color de fondo
     borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
-    borderWidth: 1,// Ancho del borde
+    borderWidth: 3,// Ancho del borde
 };
 new Chart($grafica, {
     type: 'line',// Tipo de gráfica
     data: {
         labels: etiquetas,
         datasets: [
-            datosVentas2020,
+            datosVentasM,
             // Aquí más datos...
         ]
     },
@@ -41,6 +65,43 @@ new Chart($grafica, {
         },
     }
 });
+})
+
+fetch(url2)
+.then(data=>data.json())
+.then(data=>{
+const $grafica = document.querySelector("#grafica2");
+// Las etiquetas son las que van en el eje X.
+const etiquetas = [""+data.producto1[1]+"",""+data.producto2[1]+""]
+// Podemos tener varios conjuntos de datos. Comencemos con uno
+const datosVentasS = {
+    label: "Ventas de la semana",
+    data: [data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'hsla(64, 95%, 48%, 0.377)', // Color de fondo
+    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+    borderWidth: 3,// Ancho del borde
+};
+new Chart($grafica, {
+    type: 'line',// Tipo de gráfica
+    data: {
+        labels: etiquetas,
+        datasets: [
+            datosVentasS,
+            // Aquí más datos...
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        },
+    }
+});
+})
   </script>
 </body>
 </html>
+
