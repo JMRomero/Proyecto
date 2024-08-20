@@ -1224,7 +1224,6 @@ def venta_Info(request,fecha):
 #endregion
 #logout
 def retiro_api(request,retiro,final):
-    
     id=connection.cursor()
     id.execute("select max(id) from historia_caja;")
     idc=id.fetchone()[0]
@@ -1238,16 +1237,26 @@ def retiro_api(request,retiro,final):
     HttpResponse('retiro exitoso')
 def salir(request):
     username= nombredelusuario(request)
+    
     with connection.cursor() as cursor:
         cursor.execute(f"update auth_user set hora_logout=now() where username={username};")
         cursor.execute(f"call calcularHoras('{username}');")
     logout(request)
     return redirect('login')
-
-
 @login_required
 def estadisticas(request):
-    with connection.cursor() as cursor:
-        cursor.execute("select v.Fecha, SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(v.Fecha, 1) = WEEK(CURDATE(), 1) AND YEAR(v.Fecha) = YEAR(CURDATE()) group by p.nombre order by cantidad desc;")
-        productovsemana = connection.cursor()
-    return render(request,'Estadisticas/estadisticas.html',{'productovsemana':productovsemana})
+    group=group_iden(request)
+    return render(request,'Estadisticas/estadisticas.html',{'group':group})
+
+def productovmes_api(request,fecha):
+    productovmes=connection.cursor()
+    productovmes.execute("call productoVmes(now());")
+    datos=productovmes.fetchall()
+    datoss=dict([('producto1',(datos[0][0],datos[0][1])),('producto2',(datos[1][0],datos[1][1]))])
+    return JsonResponse(datoss,safe=False)
+def productovsem_api(request,fecha):
+    productovsem=connection.cursor()
+    productovsem.execute("call productoVsem(now());")
+    datos=productovsem.fetchall()
+    datoss=dict([('producto1',(datos[0][0],datos[0][1])),('producto2',(datos[1][0],datos[1][1]))])
+    return JsonResponse(datoss,safe=False)
