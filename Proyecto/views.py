@@ -1107,10 +1107,18 @@ def LoteUpdate(request,idc,idl):
         if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
             loteOO=request.POST.get('Lote')
             if loteOO==idl:
+                cantidad=request.POST.get('Cantidad')
+                precioC=request.POST.get('PrecioC')
+                precioV=request.POST.get('PrecioV')
+                ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                ganancia=round(ganancia)
+                if ganancia%50!=0:    
+                    while ganancia%50 !=0:
+                        ganancia=ganancia+1
                 insert=connection.cursor()
-                insert.execute("Update temp_lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
+                insert.execute("Update temp_lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",porcentaje='"+request.POST.get('PrecioV')+"',precioV="+str(ganancia)+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
                 insert=connection.cursor()
-                insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+request.POST.get('PrecioV')+",CantidadProductos="+request.POST.get('Cantidad')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
                 return redirect(f'/Compra/Lista/{idc}')
             else:
                 consulta=connection.cursor()
@@ -1135,10 +1143,18 @@ def LoteUpdate(request,idc,idl):
                     grupo_actual= group_iden(request)
                     return render(request,"ReciboCompra/LoteActualizar.html",{'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
                 else:
+                    cantidad=request.POST.get('Cantidad')
+                    precioC=request.POST.get('PrecioC')
+                    precioV=request.POST.get('PrecioV')
+                    ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                    ganancia=round(ganancia)
+                    if ganancia%50!=0:    
+                        while ganancia%50 !=0:
+                            ganancia=ganancia+1
                     insert=connection.cursor()
-                    insert.execute("Update temp_lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
+                    insert.execute("Update temp_lote set Loteid='"+request.POST.get('Lote')+"',Cantidad="+str(cantidad)+",PrecioC="+str(precioC)+",porcentaje='"+request.POST.get('PrecioV')+"',precioV="+str(ganancia)+",fechaVenci='"+request.POST.get('FechaVenci')+"',fechaModify=now() where Loteid='"+str(idl)+"';")
                     insert=connection.cursor()
-                    insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+request.POST.get('PrecioV')+",CantidadProductos="+request.POST.get('Cantidad')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                    insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
                     return redirect(f'/Compra/Lista/{idc}')
     else:
         lote=connection.cursor()
