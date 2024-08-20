@@ -31,17 +31,17 @@
   <script>
     // Obtener una referencia al elemento canvas del DOM
 let url1='/productovmes_API/2020';
-let url2="/productovsem_API/2020"
+// let url2="/productovsem_API/2020"
 fetch(url1)
 .then(data=>data.json())
 .then(data=>{
 const $grafica = document.querySelector("#grafica1");
 // Las etiquetas son las que van en el eje X.
-const etiquetas = [""+data.producto1[1]+"",""+data.producto2[1]+""]
+const etiquetas = [""+data.producto1[1]+"",""+data.producto1[1]+"",""+data.producto2[1]+""]
 // Podemos tener varios conjuntos de datos. Comencemos con uno
 const datosVentasM = {
     label: "Ventas del Mes",
-    data: [data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    data: [data.producto0[0],data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
     backgroundColor: 'hsla(192, 59%, 51%, 0.377)', // Color de fondo
     borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
     borderWidth: 3,// Ancho del borde

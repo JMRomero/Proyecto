@@ -1268,11 +1268,17 @@ def productovmes_api(request,fecha):
     productovmes=connection.cursor()
     productovmes.execute("call productoVmes(now());")
     datos=productovmes.fetchall()
-    datoss=dict([('producto1',(datos[0][0],datos[0][1])),('producto2',(datos[1][0],datos[1][1]))])
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['producto'+str(i)]=(0,'Sin registro')
+    print(datoss)
     return JsonResponse(datoss,safe=False)
 def productovsem_api(request,fecha):
     productovsem=connection.cursor()
     productovsem.execute("call productoVsem(now());")
     datos=productovsem.fetchall()
-    datoss=dict([('producto1',(datos[0][0],datos[0][1])),('producto2',(datos[1][0],datos[1][1]))])
+    datoss=dict([('producto1',(0,'hola')),('producto2',(0,'hola'))])
     return JsonResponse(datoss,safe=False)
