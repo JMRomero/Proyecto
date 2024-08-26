@@ -1280,6 +1280,7 @@ def venta_Info(request,fecha):
     return render(request, "Venta/Infor_Ventas.html",{'dinero':dinero,'info':info,'infoV':infoV,'group':group})
 #endregion
 #logout
+#region estadisticas
 def retiro_api(request,retiro,final):
     id=connection.cursor()
     id.execute("select max(id) from historia_caja;")
@@ -1369,3 +1370,4 @@ def productocsem_api(request,fecha):
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
+#endregion
