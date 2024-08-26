@@ -101,6 +101,6 @@ urlpatterns = [
     path('Venta/Info/<str:fecha>',venta_Info),
     #estadisticas
     path('Estadisticas',estadisticas),
-    path('productovmes_API/<int:fecha>',productovmes_api),
-    path('productovsem_API/<int:fecha>',productovsem_api),
+    path('productovmes_API/<str:fecha>',productovmes_api),
+    path('productovsem_API/<str:fecha>',productovsem_api),
 ]

@@ -19,7 +19,7 @@
       <input type="hidden" id="Primer_registo" value="1">
       <input type="hidden" id="ID_Venta" value="0">
       <input type="hidden" id="cedula" value='{{user}}'>
-      <div class="tableWrap">
+      <div class="table-responsive" style="width:1250px; height:600px;">
     <table class="table table-fixed">
         <thead >
             <th>codigo</th>
@@ -49,13 +49,11 @@
     </table>
   </div>
 
-    <div id="BotonCancelar"><a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-secondary btn-lg" >Cancelar y Nuevo</a></div>
-    <div  id="BotonTerminar"><a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-secondary btn-lg">Terminar y Nuevo</a></div>
-    <div id="BotonCancelar2"><a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a></div>
-    <div  id="BotonTerminar2"><a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-secondary btn-lg">Terminar y Salir</a></div>
-    {%if group == 'Admin' %}
-    <div><a style="margin-left: 1300px; margin-top: -500px;" class="btn btn-warning btn-lg" href="../Venta/Dias">Ver Ventas</a></div>
-    {%endif%}
+    <e id="BotonCancelar"><a style="margin-left:0px; margin-top: 0px;" class="btn btn-secondary btn-lg" >Cancelar y Nuevo</a></e>
+    <e  id="BotonTerminar"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg">Terminar y Nuevo</a></e>
+    <e id="BotonCancelar2"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a></e>
+    <e  id="BotonTerminar2"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg">Terminar y Salir</a></e>
+    <e><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-warning btn-lg" href="../Venta/Dias">Ver Ventas</a></e>
   </div>
   {%include 'Layout/Validacion.html' %}
   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
@@ -148,10 +146,10 @@
       ventaid=document.getElementById('ID_Venta').value;
       posicion=document.getElementById('PosicionTabla'+cont).value;
       document.getElementById('eliminar'+cont).innerHTML='<i class="fa fa-pencil-square-o fa-lg ms-4" aria-hidden="true" onclick="eliminar('+c+''+ventaid+''+c+','+c+''+posicion+''+c+')"></i>'
-      document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-danger btn-lg" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar y Nuevo</a>'
-      document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-success btn-lg" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar y Nuevo</a>'
-      document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-danger btn-lg" onclick=Cancelar2('+c+''+ventaid+''+c+')>Cancelar y Salir</a>'
-      document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-primary btn-lg" onclick=Terminar2('+c+''+ventaid+''+c+')>Terminar y Salir</a>'
+      document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: 0px;" class="btn btn-danger btn-lg" onclick=Cancelar('+c+''+ventaid+''+c+')>Cancelar y Nuevo</a>'
+      document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-success btn-lg" onclick=Terminar('+c+''+ventaid+''+c+')>Terminar y Nuevo</a>'
+      document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-danger btn-lg" onclick=Cancelar2('+c+''+ventaid+''+c+')>Cancelar y Salir</a>'
+      document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-primary btn-lg" onclick=Terminar2('+c+''+ventaid+''+c+')>Terminar y Salir</a>'
       cont=cont+1;
       $('#fila').append('\
       <tr id="'+cont+'">\
@@ -191,10 +189,10 @@
         $('#'+posicion).remove()
         totalA=parseInt(document.getElementById('Total').textContent);
         if (totalA==0){
-          document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: -1100px;" class="btn btn-secondary btn-lg" >Cancelar y nuevo</a>'
-          document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: -950px;" class="btn btn-secondary btn-lg">Terminar y nuevo</a>'
-          document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: -800px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a>'
-          document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: -650px;" class="btn btn-secondary btn-lg">Terminar y Salir</a>'
+          document.getElementById('BotonCancelar').innerHTML='<a style="margin-left: 1300px; margin-top: 0px;" class="btn btn-secondary btn-lg" >Cancelar y nuevo</a>'
+          document.getElementById('BotonTerminar').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-secondary btn-lg">Terminar y nuevo</a>'
+          document.getElementById('BotonCancelar2').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a>'
+          document.getElementById('BotonTerminar2').innerHTML='<a style="margin-left: 1300px; margin-top: 25px;" class="btn btn-secondary btn-lg">Terminar y Salir</a>'
         }
     }
     function Cancelar(idventa){

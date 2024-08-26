@@ -1266,7 +1266,11 @@ def estadisticas(request):
 
 def productovmes_api(request,fecha):
     productovmes=connection.cursor()
-    productovmes.execute("call productoVmes(now());")
+    if fecha=="0":
+        productovmes.execute("call productoVmes(now());")
+    else:
+        fecha=fecha+str("-01")
+        productovmes.execute(f"call productoVmes('{fecha}');")
     datos=productovmes.fetchall()
     datoss=dict()
     for i in range(0,3,1):
@@ -1274,11 +1278,20 @@ def productovmes_api(request,fecha):
             datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
-    print(datoss)
     return JsonResponse(datoss,safe=False)
 def productovsem_api(request,fecha):
     productovsem=connection.cursor()
-    productovsem.execute("call productoVsem(now());")
+    if fecha=="0":
+        productovsem.execute("call productoVsem('0','0',now());")
+    else:
+        x=fecha.split('-W')
+        print(x[1])
+        productovsem.execute(f"call productoVsem('{x[0]}','{x[1]}',now());")
     datos=productovsem.fetchall()
-    datoss=dict([('producto1',(0,'hola')),('producto2',(0,'hola'))])
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)

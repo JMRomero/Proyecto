@@ -6,11 +6,10 @@
     <span class="logo_name" style='color:#080808'>Farmacia la honda</span>
   </div>
   <ul class="nav-links">
-    <br><br>
     <li>
       <section>
         <a href="#" class="barra">
-          <i class="fa fa-bars" aria-hidden="true"></i>
+          <i class="fa fa-bars fa-5x" aria-hidden="true"></i>
           <span class="link_name">Contraer</span>
         </a>
         <ul class="sub-menu blank">
@@ -30,39 +29,39 @@
     <li>
       <a href="/Pedidos/lista">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
-        <span class="link_name">Listado Pedidos Especiales</span>
+        <span class="link_name">Pedidos Especiales</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Pedidos/lista">Listado Pedidos Especiales</a></li>
+        <li><a class="link_name" href="/Pedidos/lista">Pedidos Especiales</a></li>
       </ul>
     </li>
     {%if group == "Admin"%}
     <li>
       <a href="/Producto/lista">
         <i class="fa fa-laptop" aria-hidden="true"></i>
-        <span class="link_name">Listado Productos</span>
+        <span class="link_name">Productos</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Producto/lista">Listado Productos</a></li>
+        <li><a class="link_name" href="/Producto/lista">Productos</a></li>
       </ul>
     </li>
 
     <li>
       <a href="/Proveedor/lista">
         <i class="fa fa-users" aria-hidden="true"></i>
-        <span class="link_name">Listado Proveedores</span>
+        <span class="link_name">Proveedores</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Proveedor/lista">Listado Proveedores</a></li>
+        <li><a class="link_name" href="/Proveedor/lista">Proveedores</a></li>
       </ul>
     </li>
     <li>
       <a href="/Usuario/lista">
         <i class="fa fa-user-circle" aria-hidden="true"></i>
-        <span class="link_name">Lista Usuarios</span>
+        <span class="link_name">Usuarios</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Usuario/lista">Lista Usuarios</a></li>
+        <li><a class="link_name" href="/Usuario/lista">Usuarios</a></li>
       </ul>
     </li>
     <li>
@@ -83,12 +82,12 @@
         <li><a class="link_name" href="/Compra/Recibos/1">Recibos de Compra</a></li>
       </ul>
       <li>
-        <a href="../../Estadisticas">
-          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+        <a href="/Estadisticas">
+          <i class="fa fa-bar-chart" aria-hidden="true" ></i>
           <span class="link_name">Estadisticas</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="../Estadisticas">Estadisticas</a></li>
+          <li><a class="link_name" href="/Estadisticas">Estadisticas</a></li>
         </ul>
     {%endif%}
     <li>
@@ -109,7 +108,7 @@
         <li><a class="link_name" href=# onclick="cerrar()">Cerrar Sesión</a></li>
       </ul>
     </li>
-    <div class="profile-details">
+    <!-- <div class="profile-details">
       <div class="profile-content">
         {%if group == "Admin"%}
         <img src="{%static 'img/Admin.png'%}" alt="profileImg">
@@ -121,7 +120,7 @@
         <div class="profile_name">{{user}}</div>
         <div class="profile_name">{{group}}</div>
       </div>
-    </div>
+    </div> -->
     </li>
   </ul>
 </div>
@@ -201,5 +200,8 @@
             location.href="/salir"
           }})
     }
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
   </script>
   {%endif%}
