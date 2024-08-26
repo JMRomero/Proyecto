@@ -1231,7 +1231,6 @@ def venta_dias(request):
     return render(request, "Venta/Dias.html",{'dias':dias,'group':group})
 def venta_Info(request,fecha):
     info=connection.cursor()
-    print(fecha)
     info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}' and TotalCompra>0;")
     infoV=connection.cursor()
     infoV.execute("select detalle_venta.id_venta, lote.id_producto,producto.Nombre,detalle_venta.PrecioU,detalle_venta.Cantidad,detalle_venta.TotalProducto from detalle_venta inner join lote on lote.Loteid=detalle_venta.id_Lote INNER join producto on lote.id_producto=producto.id_producto  GROUP by detalle_venta.id_venta, detalle_venta.PosicionTabla;")
@@ -1287,6 +1286,39 @@ def productovsem_api(request,fecha):
         x=fecha.split('-W')
         print(x[1])
         productovsem.execute(f"call productoVsem('{x[0]}','{x[1]}',now());")
+    datos=productovsem.fetchall()
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['producto'+str(i)]=(0,'Sin registro')
+    return JsonResponse(datoss,safe=False)
+
+def productocmes_api(request,fecha):
+    productovmes=connection.cursor()
+    if fecha=="0":
+        productovmes.execute("call productoCmes(now());")
+    else:
+        fecha=fecha+str("-01")
+        productovmes.execute(f"call productoCmes('{fecha}');")
+    datos=productovmes.fetchall()
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['producto'+str(i)]=(0,'Sin registro')
+    return JsonResponse(datoss,safe=False)
+
+def productocsem_api(request,fecha):
+    productovsem=connection.cursor()
+    if fecha=="0":
+        productovsem.execute("call productoCsem('0','0',now());")
+    else:
+        x=fecha.split('-W')
+        print(x[1])
+        productovsem.execute(f"call productoCsem('{x[0]}','{x[1]}',now());")
     datos=productovsem.fetchall()
     datoss=dict()
     for i in range(0,3,1):
