@@ -91,7 +91,7 @@ function VentaSem(){
     // Podemos tener varios conjuntos de datos. Comencemos con uno
     const datosVentasS = {
         label: "Ventas de la semana",
-        data: [data.producto0[0],data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+        data: [data.producto0[0],data.producto2[0],data.producto1[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
         backgroundColor: 'hsla(275, 71%, 60%, 0.377)', // Color de fondo
         borderColor: 'rgb(151, 0, 255)', // Color del borde
         borderWidth: 3,// Ancho del borde
@@ -172,11 +172,11 @@ fetch(url2)
 .then(data=>{
 const $grafica = document.querySelector("#grafica1");
 // Las etiquetas son las que van en el eje X.
-const etiquetas = [""+data.producto0[1]+"",""+data.producto1[1]+"",""+data.producto2[1]+""]
+const etiquetas = [""+data.producto0[1]+"",""+data.producto2[1]+"",""+data.producto1[1]+""]
 // Podemos tener varios conjuntos de datos. Comencemos con uno
 const datosVentasS = {
     label: "Compras de la semana",
-    data: [data.producto0[0],data.producto1[0],data.producto2[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    data: [data.producto0[0],data.producto2[0],data.producto1[0],0,0], // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
     backgroundColor: 'hsla(158, 72%, 59%, 0.377)', // Color de fondo
     borderColor: 'hsl(158, 100%, 50%)', // Color del borde
     borderWidth: 3,// Ancho del borde

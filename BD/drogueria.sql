@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 14:14:48
+-- Tiempo de generación: 26-08-2024 a las 17:40:11
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.28
 
@@ -103,13 +103,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `precioAnterior` (IN `idP` INT)   be
 select case when(select count(Loteid) from lote where id_producto=idP)>0 then (SELECT precioV from lote where id_producto=idP order by fechaCreate limit 1)else 0 end;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoCmes` (IN `fechas` DATE)   select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where MONTH(c.Fecha_Llegada)=MONTH(fechas) group by p.Nombre order by cantidad desc limit 3$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoCmes` (IN `fechas` DATE)   select SUM(dc.CantidadProductos) as cantidad,p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where MONTH(c.Fecha_Llegada)=MONTH(fechas) group by p.Nombre order by cantidad desc limit 3$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `productoCsem` (IN `yearSelect` INT, IN `weekSelect` INT, IN `fechas` DATE)   begin 
 if yearSelect=0 or weekSelect=0 THEN
-select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) = WEEK(CURDATE(), 1) AND YEAR(c.Fecha_Llegada) = YEAR(fechas) group by p.Nombre limit 3;
+select SUM(dc.CantidadProductos) as cantidad, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) = WEEK(CURDATE(), 1) AND YEAR(c.Fecha_Llegada) = YEAR(fechas) group by p.Nombre order by cantidad desc limit 3;
 ELSE
-select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) =weekSelect AND YEAR(c.Fecha_Llegada) =yearSelect group by p.Nombre order by cantidad desc limit 3;
+select SUM(dc.CantidadProductos) as cantidad, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) =weekSelect AND YEAR(c.Fecha_Llegada) =yearSelect group by p.Nombre order by cantidad desc limit 3; 
 end if;
 END$$
 
@@ -359,7 +359,7 @@ CREATE TABLE `caja` (
 --
 
 INSERT INTO `caja` (`id`, `dinero`) VALUES
-(1, -2147420548);
+(1, -3375345950);
 
 -- --------------------------------------------------------
 
@@ -386,7 +386,9 @@ INSERT INTO `compra` (`id_compra`, `Total`, `Fecha_Llegada`, `NIT`) VALUES
 (5, 91500, '2024-08-12 07:18:31', 12121212),
 (6, 60000, '2024-08-12 08:54:09', 12121212),
 (7, 10000, '2024-08-12 11:34:04', 12121212),
-(8, 27890, '2024-08-26 06:28:21', 12121212);
+(8, 27890, '2024-08-26 06:28:21', 12121212),
+(9, 100800, '2024-08-26 07:36:45', 2147483647),
+(10, 58901, '2024-08-26 07:43:38', 12121212);
 
 -- --------------------------------------------------------
 
@@ -418,7 +420,11 @@ INSERT INTO `detalle_compra` (`Lote`, `Precio`, `procentaje`, `PrecioU`, `Cantid
 ('nnnnasasa', 57000, 75, 1700, 60, 5),
 ('jksajsa', 60000, 60, 3200, 30, 6),
 ('jjajsaj', 10000, 100, 2000, 10, 7),
-('UJJS', 27890, 65, 1550, 30, 8);
+('UJJS', 27890, 65, 1550, 30, 8),
+('Ibu9922', 45000, 100, 300, 300, 9),
+('JJJ8987', 27910, 78, 1700, 30, 9),
+('JKSNa8989', 27890, 100, 200, 300, 9),
+('NSJAS990', 58901, 70, 3350, 30, 10);
 
 --
 -- Disparadores `detalle_compra`
@@ -691,12 +697,6 @@ CREATE TABLE `horas_trabajadas` (
 --
 
 INSERT INTO `horas_trabajadas` (`id`, `usuario`, `fecha`, `horas`) VALUES
-(62, '1017924962', '2024-07-17', 41),
-(63, '1017924962', '2024-08-06', 1),
-(64, '1017924962', '2024-08-06', 8),
-(65, '1017924962', '2024-08-09', 0),
-(66, '1017924962', '2024-08-09', 0),
-(67, '1017924962', '2024-08-09', 0),
 (68, '1017924962', '2024-08-09', 7079),
 (69, '1017924962', '2024-08-02', 3621),
 (70, '1025644878', '2024-08-09', 14),
@@ -737,14 +737,18 @@ CREATE TABLE `lote` (
 
 INSERT INTO `lote` (`id_producto`, `Loteid`, `Cantidad`, `PrecioC`, `porcentaje`, `precioV`, `Estado`, `fechaVenci`, `fechaModify`, `fechaCreate`, `Notificacion_on`) VALUES
 (770321, '888asas', 28, 34500, 70, 3200, 0, '2023-11-12', '2024-08-12', '2024-08-12', 1),
-(770123, 'eeeeeee', 455203, 15000, 100, 2000, 1, '2030-03-22', '2024-07-21', '2024-07-21', 0),
-(770123, 'jjajsaj', 10, 10000, 100, 2000, 1, '2026-09-01', '2024-08-12', '2024-08-12', 1),
+(770123, 'eeeeeee', 0, 15000, 100, 2000, 0, '2030-03-22', '2024-07-21', '2024-07-21', 0),
+(7701234, 'Ibu9922', 300, 45000, 100, 300, 1, '2036-02-01', '2024-08-26', '2024-08-26', 1),
+(770123, 'jjajsaj', 1481239, 10000, 100, 2000, 1, '2026-09-01', '2024-08-12', '2024-08-12', 1),
+(770321, 'JJJ8987', 30, 27910, 78, 1700, 1, '2038-03-01', '2024-08-26', '2024-08-26', 1),
 (770321, 'jksajsa', 29, 60000, 60, 3200, 1, '2028-11-01', '2024-08-12', '2024-08-12', 1),
-(77012345, 'nnnnasasa', 55, 57000, 75, 1700, 1, '2034-03-01', '2024-08-12', '2024-08-12', 1),
+(770123, 'JKSNa8989', 300, 27890, 100, 200, 1, '2038-02-01', '2024-08-26', '2024-08-26', 1),
+(77012345, 'nnnnasasa', 30, 57000, 75, 3350, 1, '2034-03-01', '2024-08-12', '2024-08-12', 1),
+(77012345, 'NSJAS990', 30, 58901, 70, 3350, 1, '2038-02-01', '2024-08-26', '2024-08-26', 1),
 (770123, 'qqqqqqq', 300, 6500, 100, 2000, 1, '2029-07-22', '2024-07-21', '2024-07-21', 0),
-(7701234, 'rrrrrrrrr', 230, 25890, 70, 70, 1, '2024-08-31', '2024-07-21', '2024-07-21', 0),
-(77012345, 'UJJS', 30, 27890, 65, 1550, 1, '2035-07-01', '2024-08-26', '2024-08-26', 1),
-(7701234, 'wwwwwwwww', 300, 26890, 70, 200, 1, '2030-09-22', '2024-07-21', '2024-07-21', 0),
+(7701234, 'rrrrrrrrr', 230, 25890, 70, 300, 1, '2024-08-31', '2024-07-21', '2024-07-21', 0),
+(77012345, 'UJJS', 30, 27890, 65, 3350, 1, '2035-07-01', '2024-08-26', '2024-08-26', 1),
+(7701234, 'wwwwwwwww', 300, 26890, 70, 300, 1, '2030-09-22', '2024-07-21', '2024-07-21', 0),
 (770123, 'yyyyyy', 300, 20000, 100, 2000, 1, '2028-08-22', '2024-07-21', '2024-07-21', 1);
 
 --
@@ -865,7 +869,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`NIT`, `Nombre`, `Estado`, `Telefono`, `Horario_Atencion`, `Politica_Devolucion`) VALUES
-(12121212, 'Hexon', 1, '3025469090', 'lunes-viernes 7am-1pm', '3');
+(12121212, 'Hexon', 1, '3025469090', 'lunes-viernes 7am-1pm', '3'),
+(2147483647, 'Henfar', 1, '3214567890', 'lunes-viernes 8am-1pm', '5');
 
 -- --------------------------------------------------------
 
@@ -984,7 +989,9 @@ INSERT INTO `venta` (`id_venta`, `TotalCompra`, `Fecha`, `Hora`, `Efectivo_Recib
 (86, 2000, '2024-08-12', '06:57:50', 2000, 0, '1017924962'),
 (87, -2147483648, '2024-08-23', '10:47:56', 2000, 7420000, '1017924962'),
 (88, 700, '2024-08-23', '10:48:43', 1000, 300, '1017924962'),
-(89, 9300, '2024-08-26', '07:08:48', 10000, 700, '1017924962');
+(89, 9300, '2024-08-26', '07:08:48', 10000, 700, '1017924962'),
+(90, -371364250, '2024-08-26', '08:58:45', 0, 0, '1017924962'),
+(91, 0, '2024-08-26', '09:13:40', 0, 0, '1017924962');
 
 --
 -- Disparadores `venta`
@@ -1276,7 +1283,7 @@ ALTER TABLE `temp_compra`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- Restricciones para tablas volcadas
