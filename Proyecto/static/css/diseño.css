@@ -11,7 +11,7 @@ body{
   --primary-color: #0a75f0;
 }
 ::-webkit-scrollbar {
-  width: 13px;
+  width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
