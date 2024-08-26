@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 20-08-2024 a las 15:38:36
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 26-08-2024 a las 14:14:48
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 7.4.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -86,6 +86,7 @@ WITH UniqueDetalle AS (
 SELECT v.fecha,(Select COUNT(id_venta) from venta where Fecha=v.Fecha) as facturas, COUNT(ud.id_venta) AS num_registros,format((select sum(TotalCompra) from venta where Fecha=v.Fecha),"###.###.###.###") as total
 FROM venta v
 JOIN UniqueDetalle ud ON v.id_venta = ud.id_venta
+where v.Efectivo_Recibido>0
 GROUP BY v.fecha
 ORDER BY v.fecha;
 END$$
@@ -102,12 +103,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `precioAnterior` (IN `idP` INT)   be
 select case when(select count(Loteid) from lote where id_producto=idP)>0 then (SELECT precioV from lote where id_producto=idP order by fechaCreate limit 1)else 0 end;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoVmes` (IN `fechas` DATE)   BEGIN
-select SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where MONTH(v.Fecha)= month(fechas) group by p.nombre limit 3;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoCmes` (IN `fechas` DATE)   select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where MONTH(c.Fecha_Llegada)=MONTH(fechas) group by p.Nombre order by cantidad desc limit 3$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoCsem` (IN `yearSelect` INT, IN `weekSelect` INT, IN `fechas` DATE)   begin 
+if yearSelect=0 or weekSelect=0 THEN
+select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) = WEEK(CURDATE(), 1) AND YEAR(c.Fecha_Llegada) = YEAR(fechas) group by p.Nombre limit 3;
+ELSE
+select c.Fecha_Llegada, SUM(dc.CantidadProductos) as cantidad, dc.Lote, l.id_producto, p.Nombre from compra as c INNER join detalle_compra as dc on c.id_compra=dc.id_compra INNER join lote as l on l.Loteid=dc.Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(c.Fecha_Llegada, 1) =weekSelect AND YEAR(c.Fecha_Llegada) =yearSelect group by p.Nombre order by cantidad desc limit 3;
+end if;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `productoVsem` (IN `fechas` DATE)   BEGIN
-select SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(v.Fecha, 1) = WEEK(fechas, 1) AND YEAR(v.Fecha) = YEAR(fechas) GROUP BY p.nombre;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoVmes` (IN `fechas` DATE)   BEGIN
+select SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where MONTH(v.Fecha)= month(fechas) group by p.nombre order by cantidad desc limit 3;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `productoVsem` (IN `yearSelect` INT, IN `weekSelect` INT, IN `fechas` DATE)   BEGIN
+if yearSelect=0 or weekSelect=0 THEN
+select SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(v.Fecha, 1) = WEEK(fechas,1) AND YEAR(v.Fecha) = year(fechas) GROUP BY p.nombre order by cantidad desc limit 3;
+else
+select SUM(dv.Cantidad) as cantidad, p.Nombre from venta as v INNER join detalle_venta as dv on v.id_venta=dv.id_venta INNER join lote as l on l.Loteid=dv.id_Lote INNER join producto as p on p.id_producto=l.id_producto where WEEK(v.Fecha, 1) = weekSelect AND YEAR(v.Fecha) = yearSelect GROUP BY p.nombre order by cantidad desc limit 3;
+end if;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Producto_cero` ()   select nombre from producto where CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End=0 and Estado=True and rotacion="Normal"$$
@@ -182,7 +197,7 @@ DELIMITER ;
 
 CREATE TABLE `auth_group` (
   `id` int(11) NOT NULL,
-  `name` varchar(150) NOT NULL
+  `name` varchar(150) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -220,9 +235,9 @@ INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES
 
 CREATE TABLE `auth_permission` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `content_type_id` int(11) NOT NULL,
-  `codename` varchar(100) NOT NULL
+  `codename` varchar(100) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -271,19 +286,19 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 
 CREATE TABLE `auth_user` (
   `id` int(11) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `password` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `last_login` datetime(6) DEFAULT NULL,
   `is_superuser` tinyint(1) NOT NULL DEFAULT 0,
-  `username` varchar(150) NOT NULL,
-  `first_name` varchar(150) NOT NULL,
-  `last_name` varchar(150) NOT NULL,
-  `email` varchar(254) NOT NULL,
+  `username` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
+  `first_name` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
+  `last_name` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(254) COLLATE utf8_spanish_ci NOT NULL,
   `is_staff` tinyint(1) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `date_joined` datetime(6) NOT NULL,
   `fechaNacimiento` date NOT NULL,
-  `Direccion` varchar(250) NOT NULL DEFAULT '',
-  `Telefono` varchar(10) NOT NULL DEFAULT '',
+  `Direccion` varchar(250) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
+  `Telefono` varchar(10) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `hora_login` datetime DEFAULT NULL,
   `hora_logout` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -293,8 +308,8 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `fechaNacimiento`, `Direccion`, `Telefono`, `hora_login`, `hora_logout`) VALUES
-(3, 'pbkdf2_sha256$720000$NjhwZWuCcQz0RODIC3ZBT5$fDnsKWR42Cp0pq0Rb2G/vEjeQ3KXXhw3tzT6OWGEj04=', '2024-08-20 11:48:57.434613', 0, '1017924962', 'jose', 'romero', 'rjosemiguel787@gmail.com', 0, 1, '2023-11-17 06:36:00.000000', '2005-05-05', 'CL 112 81-74', '3046803586', '2024-08-20 06:48:57', '2024-08-17 20:40:01'),
-(15, 'pbkdf2_sha256$720000$N7AeFCMM4YgFQoxKOGSkDM$qtxUAtf7DaXFdkRc2nZl0nwD4JeOyJzkx+IWsx4IJjk=', '2024-08-12 10:18:35.929853', 0, '1025644878', 'Juan', 'Guerra', 'juanpguerra14@gmail.com', 0, 0, '2024-07-17 15:32:02.856608', '2000-08-22', 'cll23', '3144698932', '2024-08-12 05:18:35', '2024-08-12 07:00:09');
+(3, 'pbkdf2_sha256$720000$NjhwZWuCcQz0RODIC3ZBT5$fDnsKWR42Cp0pq0Rb2G/vEjeQ3KXXhw3tzT6OWGEj04=', '2024-08-26 11:28:04.337749', 0, '1017924962', 'jose', 'romero', 'rjosemiguel787@gmail.com', 0, 1, '2023-11-17 06:36:00.000000', '2005-05-05', 'CL 112 81-74', '3046803586', '2024-08-26 06:28:04', '2024-08-20 10:49:51'),
+(15, 'pbkdf2_sha256$720000$IrvJ9SuMxGICLRBxmXvLsD$oI5aKDExIn0MhTcU1700Z1KQu/RseMTnwtW0RBiw8tE=', '2024-08-20 15:49:55.139006', 0, '1025644878', 'Juan', 'Guerra', 'juanpguerra14@gmail.com', 0, 1, '2024-07-17 15:32:02.856608', '2000-08-22', 'cll23', '3144698932', '2024-08-20 10:49:55', '2024-08-12 07:00:09');
 
 -- --------------------------------------------------------
 
@@ -314,7 +329,7 @@ CREATE TABLE `auth_user_groups` (
 
 INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES
 (2, 3, 2),
-(10, 15, 2);
+(10, 15, 1);
 
 -- --------------------------------------------------------
 
@@ -337,14 +352,14 @@ CREATE TABLE `auth_user_user_permissions` (
 CREATE TABLE `caja` (
   `id` int(11) NOT NULL,
   `dinero` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `caja`
 --
 
 INSERT INTO `caja` (`id`, `dinero`) VALUES
-(1, 222700);
+(1, -2147420548);
 
 -- --------------------------------------------------------
 
@@ -357,7 +372,7 @@ CREATE TABLE `compra` (
   `Total` int(11) DEFAULT NULL,
   `Fecha_Llegada` datetime DEFAULT NULL,
   `NIT` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `compra`
@@ -368,7 +383,10 @@ INSERT INTO `compra` (`id_compra`, `Total`, `Fecha_Llegada`, `NIT`) VALUES
 (2, 41890, '2024-07-21 23:10:04', 12121212),
 (3, 25890, '2024-07-21 23:19:11', 12121212),
 (4, 20022, '2024-07-21 23:34:04', 12121212),
-(5, 27890, '2024-08-20 08:08:47', 13425);
+(5, 91500, '2024-08-12 07:18:31', 12121212),
+(6, 60000, '2024-08-12 08:54:09', 12121212),
+(7, 10000, '2024-08-12 11:34:04', 12121212),
+(8, 27890, '2024-08-26 06:28:21', 12121212);
 
 -- --------------------------------------------------------
 
@@ -383,7 +401,7 @@ CREATE TABLE `detalle_compra` (
   `PrecioU` int(11) NOT NULL,
   `CantidadProductos` int(11) NOT NULL,
   `id_compra` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_compra`
@@ -396,7 +414,11 @@ INSERT INTO `detalle_compra` (`Lote`, `Precio`, `procentaje`, `PrecioU`, `Cantid
 ('rrrrrrrrr', 25890, 70, 150, 300, 3),
 ('yyyyyy', 20000, 100, 150, 300, 4),
 ('yyyyyy', 22, 22, 200, 2, 4),
-('dfghjkjh', 27890, 100, 1900, 30, 5);
+('888asas', 34500, 70, 2000, 30, 5),
+('nnnnasasa', 57000, 75, 1700, 60, 5),
+('jksajsa', 60000, 60, 3200, 30, 6),
+('jjajsaj', 10000, 100, 2000, 10, 7),
+('UJJS', 27890, 65, 1550, 30, 8);
 
 --
 -- Disparadores `detalle_compra`
@@ -431,7 +453,7 @@ CREATE TABLE `detalle_venta` (
   `Cantidad` int(11) NOT NULL,
   `PosicionTabla` int(11) DEFAULT NULL,
   `id_venta` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `detalle_venta`
@@ -450,12 +472,14 @@ INSERT INTO `detalle_venta` (`id_Lote`, `PrecioU`, `TotalProducto`, `Cantidad`, 
 ('eeeeeee', 200, 2000, 10, 1, 82),
 ('eeeeeee', 200, 2000, 10, 1, 83),
 ('eeeeeee', 200, 2000, 10, 1, 84),
-('rrrrrrrrr', 150, 4500, 30, 1, 85),
-('eeeeeee', 200, 46000, 230, 1, 86),
-('qqqqqqq', 200, 60000, 300, 1, 86),
-('yyyyyy', 200, 60000, 300, 1, 86),
-('rrrrrrrrr', 150, 300, 2, 1, 87),
-('dfghjkjh', 1900, 1900, 1, 1, 88);
+('nnnnasasa', 1700, 5100, 3, 1, 85),
+('888asas', 2000, 4000, 2, 2, 85),
+('eeeeeee', 2000, 2000, 1, 1, 86),
+('rrrrrrrrr', 70, 700, 10, 1, 88),
+('rrrrrrrrr', 70, 700, 10, 1, 89),
+('nnnnasasa', 1700, 3400, 2, 2, 89),
+('eeeeeee', 2000, 2000, 1, 3, 89),
+('jksajsa', 3200, 3200, 1, 4, 89);
 
 --
 -- Disparadores `detalle_venta`
@@ -479,10 +503,10 @@ DELIMITER ;
 CREATE TABLE `django_admin_log` (
   `id` int(11) NOT NULL,
   `action_time` datetime(6) NOT NULL,
-  `object_id` longtext DEFAULT NULL,
-  `object_repr` varchar(200) NOT NULL,
+  `object_id` longtext COLLATE utf8_spanish_ci DEFAULT NULL,
+  `object_repr` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
   `action_flag` smallint(5) UNSIGNED NOT NULL CHECK (`action_flag` >= 0),
-  `change_message` longtext NOT NULL,
+  `change_message` longtext COLLATE utf8_spanish_ci NOT NULL,
   `content_type_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -504,8 +528,8 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 
 CREATE TABLE `django_content_type` (
   `id` int(11) NOT NULL,
-  `app_label` varchar(100) NOT NULL,
-  `model` varchar(100) NOT NULL
+  `app_label` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `model` varchar(100) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -530,8 +554,8 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 
 CREATE TABLE `django_migrations` (
   `id` bigint(20) NOT NULL,
-  `app` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `app` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `applied` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -566,8 +590,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 --
 
 CREATE TABLE `django_session` (
-  `session_key` varchar(40) NOT NULL,
-  `session_data` longtext NOT NULL,
+  `session_key` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
+  `session_data` longtext COLLATE utf8_spanish_ci NOT NULL,
   `expire_date` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -576,20 +600,22 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
+('1zlmcu8u559ryx74j9n0l8kpjyg11j6k', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1siXtE:Gs_sYbWei631bRgpijBlcRUeUoFcPOTl_6mI7jwCIbs', '2024-08-26 19:28:04.342748'),
 ('2pgda48nvs8ypx5veze4jff7h55m7l8z', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sIFWQ:TXiOgnZ6Qu6xsxCbeKIDJp321HZeUEbz2oRJsdJKfzQ', '2024-06-15 06:35:50.678006'),
 ('31kjxeqcgkvbtgdmdio5s37a6zeey5l9', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJCgJ:9EPEVu_FS54mMs2B0UZicCte6L4_2dvRM0iNXPw2f1A', '2024-06-17 21:45:59.417572'),
-('3pajbg4ntdwifjzgu1oe2lnr24b7ytaz', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sdVaL:SK7Lo41Xg5_46YSnV6YihpksjHogwCwPunrIkYB035E', '2024-08-12 21:59:45.419823'),
+('78x0z2qpumhos8rke02yntufxbwntgbg', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sgbOq:OeSlrwfVoYpSxvxQZT0aFwK2QVOlYsVn3ve6Zub6lJ4', '2024-08-21 10:48:40.752029'),
 ('7zdq3dhy3vzncrp6w1tscn1ivgfpmap9', '.eJxVjEEOwiAQRe_C2hBwKIhL9z0DGZhBqgaS0q6Md7dNutDte-__twi4LiWsnecwkbiKszj9sojpyXUX9MB6bzK1usxTlHsiD9vl2Ihft6P9OyjYy7Y21hlk6w2pCHCJKg-RGEArp7SyfkNxQAM2Y3IZkdgmBCb0NjtkLT5f3KE4hA:1rd7zn:4pbBkMd99V9yWe6fJvhlQPXuacr1PVdg1zHieLYO7tg', '2024-03-07 12:16:11.132810'),
 ('9ow5ww4pvw1rhmnvrtvgbmi4peo7jvvm', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sVjay:gwCWeU28HDdGFDbVzxgGjXP8fHTFdQ8KzD6hFpoZ4Ps', '2024-07-22 11:20:16.909912'),
 ('cg4ymx6r8sa4nxtvhd1l0e9soagndh57', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s55rC:iIlGi1A2fwZZ_bwjAwSnn85f5q28bHZum36Su2Dspcc', '2024-05-09 23:38:54.830193'),
 ('chyooe62g6zwxcawg5ay7znr7pbekogr', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sLwFc:SujOw8L_pw82b8l71Hli8lERAN9is4aEjL4Sd2xI17s', '2024-06-25 10:49:44.436241'),
-('d53xq2fcu6if9nzhptvcdvtgtlshr3nn', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sgNM9:I0J89OUYmBaf6M5tvIUD9ef_FlymlN34rGXN2rnsw68', '2024-08-20 19:48:57.438613'),
 ('d7zag99le2kmnj6hbhl7j435r2xjz4m7', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s2unE:tGWctmgSiVChI_lF9U37j5KOzT6_TW1Sh0bxHcG05Gg', '2024-05-03 23:25:48.318442'),
 ('drre2v61ei9yc5ekxp4ti0zb13q56kcz', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJlhR:DCfDRO6ZCXG-x1dRst5e3mMrL_rq27ZJ7-Y5oAqfKaQ', '2024-06-19 11:09:29.702333'),
 ('e5ooz9enqk4fc9f7bjbhg5au4pf08ckn', '.eJxVjDsOwjAQBe_iGln-hg0lfc5grb1rHEC2FCcV4u4QKQW0b2beSwTc1hK2zkuYSVyEEaffLWJ6cN0B3bHemkytrssc5a7Ig3Y5NeLn9XD_Dgr28q19hkjeQ0KjASFGTd66NPhzdo6MYYhgKWWADFapkVkTqIHsiMYzGfH-AO3qOBI:1r3br7:aOTxIf1Hf47gTaaaK7ia9K2VAOLaQkBpSt5hXONxgHY', '2023-11-30 12:52:25.502416'),
+('eidtb0u2qp9dfqcwannuur4uagsxixg0', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sdY2C:w-xA_t-QNavSwxOOR0mP3tFIEF5u1YVu93BtvG7JHSo', '2024-08-13 00:36:40.118848'),
 ('f2lot3b8mynewz1rw76ssie5zby93xc5', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sI5u8:wVwOOie6UmZo8whPgZKIXf38sfxglT_piFHDpxocSfY', '2024-06-14 20:19:40.421524'),
 ('fp0qoj4asiuedixif1lqv2p9wgeolvz1', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJWu4:JAj-9SFGu0nq8sB6z9_jJUoKjoyyrUkEehGekQuAfv8', '2024-06-18 19:21:32.451664'),
 ('fyldwgfbpqmgtnv4iomeukd0i0tx34j5', 'e30:1rzxwv:FpU4zIMgxjrRVk2zEY-5pLx9q5fnbyj-YzixOs5t5kE', '2024-05-09 12:11:37.859978'),
+('h7fyh0rfsei2r5sk1xwsptqojnsdhaya', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1siQAZ:mN6GtgHrrnS2EtGK-JwE2HqpAkcOh-isQCMl96zv9XY', '2024-08-26 11:13:27.034398'),
 ('hhvo7bow73onn27eow554ktoa3w1azb3', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sRBo0:RNwOMX5WGylIXGEUQiTjhFhazX13vaeZO7oLgqivY3s', '2024-07-09 22:26:56.944177'),
 ('hn0o6qq8rtxzidbr2z1ob0ivbcgjgxaa', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKfGI:2D4dw5cXVaY1JrUivvuhVHvU9qmzky7XNzv7nSpYkk0', '2024-06-21 22:29:10.479350'),
 ('ielf6q699i8vizx7utdi6og09lwrt75b', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKGe6:p7qxCCDrb0CYqSdTxhE1LYMIccAoFt18lY_v7us_SVU', '2024-06-20 20:12:06.502499'),
@@ -598,18 +624,20 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('kjbdpge97ji9ark2ok2fqcj5q2ofkjvf', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sAAaW:ITOpSr_t2bE_IhUAP4G6UMkW9tI6hJ3h-bZnOS7Yjd4', '2024-05-23 23:42:40.700289'),
 ('klglvjofb1odcfcowdq5g5ip8a0h8r1d', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sLvae:-fVIYf9uqqiKwYJJjwdAR09wYX1TG9EEdQC4a7fIGxw', '2024-06-25 10:07:24.104964'),
 ('mebrh7czld1cmnqf68us3qnroeqvu8pk', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s7dit:oeEBNhMuNRZ354FasIFcNlQ_RdDtfOjCGBVZC1DiBLY', '2024-05-17 00:12:51.562914'),
+('mrwcoeudmnm7y3w30wcmiqbaieynhkoo', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1shU5b:h9zmsJYCQSuYDsXa1eFv9nskEQ4vRh9H-DIShh98FRE', '2024-08-23 21:12:27.011303'),
 ('muq3be3ljpvxe8fx7fl7fntp5s6jlnbj', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s7wkl:iEVYmXl2fNiBEvN6RnDAzBtjvXvzk0znfFpX960494Y', '2024-05-17 20:32:03.041359'),
 ('naln5a4d93phok2ido5avkvwl304lkp4', '.eJxVjDsOwjAQBe_iGln4E-OlpOcM1m68iwPIluKkQtwdIqWA9s3Me6mE61LS2nlOU1Zn5dThdyMcH1w3kO9Yb02PrS7zRHpT9E67vrbMz8vu_h0U7OVbG0_RYBYmB0EYiCAHL5ZOxpCQCAoSWCeB7RBBjmKYeADvrPMRnHp_ABy4ONc:1r46Vg:hyTABNosUu5IRIeC7_OXbEFXXpGHABuF0x2TL6eClt0', '2023-12-01 21:36:20.429767'),
 ('nhk4relqpow9zu0e7k7bwtg007swuvl0', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sAW5A:3nSisoYIbyB_8F5RGq03NK4IlFKU6REsqLgQcE-hqks', '2024-05-24 22:39:44.973061'),
 ('nif8owffr5nm53vvvxm88ykn3akvftrg', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1saw17:X3y3oj5g2Fc2zacjCdB14HIOi3p16LzewEiryT42y_o', '2024-08-05 19:36:45.520686'),
-('nqvrd5rk8dgrnq0j7j6gvmik2cmiw1ml', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sdTzs:5UdfQOFz67T_aESLpL6IppcQYjcFBpNvc4dSGXbuOpM', '2024-08-12 20:18:00.449433'),
 ('nvpjhfh5el8o6oesxchl3frxai0vop4a', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKPoq:kAoBexzD4NT5igCZNpBQTNaOBPoEGkdq9c_P5HDSn8w', '2024-06-21 05:59:48.167616'),
 ('q2rx0gsnn49hsxgus1h9dcvizu73c6be', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sU6aU:7gCDkzdAuybjUPEhOZobvC5tYFWAeF0CqSHXqxur9KA', '2024-07-17 23:29:02.387769'),
 ('r84vdmy19hm0vyl92kgfp8swrcd1qvy1', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sbJrb:3Ed94hzG9dvqEmB68TilaudgnAQLyf8iPNEnBbBrv_w', '2024-08-06 21:04:31.856279'),
+('rnqdnpcqrsskyidb5u5r1i6vkfxhf0d7', '.eJxVjjsOwjAQRO_iGlmx499S0nOGaO1d4wCypXwqxN3BUgpo570ZzUtMuG9l2ldeppnEWSgrTr9hxPTg2gndsd6aTK1uyxxlV-RBV3ltxM_L4f4NFFxLb9vBMHhrxhSC04pcjmCzxxFYe8gZFXgVONvoAvHoDBEOHjQbB-H76v0B--Y3qw:1sgR7L:3fyluFxsc9dVjlVGd24tUsMDxZ9QqVX9PuAbH4cPRKo', '2024-08-20 23:49:55.147004'),
 ('smmct7qge5xdj3wv8uro8mpyksi29vyl', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sThHq:5okwBOcPXP62Xfd1XI5C4yRRvqMtCcD1R4CN8tSychg', '2024-07-16 20:28:06.864350'),
 ('ujsce9v4tr5eps2bxwlegx3j7opxk1ya', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sTjYU:Smum9lOvluifwwSK9fGx4YRc5qv6GoSNkGPWzuzPYok', '2024-07-16 22:53:26.500247'),
 ('usbf9f4trkkdqgbzi2vwy9hkt4mos0aa', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJtFh:0OpGWsn_XWIRDIpUCCmJh9CkRo5JTAJ4ewH16_im_Mo', '2024-06-19 19:13:21.227605'),
 ('v8tl9cmzewf7ii5011di62p4v6np8xvz', '.eJxVjMEOwiAQRP-FsyECWygevfsNZGEXqRpISnsy_rtt0oMeZ96beYuA61LC2nkOE4mLUIM4_ZYR05PrTuiB9d5kanWZpyh3RR60y1sjfl0P9--gYC_bGrNjUNqgIlKj8Z4gWkjZ0DlndhAjIcMWBmKlkJzzCUedI2iwwFZ8vjE8OSQ:1scRrH:QVG4z985ypXmy4inXZtFl1SFthd4vzdKb2h8TWPAtl8', '2024-08-09 23:48:51.579214'),
+('xcoracqb8c5x1k27spbuf6ijg37pihop', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sgjup:vCRiN-oI0WlUcmlgpeB1SD2g7jQzX1NKZEPGq8OCQIs', '2024-08-21 19:54:15.022414'),
 ('z97y9w84xe499svmt10kj9zypyt1mcxo', '.eJxVzMsOwiAUBNB_YW0IeHt5uHTvNxAuD6kaSEq7Mv67NOlCt3Nm5s2c39bitp4WN0d2YRM7_WbkwzPVHeLD13vjodV1mYnvFX5o57cW0-t6dP8Oiu9lrG02EqW2Z68wkJYmg8AJyJo8iKI2hANjAsCgiSCoSYAZagmjEuzzBc3VN2w:1rY568:pwBOBLr5sXzIPjAIDdGdEiQJrcni-LnhXNv0TbhBkKA', '2024-02-22 14:09:52.270358');
 
 -- --------------------------------------------------------
@@ -626,7 +654,7 @@ CREATE TABLE `historia_caja` (
   `final` bigint(20) DEFAULT NULL,
   `retiro` bigint(20) DEFAULT 0,
   `fecha` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `historia_caja`
@@ -641,7 +669,9 @@ INSERT INTO `historia_caja` (`id`, `id_caja`, `cedula`, `inicio`, `final`, `reti
 (6, 1, '1017924962', 50000, 50000, 0, NULL),
 (7, 1, '1017924962', 50000, 50000, 0, NULL),
 (8, 1, '1017924962', 50000, 50000, 2000, NULL),
-(9, 1, NULL, 50000, NULL, 0, NULL);
+(9, 1, '1017924962', 50000, 49100, 10000, '2024-08-12 11:36:35'),
+(10, 1, '1017924962', 49100, 51100, 0, '2024-08-20 09:37:23'),
+(11, 1, NULL, 51100, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -654,7 +684,7 @@ CREATE TABLE `horas_trabajadas` (
   `usuario` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `fecha` date NOT NULL,
   `horas` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `horas_trabajadas`
@@ -677,9 +707,9 @@ INSERT INTO `horas_trabajadas` (`id`, `usuario`, `fecha`, `horas`) VALUES
 (75, '1017924962', '2024-08-12', 7),
 (76, '1017924962', '2024-08-12', 7),
 (77, '1017924962', '2024-08-12', 42),
-(78, '1017924962', '2024-08-12', 4319),
-(79, '1017924962', '2024-08-17', 5612),
-(80, '1017924962', '2024-08-17', 216);
+(78, '1017924962', '2024-08-12', 15517),
+(79, '1017924962', '2024-08-20', 10421),
+(80, '1017924962', '2024-08-20', 4343);
 
 -- --------------------------------------------------------
 
@@ -699,19 +729,23 @@ CREATE TABLE `lote` (
   `fechaModify` date NOT NULL,
   `fechaCreate` date NOT NULL,
   `Notificacion_on` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `lote`
 --
 
 INSERT INTO `lote` (`id_producto`, `Loteid`, `Cantidad`, `PrecioC`, `porcentaje`, `precioV`, `Estado`, `fechaVenci`, `fechaModify`, `fechaCreate`, `Notificacion_on`) VALUES
-(770123, 'dfghjkjh', 29, 27890, 100, 1900, 1, '2034-07-22', '2024-08-20', '2024-08-20', 1),
-(770123, 'eeeeeee', 0, 15000, 100, 1900, 0, '2030-03-22', '2024-07-21', '2024-07-21', 0),
-(770123, 'qqqqqqq', 0, 6500, 100, 1900, 0, '2029-07-22', '2024-07-21', '2024-07-21', 0),
-(7701234, 'rrrrrrrrr', 218, 25890, 70, 150, 1, '2031-07-04', '2024-07-21', '2024-07-21', 0),
+(770321, '888asas', 28, 34500, 70, 3200, 0, '2023-11-12', '2024-08-12', '2024-08-12', 1),
+(770123, 'eeeeeee', 455203, 15000, 100, 2000, 1, '2030-03-22', '2024-07-21', '2024-07-21', 0),
+(770123, 'jjajsaj', 10, 10000, 100, 2000, 1, '2026-09-01', '2024-08-12', '2024-08-12', 1),
+(770321, 'jksajsa', 29, 60000, 60, 3200, 1, '2028-11-01', '2024-08-12', '2024-08-12', 1),
+(77012345, 'nnnnasasa', 55, 57000, 75, 1700, 1, '2034-03-01', '2024-08-12', '2024-08-12', 1),
+(770123, 'qqqqqqq', 300, 6500, 100, 2000, 1, '2029-07-22', '2024-07-21', '2024-07-21', 0),
+(7701234, 'rrrrrrrrr', 230, 25890, 70, 70, 1, '2024-08-31', '2024-07-21', '2024-07-21', 0),
+(77012345, 'UJJS', 30, 27890, 65, 1550, 1, '2035-07-01', '2024-08-26', '2024-08-26', 1),
 (7701234, 'wwwwwwwww', 300, 26890, 70, 200, 1, '2030-09-22', '2024-07-21', '2024-07-21', 0),
-(770123, 'yyyyyy', 0, 20000, 100, 1900, 0, '2028-08-22', '2024-07-21', '2024-07-21', 1);
+(770123, 'yyyyyy', 300, 20000, 100, 2000, 1, '2028-08-22', '2024-07-21', '2024-07-21', 1);
 
 --
 -- Disparadores `lote`
@@ -755,7 +789,14 @@ CREATE TABLE `pedidos_especiales` (
   `fechaP` date NOT NULL,
   `Cantidad` int(11) NOT NULL,
   `fechaM` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `pedidos_especiales`
+--
+
+INSERT INTO `pedidos_especiales` (`id_pedido`, `Cedula`, `nombreClie`, `celularClie`, `descripcion`, `estadoPe`, `fechaP`, `Cantidad`, `fechaM`) VALUES
+(9, '1017924962', 'Sebas', '3015678990', 'crema para heridas ', 2, '2024-08-20', 2, '2024-08-20 10:05:13');
 
 -- --------------------------------------------------------
 
@@ -772,7 +813,7 @@ CREATE TABLE `producto` (
   `Max` int(11) NOT NULL DEFAULT 0,
   `Min` int(11) NOT NULL DEFAULT 0,
   `rotacion` varchar(250) NOT NULL DEFAULT 'Normal'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -780,7 +821,9 @@ CREATE TABLE `producto` (
 
 INSERT INTO `producto` (`id_producto`, `Nombre`, `estado`, `GramoLitro`, `Fecha_Modificacion`, `Max`, `Min`, `rotacion`) VALUES
 (770123, 'Acetaminofen', 1, '30mg', '2024-07-21 22:31:57', 900, 100, 'Normal'),
-(7701234, 'Ibuprofeno', 1, '300mg', '2024-07-21 23:10:44', 600, 100, 'Normal');
+(770321, 'Next gl', 1, '215 mg', '2024-08-12 07:46:37', 50, 15, 'Baja'),
+(7701234, 'Ibuprofeno', 1, '300mg', '2024-07-21 23:10:44', 600, 100, 'Normal'),
+(77012345, 'Advil Gripa', 1, '30 mg', '2024-08-20 07:06:21', 90, 20, 'Normal');
 
 --
 -- Disparadores `producto`
@@ -815,15 +858,14 @@ CREATE TABLE `proveedor` (
   `Telefono` varchar(10) NOT NULL,
   `Horario_Atencion` varchar(250) NOT NULL,
   `Politica_Devolucion` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `proveedor`
 --
 
 INSERT INTO `proveedor` (`NIT`, `Nombre`, `Estado`, `Telefono`, `Horario_Atencion`, `Politica_Devolucion`) VALUES
-(13425, 'sebastian quintero', 1, '3125260493', '8 a 12', '2'),
-(12121212, 'Hexon', 0, '3025469090', 'lunes-viernes 7am-1pm', '3');
+(12121212, 'Hexon', 1, '3025469090', 'lunes-viernes 7am-1pm', '3');
 
 -- --------------------------------------------------------
 
@@ -836,7 +878,7 @@ CREATE TABLE `temp_compra` (
   `Total` int(11) NOT NULL,
   `Fecha_Llegada` datetime DEFAULT NULL,
   `NIT` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -851,7 +893,7 @@ CREATE TABLE `temp_detalle_compra` (
   `PrecioU` int(11) NOT NULL,
   `CantidadProductos` int(11) NOT NULL,
   `id_compra` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -871,7 +913,7 @@ CREATE TABLE `temp_lote` (
   `fechaModify` date NOT NULL,
   `fechaCreate` date NOT NULL,
   `Notificacion_on` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -888,7 +930,7 @@ CREATE TABLE `temp_producto` (
   `Max` int(11) NOT NULL DEFAULT 0,
   `Min` int(11) NOT NULL DEFAULT 0,
   `rotacion` varchar(250) NOT NULL DEFAULT 'Normal'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -903,7 +945,7 @@ CREATE TABLE `temp_proveedor` (
   `Telefono` varchar(10) NOT NULL,
   `Horario_Atencion` varchar(250) NOT NULL,
   `Politica_Devolucion` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -919,7 +961,7 @@ CREATE TABLE `venta` (
   `Efectivo_Recibido` int(11) NOT NULL,
   `Efectivo_Entregado` int(11) NOT NULL,
   `Cedula` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `venta`
@@ -931,17 +973,18 @@ INSERT INTO `venta` (`id_venta`, `TotalCompra`, `Fecha`, `Hora`, `Efectivo_Recib
 (75, 2000, '2024-08-05', '09:08:12', 0, 0, '1017924962'),
 (76, 1500, '2024-08-05', '09:10:53', 2000, 500, '1017924962'),
 (77, 2000, '2024-08-05', '09:13:40', 9, -1991, '1017924962'),
-(78, 1500, '2024-08-05', '09:15:00', 12121, 10621, '1017924962'),
+(78, 1500, '2024-07-05', '09:15:00', 12121, 10621, '1017924962'),
 (79, 1500, '2024-08-05', '09:15:55', 1500, 0, '1017924962'),
 (80, 2000, '2024-08-05', '09:16:50', 5000, 3000, '1017924962'),
 (81, 1500, '2024-08-05', '09:17:27', 2000, 500, '1017924962'),
 (82, 2000, '2024-08-06', '10:35:46', 5000, 3000, '1017924962'),
 (83, 2000, '2024-08-09', '10:49:04', 3000, 1000, '1025644878'),
 (84, 2000, '2024-08-12', '07:11:00', 5000, 3000, '1017924962'),
-(85, 4500, '2024-08-12', '10:31:16', 5000, 500, '1017924962'),
-(86, 166000, '2024-08-17', '18:59:43', 170000, 4000, '1017924962'),
-(87, 300, '2024-08-20', '07:52:09', 500, 200, '1017924962'),
-(88, 1900, '2024-08-20', '08:09:29', 2000, 100, '1017924962');
+(85, 9100, '2024-08-12', '07:54:44', 10000, 900, '1017924962'),
+(86, 2000, '2024-08-12', '06:57:50', 2000, 0, '1017924962'),
+(87, -2147483648, '2024-08-23', '10:47:56', 2000, 7420000, '1017924962'),
+(88, 700, '2024-08-23', '10:48:43', 1000, 300, '1017924962'),
+(89, 9300, '2024-08-26', '07:08:48', 10000, 700, '1017924962');
 
 --
 -- Disparadores `venta`
@@ -1209,7 +1252,7 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT de la tabla `historia_caja`
 --
 ALTER TABLE `historia_caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `horas_trabajadas`
@@ -1221,7 +1264,7 @@ ALTER TABLE `horas_trabajadas`
 -- AUTO_INCREMENT de la tabla `pedidos_especiales`
 --
 ALTER TABLE `pedidos_especiales`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `temp_compra`
@@ -1233,7 +1276,7 @@ ALTER TABLE `temp_compra`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- Restricciones para tablas volcadas
