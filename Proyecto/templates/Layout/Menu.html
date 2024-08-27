@@ -67,7 +67,7 @@
     </li>
     <li>
       <a href="/Notificacion">
-        <i class="fa fa-bell" aria-hidden="true"><!--<e style="color: red;">2</e>--></i>
+        <i class="fa fa-bell" aria-hidden="true" id="not"></i>
         <span class="link_name">Notificacion</span>
       </a>
       <ul class="sub-menu blank">
@@ -131,6 +131,17 @@
   </div>
   <script src="{%static 'js/sweetalert2.js' %}"></script>
   <script>
+    let url="/notificaciones_api";
+      fetch(url)
+      .then(num=>num.json())
+      .then(num=>{
+      console.log(num.Numero)
+      document.getElementById("not").innerHTML=`<span class="position-absolute top-1 start-5 badge rounded-pill bg-danger">
+    `+num.Numero+`
+    <span class="visually-hidden"></span>
+  </span>`;
+      })
+
     let arrow = document.querySelectorAll(".arrow");
     for (var i = 0; i < arrow.length; i++) {
       arrow[i].addEventListener("click", (e) => {
@@ -203,6 +214,7 @@
     }
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
+
 })
   </script>
   {%endif%}

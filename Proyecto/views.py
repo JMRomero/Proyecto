@@ -1264,6 +1264,14 @@ def venta_DONE(request,idV,efectivo):
     entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now() where id_venta={str(idV)};")
     json=dict([('Devolver',devolver)])
     return JsonResponse(json,safe=False)
+
+def api_notificaciones(request):
+    notificaciones=connection.cursor()
+    notificaciones.execute("call notificacion_punto")
+    numero=notificaciones.fetchone()[0]
+    json=dict([('Numero',numero)])
+    return JsonResponse(json,safe=False) 
+
 def venta_dias(request):
     dias=connection.cursor()
     dias.execute("call Dias_Venta()")
