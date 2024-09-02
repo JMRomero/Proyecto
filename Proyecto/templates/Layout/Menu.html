@@ -197,6 +197,7 @@
     {%else%}
     <script>
     function cerrar() {
+      final=parseInt("{{dinero}}");
       Swal.fire({
         title: "¿Desea terminar la jornada?",
         text: "el total de la caja es: {{dinero}}",
@@ -204,14 +205,32 @@
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light"href="/salir" > Aceptar</a> ',
-        cancelButtonText: "No, cancelar",
+        cancelButtonText: "Cancelar",
         width:'30%',
-      }).then((result) => {
+        showCancelButton: true,
+        confirmButtonText: "Terminar",
+        showLoaderOnConfirm: true,
+        preConfirm: async (valor) => {
+          let url="../../retiro/APIR/"+final;
+          fetch(url)
+          return final
+          },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((resultado) => {
+            if (resultado.isConfirmed) {
+              Swal.fire({
+                title: 'Total en la caja',
+                text: `${final}`,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: 'Terminar jornada',
+                allowOutsideClick: false,
+                allowEnterKey: true}).then((result) => {
           if (result.isConfirmed) {
-            location.href="/salir"
+            location.href="/salir";
           }})
-    }
+            }
+     
+          })};
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 

@@ -74,7 +74,7 @@ def inicio(request):
             print(nombre,"session")
 
         return render(request, 'registration/login.html',{'session':sesioniniciada})
-#cambiarcontraseña
+#cambiar contraseña ingreso por primera vez 
 def cambiarpassword(request,username):
     desactivarVencidos=connection.cursor()
     if request.method=='POST':
@@ -1296,6 +1296,19 @@ def retiro_api(request,retiro,final):
     username= nombredelusuario(request)
     retirobd=connection.cursor()
     retirobd.execute(f"update historia_caja set cedula={username}, final={final}, retiro={retiro}, fecha=now() where id={idc}")
+    updatecaja=connection.cursor()
+    updatecaja.execute(f"update caja set dinero ={final};")
+    nuevo=connection.cursor()
+    nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
+    HttpResponse('retiro exitoso')
+
+def retiro_apiR(request,final):
+    id=connection.cursor()
+    id.execute("select max(id) from historia_caja;")
+    idc=id.fetchone()[0]
+    username= nombredelusuario(request)
+    retirobd=connection.cursor()
+    retirobd.execute(f"update historia_caja set cedula={username},final={final}, fecha=now() where id={idc}")
     updatecaja=connection.cursor()
     updatecaja.execute(f"update caja set dinero ={final};")
     nuevo=connection.cursor()
