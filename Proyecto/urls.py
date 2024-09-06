@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from . import views
 from django.urls import path, include
-from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar,registro_venta,producto_API,registo_detalleVenta,venta_crear_factura, estadisticas
+from .views import producto,viewP,viewL,update,esatdoI,cambiarpassword,esatdoA,menu,viewProveedor,updateProveedor,proveedorInsert,proveedorEstadoI,proveedorEstadoA,viewPedidos,pedidosEstadoA,pedidosEstadoI,pedidosInsert,estadoaL,estadoiL,viewUsuario,usuarioEstadoI,usuarioEstadoA,usuarioInsert,updateUsuario,updateLote,pedidosEstadoC,pedidosEstadoR,viewPedidosC,updatePedidos,inicio,Notificacion,updateUsuarioContrasena,usuarioRolA,usuarioRolR,RProveedor1,RProveedor2,Cproveedor,crearR,RProducto,Cproducto,LoteInsert,reciboCompraView,LoteUpdate,LoteUpdate2,Recibos,RecibosD, Recibos_Finalizar,Recibos_Cancelar,registro_venta,producto_API,registo_detalleVenta,venta_crear_factura, estadisticas
 from .views import venta_eliminar_API,venta_Cancelar_API,venta_DONE,venta_dias,venta_Info,retiro_api,productovmes_api,productovsem_api,productocmes_api,productocsem_api
 from django.contrib.auth import views as auth_views
 from django.urls import path
@@ -44,6 +44,7 @@ urlpatterns = [
     path('Compra/CProducto/<int:idc>',Cproducto),
     path('Compra/lote/<int:idc>/<int:idp>',LoteInsert),
     path('Compra/loteA/<int:idc>/<str:idl>',LoteUpdate),
+    path('Compra/loteA2/<int:idc>/<str:idl>',LoteUpdate2),
     path('Compra/Lista/<int:idc>',reciboCompraView),
     path('Compra/Recibos/<int:pag>',Recibos),
     path('Compra/Recibos/Finalizar',Recibos_Finalizar),
@@ -105,4 +106,5 @@ urlpatterns = [
     path('productovsem_API/<str:fecha>',productovsem_api),
     path('productocmes_API/<str:fecha>',productocmes_api),
     path('productocsem_API/<str:fecha>',productocsem_api),
+
 ]

@@ -43,7 +43,11 @@
         {%endfor%}
         <div class="d-grid gap-2 col-6 mx-auto">
             <a href="/Compra/Producto/{{idc}}" type='button' values='Subir' class="btn btn-primary">Agregar Un Nuevo Lote</a>
+            {%if terminar%}
             <a href="/Compra/Recibos/Finalizar" type='button' values='Subir' class="btn btn-primary">Finalizar</a>
+            {%else%}
+            <a onclick="NoTerminar()" type='button' values='Subir' class="btn btn-secondary">Finalizar</a>
+            {%endif%}
             <a href="/Compra/Recibos/Cancelar" type='button' values='Subir' class="btn btn-outline-danger">Cancelar</a>
 
         </div><br>
@@ -80,6 +84,22 @@
                         </td>{%endif%}
                     {%endfor%}
                     </tr>
+                    {% for p in RC2%}
+                    <tr>
+                        <td>{{p.8}}</td>
+                        <td>{{p.7}}</td>
+                        <td>{{p.0}}</td>
+                        <td>{{p.4}}</td>
+                        <td>{{p.1}}</td>
+                        <td>{{p.2}}%</td>
+                        <td>{{p.6}}</td>
+                        <td> 
+                            <a href="/Compra/loteA2/{{idc}}/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg ms-4"aria-hidden="true"></i></a>
+                        </td>
+                        {%if p.10 > p.9%}<td><a id="alert" href="#" style="color: red;" data-toggle="popover" data-bs-content="<a href='#' class='alerta'>!Sobrepasa la cantidad maxima del producto¡</a>"><i required id="alerta{{p.0}}"  class="fa fa-exclamation-triangle" aria-hidden="true"></i></a>
+                        </td>{%endif%}
+                    {%endfor%}
+                    </tr>
                 </tbody>
             </table>
             
@@ -91,6 +111,21 @@
     <script>
         $(document).ready(function(){$('[data-toggle="popover"]').popover({html:true});
         });
+        function NoTerminar(){
+        Swal.fire({
+        text:"¡Debes registrar un lote para poder finalizar!",
+        iconColor:"#d33",
+        icon: "warning",
+        showCancelButton: false,
+        toast:false,
+        position:'center',
+        width:'40%',
+        padding:'2rem',
+        confirmButtonText: ' Volver',
+        showCancelButton: false,  // Oculta el botón de cancelar
+        allowOutsideClick: false,
+        allowEnterKey: false,
+        allowEscapeKey: false})}
     </script>
 </body>
 </html>

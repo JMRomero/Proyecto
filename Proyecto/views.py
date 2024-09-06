@@ -1020,12 +1020,19 @@ def LoteInsert(request,idc,idp):
         if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
             consulta=connection.cursor()
             consulta2=connection.cursor()
-            consulta.execute("select COUNT(Loteid) from lote where Loteid='"+request.POST.get('Lote')+"';")
+            consulta.execute("select COUNT(Loteid) from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto!="+str(idp)+";")
             consulta2.execute("select COUNT(Loteid) from temp_lote where Loteid='"+request.POST.get('Lote')+"';")
             existente=consulta.fetchone()[0]
             existente2=consulta2.fetchone()[0]
-            if existente>0 or existente2>0:
+            update=connection.cursor()
+            update.execute("select count(Loteid),fechaVenci from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto="+str(idp)+";")
+            lote_existente=update.fetchall()
+            if existente>0 or existente2>0 or (lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci')):
                 repetido=True
+                if lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci'):
+                    lote_R=True
+                else:
+                    lote_R=False
                 codigor=request.POST.get('Lote')
                 cantidad=request.POST.get('Cantidad')
                 precioC=request.POST.get('PrecioC')
@@ -1042,7 +1049,45 @@ def LoteInsert(request,idc,idp):
                 fechaa=fecha.fetchone()[0]
                 fechau=fechaa.strftime("%Y-%m-%d")
                 dinero=caja_N(request)
-                return render(request,'ReciboCompra/Loteinsertar.html',{'dinero':dinero,'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual,'fecha':fechau})
+                return render(request,'ReciboCompra/Loteinsertar.html',{'dinero':dinero,'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'loteR':lote_R,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual,'fecha':fechau})
+            elif lote_existente[0][0]:
+                lote_update_existe=connection.cursor()
+                lote_update_existe.execute("select count(Loteid) from temp_lote_update where Loteid='"+request.POST.get('Lote')+"';")
+                lote_u_existe=lote_update_existe.fetchone()[0]
+                if lote_u_existe:
+                    repetido=True
+                    lote_R=False
+                    codigor=request.POST.get('Lote')
+                    cantidad=request.POST.get('Cantidad')
+                    precioC=request.POST.get('PrecioC')
+                    precioV=request.POST.get('PrecioV')
+                    fechaVenci=request.POST.get('FechaVenci')
+                    info=connection.cursor ()
+                    info.execute("select * from temp_compra where id_compra="+str(idc)+";")
+                    prov=connection.cursor()
+                    prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+                    ListacombinadaI=list(zip(info,prov))
+                    grupo_actual= group_iden(request)
+                    fecha=connection.cursor()
+                    fecha.execute("select CURDATE();")
+                    fechaa=fecha.fetchone()[0]
+                    fechau=fechaa.strftime("%Y-%m-%d")
+                    dinero=caja_N(request)
+                    return render(request,'ReciboCompra/Loteinsertar.html',{'dinero':dinero,'RC':idc,'info':ListacombinadaI,'datos':consulta,'repetido':repetido,'loteR':lote_R,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual,'fecha':fechau})
+                else:
+                    cantidad=request.POST.get('Cantidad')
+                    precioC=request.POST.get('PrecioC')
+                    precioV=request.POST.get('PrecioV')
+                    ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                    ganancia=round(ganancia)
+                    if ganancia%50!=0:    
+                        while ganancia%50 !=0:
+                            ganancia=ganancia+1
+                    lote=connection.cursor()
+                    detalle=connection.cursor()
+                    lote.execute("Insert into temp_lote_update values("+str(idp)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",'"+request.POST.get('FechaVenci')+"')")
+                    detalle.execute("Insert into temp_detalle_compra values('"+request.POST.get('Lote')+"',"+request.POST.get('PrecioC')+","+request.POST.get('PrecioV')+","+str(ganancia)+","+request.POST.get('Cantidad')+","+str(idc)+");")
+                    return redirect (f'/Compra/Lista/{idc}')
             else:
                 cantidad=request.POST.get('Cantidad')
                 precioC=request.POST.get('PrecioC')
@@ -1051,7 +1096,7 @@ def LoteInsert(request,idc,idp):
                 ganancia=round(ganancia)
                 if ganancia%50!=0:    
                     while ganancia%50 !=0:
-                        ganancia=ganancia+1
+                        ganancia=ganancia+1 
                 lote=connection.cursor()
                 lote.execute("Insert into temp_lote values("+str(idp)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",True,'"+request.POST.get('FechaVenci')+"',Now(),now(),1);")
                 detalle=connection.cursor()
@@ -1066,27 +1111,35 @@ def LoteInsert(request,idc,idp):
         fecha.execute("select CURDATE();")
         fechaa=fecha.fetchone()[0]
         fechau=fechaa.strftime("%Y-%m-%d")
-        print(fechau)
         ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
         dinero=caja_N(request)
         repetido=False
-        return render(request,'ReciboCompra/Loteinsertar.html',{'dinero':dinero,'repetido':repetido,'RC':idc,'info':ListacombinadaI,'group':grupo_actual,'fecha':fechau})
+        lote_R=False
+        return render(request,'ReciboCompra/Loteinsertar.html',{'dinero':dinero,'repetido':repetido,'loteR':lote_R,'RC':idc,'info':ListacombinadaI,'group':grupo_actual,'fecha':fechau})
 @login_required   
 def reciboCompraView(request,idc):
     idc2=idc
     max=connection.cursor()
     lote=connection.cursor()
-    lote.execute("select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto,(select nombre from producto where id_producto=temp_lote.id_producto union select nombre from temp_producto where id_producto=temp_lote.id_producto),(select max from producto where id_producto=temp_lote.id_producto union select max from temp_producto where id_producto=temp_lote.id_producto),((select SUM(CantidadProductos) from temp_detalle_compra where (select id_producto from producto where id_producto=temp_lote.id_producto union select id_producto from temp_producto where id_producto=temp_lote.id_producto)=(select id_producto from temp_lote where Loteid=temp_detalle_compra.Lote))+(CASE when (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True)>0 then (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True) else 0 end)) from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra="+str(idc2)+";")
-    lote2=lote.fetchall()
+    lote.execute(f"call Lotes_Compra({str(idc)})")
+    loteU=connection.cursor()
+    loteU.execute(f"call Lotes_update_Compra({str(idc)})")
     info=connection.cursor()
     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
     prov=connection.cursor()
     prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
     ListacombinadaI=list(zip(info,prov))
+    lotes=connection.cursor()
+    lotes.execute("select count(Lote) from temp_detalle_compra;")
+    lotes_registrados=lotes.fetchone()[0]
+    if lotes_registrados==0:
+        terminar=False
+    else:
+        terminar=True
     grupo_actual= group_iden(request)
     dinero=caja_N(request)
-    return render(request,'ReciboCompra/CompraVisualizar.html',{'dinero':dinero,'RC':lote2,'info':ListacombinadaI,'idc':idc2,'group':grupo_actual})
+    return render(request,'ReciboCompra/CompraVisualizar.html',{'dinero':dinero,'RC':lote,'RC2':loteU,'info':ListacombinadaI,'idc':idc2,'group':grupo_actual,'terminar':terminar})
 @login_required
 def Recibos(request,pag):
     validacion=connection.cursor()
@@ -1159,14 +1212,24 @@ def LoteUpdate(request,idc,idl):
                 insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
                 return redirect(f'/Compra/Lista/{idc}')
             else:
+                idp=connection.cursor()
+                idp.execute("select id_producto from temp_lote where Loteid='"+str(idl)+"';")
+                idp2=idp.fetchone()[0]
                 consulta=connection.cursor()
-                consulta.execute("select COUNT(Loteid) from lote where Loteid='"+request.POST.get('Lote')+"';")
+                consulta.execute("select COUNT(Loteid) from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto!="+str(idp2)+";")
                 consulta2=connection.cursor()
                 consulta2.execute("select COUNT(Loteid) from temp_lote where Loteid='"+request.POST.get('Lote')+"';")
+                update=connection.cursor()
+                update.execute("select count(Loteid),fechaVenci from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto="+str(idp2)+";")
+                lote_existente=update.fetchall()
                 existente=consulta.fetchone()[0]
                 existente2=consulta2.fetchone()[0]
-                if existente>0 or existente2>0:
+                if existente>0 or existente2>0 or (lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci')):
                     repetido=True
+                    if lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci'):
+                        lote_R=True
+                    else:
+                        lote_R=False
                     codigoO=idl
                     codigor=request.POST.get('Lote')
                     cantidad=request.POST.get('Cantidad')
@@ -1177,9 +1240,55 @@ def LoteUpdate(request,idc,idl):
                     info.execute("select * from temp_compra where id_compra="+str(idc)+";")
                     prov=connection.cursor()
                     prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+                    fecha=connection.cursor()
+                    fecha.execute("select CURDATE();")
+                    fechaa=fecha.fetchone()[0]
+                    fechau=fechaa.strftime("%Y-%m-%d")
                     ListacombinadaI=list(zip(info,prov))
                     grupo_actual= group_iden(request)
-                    return render(request,"ReciboCompra/LoteActualizar.html",{'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                    dinero=caja_N(request)
+                    return render(request,"ReciboCompra/LoteActualizar.html",{'fecha':fechau,'loteR':lote_R,'dinero':dinero,'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                elif lote_existente[0][0]:
+                    lote_update_existe=connection.cursor()
+                    lote_update_existe.execute("select count(Loteid) from temp_lote_update where Loteid='"+request.POST.get('Lote')+"';")
+                    lote_u_existe=lote_update_existe.fetchone()[0]
+                    if lote_u_existe:
+                        repetido=True
+                        lote_R=False
+                        codigoO=idl
+                        codigor=request.POST.get('Lote')
+                        cantidad=request.POST.get('Cantidad')
+                        precioC=request.POST.get('PrecioC')
+                        precioV=request.POST.get('PrecioV')
+                        fechaVenci=request.POST.get('FechaVenci')
+                        info=connection.cursor ()
+                        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
+                        prov=connection.cursor()
+                        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+                        fecha=connection.cursor()
+                        fecha.execute("select CURDATE();")
+                        fechaa=fecha.fetchone()[0]
+                        fechau=fechaa.strftime("%Y-%m-%d")
+                        ListacombinadaI=list(zip(info,prov))
+                        grupo_actual= group_iden(request)
+                        dinero=caja_N(request)
+                        return render(request,"ReciboCompra/LoteActualizar.html",{'fecha':fechau,'loteR':lote_R,'dinero':dinero,'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                    else:
+                        cantidad=request.POST.get('Cantidad')
+                        precioC=request.POST.get('PrecioC')
+                        precioV=request.POST.get('PrecioV')
+                        ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                        ganancia=round(ganancia)
+                        if ganancia%50!=0:    
+                            while ganancia%50 !=0:
+                                ganancia=ganancia+1
+                        lote=connection.cursor()
+                        detalle=connection.cursor()
+                        deletelote=connection.cursor()
+                        lote.execute("Insert into temp_lote_update values("+str(idp2)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",'"+request.POST.get('FechaVenci')+"')")
+                        detalle.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                        deletelote.execute("delete from temp_lote where Loteid='"+str(idl)+"';")
+                        return redirect (f'/Compra/Lista/{idc}')
                 else:
                     cantidad=request.POST.get('Cantidad')
                     precioC=request.POST.get('PrecioC')
@@ -1201,10 +1310,147 @@ def LoteUpdate(request,idc,idl):
         info.execute("select * from temp_compra where id_compra="+str(idc)+";")
         prov=connection.cursor()
         prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        fecha=connection.cursor()
+        fecha.execute("select CURDATE();")
+        fechaa=fecha.fetchone()[0]
+        fechau=fechaa.strftime("%Y-%m-%d")
         ListacombinadaI=list(zip(info,prov))
         grupo_actual= group_iden(request)
         dinero=caja_N(request)
-        return render(request,"ReciboCompra/LoteActualizar.html",{'dinero':dinero,'lote':lote,'info':ListacombinadaI,'group':grupo_actual})
+        return render(request,"ReciboCompra/LoteActualizar.html",{'fecha':fechau,'dinero':dinero,'lote':lote,'info':ListacombinadaI,'group':grupo_actual})
+
+@login_required
+def LoteUpdate2(request,idc,idl):
+    if request.method == 'POST':
+        if request.POST.get('Lote') and request.POST.get('Cantidad') and request.POST.get('PrecioC') and request.POST.get('PrecioV') and request.POST.get('FechaVenci'):
+            fechaV=connection.cursor()
+            fechaV.execute("select fechaVenci from temp_lote_update where Loteid='"+idl+"'")
+            fechaV2=fechaV.fetchone()[0]
+            loteOO=request.POST.get('Lote')
+            fechaV0=request.POST.get('FechaVenci')
+            if loteOO==idl and str(fechaV2)==fechaV0:
+                cantidad=request.POST.get('Cantidad')
+                precioC=request.POST.get('PrecioC')
+                precioV=request.POST.get('PrecioV')
+                ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                ganancia=round(ganancia)
+                if ganancia%50!=0:    
+                    while ganancia%50 !=0:
+                        ganancia=ganancia+1
+                insert=connection.cursor()
+                insert.execute("Update temp_lote_update set Loteid='"+request.POST.get('Lote')+"',Cantidad="+request.POST.get('Cantidad')+",PrecioC="+request.POST.get('PrecioC')+",porcentaje='"+request.POST.get('PrecioV')+"',precioV="+str(ganancia)+",fechaVenci='"+request.POST.get('FechaVenci')+"' where Loteid='"+str(idl)+"';")
+                insert=connection.cursor()
+                insert.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                return redirect(f'/Compra/Lista/{idc}')
+            else:
+                idp=connection.cursor()
+                idp.execute("select id_producto from temp_lote_update where Loteid='"+str(idl)+"';")
+                idp2=idp.fetchone()[0]
+                consulta=connection.cursor()
+                consulta.execute("select COUNT(Loteid) from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto!="+str(idp2)+";")
+                consulta2=connection.cursor()
+                consulta2.execute("select COUNT(Loteid) from temp_lote where Loteid='"+request.POST.get('Lote')+"';")
+                update=connection.cursor()
+                update.execute("select count(Loteid),fechaVenci from lote where Loteid='"+request.POST.get('Lote')+"' and id_producto="+str(idp2)+";")
+                lote_existente=update.fetchall()
+                existente=consulta.fetchone()[0]
+                existente2=consulta2.fetchone()[0]
+                if existente>0 or existente2>0 or (lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci')):
+                    repetido=True
+                    if lote_existente[0][0]>0 and str(lote_existente[0][1])!=request.POST.get('FechaVenci'):
+                        lote_R=True
+                    else:
+                        lote_R=False
+                    codigoO=idl
+                    codigor=request.POST.get('Lote')
+                    cantidad=request.POST.get('Cantidad')
+                    precioC=request.POST.get('PrecioC')
+                    precioV=request.POST.get('PrecioV')
+                    fechaVenci=request.POST.get('FechaVenci')
+                    info=connection.cursor ()
+                    info.execute("select * from temp_compra where id_compra="+str(idc)+";")
+                    prov=connection.cursor()
+                    prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+                    fecha=connection.cursor()
+                    fecha.execute("select CURDATE();")
+                    fechaa=fecha.fetchone()[0]
+                    fechau=fechaa.strftime("%Y-%m-%d")
+                    ListacombinadaI=list(zip(info,prov))
+                    grupo_actual= group_iden(request)
+                    dinero=caja_N(request)
+                    return render(request,"ReciboCompra/LoteActualizar2.html",{'fecha':fechau,'loteR':lote_R,'dinero':dinero,'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                elif lote_existente[0][0]:
+                    lote_update_existe=connection.cursor()
+                    lote_update_existe.execute("select count(Loteid) from temp_lote_update where Loteid='"+request.POST.get('Lote')+"';")
+                    lote_u_existe=lote_update_existe.fetchone()[0]
+                    if lote_u_existe:
+                        repetido=True
+                        lote_R=False
+                        codigoO=idl
+                        codigor=request.POST.get('Lote')
+                        cantidad=request.POST.get('Cantidad')
+                        precioC=request.POST.get('PrecioC')
+                        precioV=request.POST.get('PrecioV')
+                        fechaVenci=request.POST.get('FechaVenci')
+                        info=connection.cursor ()
+                        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
+                        prov=connection.cursor()
+                        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+                        fecha=connection.cursor()
+                        fecha.execute("select CURDATE();")
+                        fechaa=fecha.fetchone()[0]
+                        fechau=fechaa.strftime("%Y-%m-%d")
+                        ListacombinadaI=list(zip(info,prov))
+                        grupo_actual= group_iden(request)
+                        dinero=caja_N(request)
+                        return render(request,"ReciboCompra/LoteActualizar2.html",{'fecha':fechau,'loteR':lote_R,'dinero':dinero,'info':ListacombinadaI,'repetido':repetido,'codigoO':codigoO,'codigor':codigor,'cantidad':cantidad,'precioC':precioC,'precioV':precioV,'fechaVenci':fechaVenci,'group':grupo_actual})
+                    else:
+                        cantidad=request.POST.get('Cantidad')
+                        precioC=request.POST.get('PrecioC')
+                        precioV=request.POST.get('PrecioV')
+                        ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                        ganancia=round(ganancia)
+                        if ganancia%50!=0:    
+                            while ganancia%50 !=0:
+                                ganancia=ganancia+1
+                        lote=connection.cursor()
+                        detalle=connection.cursor()
+                        deletelote=connection.cursor()
+                        lote.execute("Insert into temp_lote values("+str(idp2)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",True,'"+request.POST.get('FechaVenci')+"',now(),now(),True)")
+                        detalle.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                        deletelote.execute("delete from temp_lote_update where Loteid='"+str(idl)+"';")
+                        return redirect (f'/Compra/Lista/{idc}')
+                else:
+                    cantidad=request.POST.get('Cantidad')
+                    precioC=request.POST.get('PrecioC')
+                    precioV=request.POST.get('PrecioV')
+                    ganancia=((int(precioC)/int(cantidad))*int(precioV))/100 +(int(precioC)/int(cantidad))
+                    ganancia=round(ganancia)
+                    if ganancia%50!=0:    
+                        while ganancia%50 !=0:
+                            ganancia=ganancia+1
+                    lote=connection.cursor()
+                    detalle=connection.cursor()
+                    deletelote=connection.cursor()
+                    lote.execute("Insert into temp_lote values("+str(idp2)+",'"+request.POST.get('Lote')+"',"+cantidad+","+precioC+","+precioV+","+str(ganancia)+",True,'"+request.POST.get('FechaVenci')+"',now(),now(),True)")
+                    detalle.execute("Update temp_detalle_Compra set Lote='"+request.POST.get('Lote')+"' ,Precio="+request.POST.get('PrecioC')+",PrecioU="+str(ganancia)+",CantidadProductos="+request.POST.get('Cantidad')+",procentaje="+request.POST.get('PrecioV')+" where id_compra="+str(idc)+" and Lote='"+str(idl)+"';")
+                    deletelote.execute("delete from temp_lote_update where Loteid='"+str(idl)+"';")
+                    return redirect (f'/Compra/Lista/{idc}')
+    else:
+        lote=connection.cursor()
+        lote.execute("select temp_lote_update.*,temp_detalle_compra.PrecioU from temp_lote_update inner join temp_detalle_compra on temp_lote_update.Loteid=temp_detalle_compra.Lote where Loteid='"+str(idl)+"';")
+        info=connection.cursor ()
+        info.execute("select * from temp_compra where id_compra="+str(idc)+";")
+        prov=connection.cursor()
+        prov.execute("Select Nombre from proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+") union Select Nombre from temp_proveedor where NIT=(select NIT from temp_compra where id_compra="+str(idc)+");")
+        fecha=connection.cursor()
+        fecha.execute("select CURDATE();")
+        fechaa=fecha.fetchone()[0]
+        fechau=fechaa.strftime("%Y-%m-%d")
+        ListacombinadaI=list(zip(info,prov))
+        grupo_actual= group_iden(request)
+        dinero=caja_N(request)
+        return render(request,"ReciboCompra/LoteActualizar2.html",{'fecha':fechau,'dinero':dinero,'lote':lote,'info':ListacombinadaI,'group':grupo_actual})
 @login_required
 def Recibos_Finalizar(request):
     proveedor=connection.cursor()
@@ -1217,8 +1463,24 @@ def Recibos_Finalizar(request):
     compra.execute("INSERT INTO compra SELECT * FROM temp_compra;")
     detalle_compra=connection.cursor()
     detalle_compra.execute("INSERT INTO detalle_compra SELECT * FROM temp_detalle_compra;")
-
-    delete=connection.cursor()
+    count=connection.cursor()
+    count.execute("select count(id_producto) from temp_lote_update;")
+    count2=count.fetchone()[0]
+    contador=0
+    for x in range(0,count2,1):
+        loteupdate=connection.cursor()
+        loteupdate.execute("select * from temp_lote_update limit 1;")
+        contador=contador+1
+        for lote in loteupdate :
+            loteC=connection.cursor()
+            loteC.execute(f"select Cantidad from lote where Loteid='{lote[1]}';")
+            cantidad=loteC.fetchone()[0]
+            cantidadT=int(lote[2])+int(cantidad)
+            update=connection.cursor()
+            update.execute(f"update lote set Cantidad={cantidadT}, PrecioC={lote[3]}, porcentaje={lote[4]},precioV={lote[5]} where id_producto={lote[0]} and Loteid='{lote[1]}' and fechaVenci='{lote[6]}';")
+            delete=connection.cursor()
+            delete.execute(f"delete from temp_lote_update where id_producto={lote[0]} and Loteid='{lote[1]}' and fechaVenci='{lote[6]}';")
+    
     delete.execute("call Delete_Temp;")
     return redirect('/Compra/Recibos/1')
 @login_required
@@ -1261,7 +1523,7 @@ def venta_DONE(request,idV,efectivo):
         consulta.execute(f"update venta set Efectivo_Recibido={str(efectivo)} where id_venta={str(idV)};")
     devolver=efectivo-int(total)
     entregado=connection.cursor()
-    entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now() where id_venta={str(idV)};")
+    entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now(),Fecha=now() where id_venta={str(idV)};")
     json=dict([('Devolver',devolver)])
     return JsonResponse(json,safe=False)
 def venta_dias(request):
@@ -1280,7 +1542,13 @@ def venta_Info(request,fecha):
     return render(request, "Venta/Infor_Ventas.html",{'dinero':dinero,'info':info,'infoV':infoV,'group':group})
 #endregion
 #logout
-#region estadisticas
+def salir(request):
+    username= nombredelusuario(request)
+    with connection.cursor() as cursor:
+        cursor.execute(f"update auth_user set hora_logout=now() where username={username};")
+        cursor.execute(f"call calcularHoras('{username}');")
+    logout(request)
+    return redirect('login')
 def retiro_api(request,retiro,final):
     id=connection.cursor()
     id.execute("select max(id) from historia_caja;")
@@ -1293,14 +1561,7 @@ def retiro_api(request,retiro,final):
     nuevo=connection.cursor()
     nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
     HttpResponse('retiro exitoso')
-def salir(request):
-    username= nombredelusuario(request)
-    
-    with connection.cursor() as cursor:
-        cursor.execute(f"update auth_user set hora_logout=now() where username={username};")
-        cursor.execute(f"call calcularHoras('{username}');")
-    logout(request)
-    return redirect('login')
+#region estadisticas
 @login_required
 def estadisticas(request):
     group=group_iden(request)
@@ -1371,3 +1632,4 @@ def productocsem_api(request,fecha):
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
 #endregion
+    
