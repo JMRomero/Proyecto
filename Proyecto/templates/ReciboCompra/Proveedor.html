@@ -4,6 +4,7 @@
 <head>
     {%include 'Layout/ValidacionRol.html' %}   
     {%include "Layout/head.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
     <title>Selecionar Proveedores</title>
 </head>
 <body>
@@ -17,7 +18,7 @@
     </nav>
     <br><br>
     <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="CProveedor" class="btn btn-primary" type="button">Registrar y seleccionar nuevo proveedor</a>
+        <a href="CProveedor" class="btn btn-primary estilo" type="button">Registrar y seleccionar nuevo proveedor</a>
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {%if busqueda%}

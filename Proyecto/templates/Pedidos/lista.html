@@ -3,13 +3,14 @@
 <html lang="en">
 <head>
     {%include "Layout/head.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
     <title>Lista Pedido Especial</title>
 </head>
 <body>
     {%include 'Layout/Menu.html' %}
     <nav class="navbar navbar-expand-lg sidevar close " style="background-color: #0d6efd;" data-bs-theme="green">
             <div class="container-fluid">
-              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Pedidos especiales</a>
+              <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2 " >Pedidos especiales</a>
             </div>
             <ul class="right hide-on-med-and-down">
             </ul>
@@ -17,8 +18,8 @@
 {%include 'Layout/Validacion.html'%}
 <br>
 <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="insert" class="btn btn-primary" type="button">Ingresar nuevo pedido especial</a>
-        <a href="listaC" class="btn btn-primary" type="button">Lista de pedidos concluidos</a>
+        <a href="insert" class="btn btn-primary estilo" type="button">Ingresar nuevo pedido especial</a>
+        <a href="listaC" class="btn btn-primary estilo" type="button">Lista de pedidos concluidos</a>
         <form class="d-flex" method="POST" action="">
             {% csrf_token %}
             {% if busqueda %}

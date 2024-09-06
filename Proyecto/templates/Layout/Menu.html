@@ -1,5 +1,4 @@
 {%load static%}
-
 <div class="sidebar close bsb-table-xl">
   <div class="logo-details">
     <i><img src="{%static 'img/logo2.png'%}" alt="profileImg" height="70px" width="70"></i>
@@ -27,13 +26,13 @@
         <li><a class="link_name" href="/">Menú</a></li>
       </ul>
     </li>
-    <li>
+    <li id="specialOrders">
       <a href="/Pedidos/lista">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
         <span class="link_name">Pedidos Especiales</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Pedidos/lista">Pedidos Especiales</a></li>
+        <li ><a class="link_name" href="/Pedidos/lista">Pedidos Especiales</a></li>
       </ul>
     </li>
     {%if group == "Admin"%}
@@ -47,7 +46,7 @@
       </ul>
     </li>
 
-    <li>
+    <li >
       <a href="/Proveedor/lista">
         <i class="fa fa-users" aria-hidden="true"></i>
         <span class="link_name">Proveedores</span>
@@ -162,6 +161,8 @@
         dinero=parseInt("{{dinero}}");
         recomendacion=dinero-50000;
         Swal.fire({
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
             title: "¿Desea terminar la jornada?",
             text: "el total de la caja es: {{dinero}} Ingrese el dinero a retirar te recomendamos retirar "+recomendacion+" para que la base de la caja sea 50000",
             input: "number",
@@ -171,6 +172,7 @@
             }},
             showCancelButton: true,
             confirmButtonText: "Terminar",
+            confirmButtonColor: "#3085d6",
             showLoaderOnConfirm: true,
             preConfirm: async (valor) => {
               final=dinero-valor;
@@ -184,6 +186,8 @@
               Swal.fire({
                 title: 'Total en la caja',
                 text: `${final}`,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
                 confirmButtonText: 'Terminar jornada',
                 allowOutsideClick: false,
                 allowEnterKey: true}).then((result) => {
@@ -236,4 +240,27 @@
 
 })
   </script>
+  <script>
+  // Obtener la URL actual
+  const currentURL = window.location.pathname;
+
+  // Agregar la clase de resaltado al elemento del menú correspondiente
+  switch (currentURL) {
+    case '/home':
+      document.getElementById('home').classList.add('highlight');
+      break;
+    case '/Pedidos/lista':
+      document.getElementById('specialOrders').classList.add('highlight');
+      break;
+    case '/about':
+      document.getElementById('about').classList.add('highlight');
+      break;
+    default:
+      break;
+  }
+
+  // Mostrar la URL actual en la consola
+  console.log("URL actual:", window.location.href);
+</script>
+
   {%endif%}

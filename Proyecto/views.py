@@ -245,7 +245,6 @@ def viewP(request):
         busqueda=False
         v=0
     nombre=nombredelusuario2(request)
-    print(nombre)
     fechahoy=fecha(request)
     grupo_actual= group_iden(request)
     dinero=caja_N(request)
@@ -1137,8 +1136,10 @@ def RecibosD(request,idc):
     recibo=connection.cursor()
     recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
     grupo_actual= group_iden(request)
+    nombre=nombredelusuario2(request)
+    fechahoy=fecha(request)
     dinero=caja_N(request)
-    return render(request,'ReciboCompra/ListaRD.html',{'dinero':dinero,'RC':recibo,'group':grupo_actual,'info':info})
+    return render(request,'ReciboCompra/ListaRD.html',{'Nombre':nombre,'fecha':fechahoy,'dinero':dinero,'RC':recibo,'group':grupo_actual,'info':info})
 @login_required
 def LoteUpdate(request,idc,idl):
     if request.method == 'POST':
@@ -1390,5 +1391,22 @@ def productocsem_api(request,fecha):
             datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
+    return JsonResponse(datoss,safe=False)
+
+def trabajadorsem_api(request,fecha):
+    usuariosemanatra=connection.cursor()
+    if fecha=="0":
+        usuariosemanatra.execute("call usuariosemanatra('0','0',now());")
+    else:
+        x=fecha.split('-W')
+        print(x[1])
+        usuariosemanatra.execute(f"call usuariosemanatra('{x[0]}','{x[1]}',now());")
+    datos=usuariosemanatra.fetchall()
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['usuario'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['usuario'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
 #endregion

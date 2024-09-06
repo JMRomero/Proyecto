@@ -18,7 +18,7 @@
           </nav>
     
     <div class="container">
-        <br>
+        <br><br>
         {%if repetido%}
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
@@ -72,10 +72,10 @@
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
           <br><br>
           <form class="row g-3 needs-validation" novalidate method='POST'>
-            {% csrf_token %}
+            {% csrf_token %}              
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
-                    <label class="form-label is-required">NIT</label> 
+                    <label class="form-label is-required">NIt</label>
                     <input type="number" class="form-control" name='nit' required value="{{p.0}}">
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
@@ -115,7 +115,7 @@
             </div>
             {%endfor%}
         </form>
-      </div>
+      </div><br><br>
       {%endif%}
     </section>  
     </div>

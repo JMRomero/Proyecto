@@ -5,6 +5,7 @@
 <head>
     {%include 'Layout/ValidacionRol.html' %}
     {%include "Layout/head.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
     <title>Ventas info</title>
 </head>
 
@@ -18,10 +19,10 @@
         </ul>
     </nav>
     <br>
-    <center><a href="../../Venta/registrar" class="btn btn-lg btn-success">Volver</a></center>
+    <center><a href="../../Venta/registrar" class="btn btn-lg btn-primary estilo">Volver</a></center>
     <div class="container">
     <div class="container-fluid bg-trasparent my-4 p-3" style="position: relative;">
-        <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+        <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3 gap-3">
         {%for v in dias%}
         <div class="card text-center mb-3" style="width: 18rem;">
             <div class="card-body">

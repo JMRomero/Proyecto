@@ -1,0 +1,9 @@
+.estilo {
+    background-color: #1991c0e3; /* Azul por defecto */
+    border: none;
+  }
+
+  .styled-button:hover {
+    background-color: #ff6347; /* Rojo tomate */
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+  }
