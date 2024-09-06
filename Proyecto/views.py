@@ -74,7 +74,7 @@ def inicio(request):
             print(nombre,"session")
 
         return render(request, 'registration/login.html',{'session':sesioniniciada})
-#cambiarcontraseña
+#cambiar contraseña ingreso por primera vez 
 def cambiarpassword(request,username):
     desactivarVencidos=connection.cursor()
     if request.method=='POST':
@@ -245,7 +245,6 @@ def viewP(request):
         busqueda=False
         v=0
     nombre=nombredelusuario2(request)
-    print(nombre)
     fechahoy=fecha(request)
     grupo_actual= group_iden(request)
     dinero=caja_N(request)
@@ -1190,8 +1189,10 @@ def RecibosD(request,idc):
     recibo=connection.cursor()
     recibo.execute("select detalle_compra.*,Producto.Nombre,Lote.fechaVenci,Lote.id_producto,format(detalle_compra.Precio,'###.###.###.###') from detalle_compra inner join Lote on detalle_compra.Lote=Lote.loteid inner join producto on Lote.id_producto=Producto.id_producto where detalle_compra.id_compra="+str(idc)+";")
     grupo_actual= group_iden(request)
+    nombre=nombredelusuario2(request)
+    fechahoy=fecha(request)
     dinero=caja_N(request)
-    return render(request,'ReciboCompra/ListaRD.html',{'dinero':dinero,'RC':recibo,'group':grupo_actual,'info':info})
+    return render(request,'ReciboCompra/ListaRD.html',{'Nombre':nombre,'fecha':fechahoy,'dinero':dinero,'RC':recibo,'group':grupo_actual,'info':info})
 @login_required
 def LoteUpdate(request,idc,idl):
     if request.method == 'POST':
@@ -1526,6 +1527,14 @@ def venta_DONE(request,idV,efectivo):
     entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now(),Fecha=now() where id_venta={str(idV)};")
     json=dict([('Devolver',devolver)])
     return JsonResponse(json,safe=False)
+
+def api_notificaciones(request):
+    notificaciones=connection.cursor()
+    notificaciones.execute("call notificacion_punto")
+    numero=notificaciones.fetchone()[0]
+    json=dict([('Numero',numero)])
+    return JsonResponse(json,safe=False) 
+
 def venta_dias(request):
     dias=connection.cursor()
     dias.execute("call Dias_Venta()")
@@ -1561,7 +1570,19 @@ def retiro_api(request,retiro,final):
     nuevo=connection.cursor()
     nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
     HttpResponse('retiro exitoso')
-#region estadisticas
+
+def retiro_apiR(request,final):
+    id=connection.cursor()
+    id.execute("select max(id) from historia_caja;")
+    idc=id.fetchone()[0]
+    username= nombredelusuario(request)
+    retirobd=connection.cursor()
+    retirobd.execute(f"update historia_caja set cedula={username},final={final}, fecha=now() where id={idc}")
+    updatecaja=connection.cursor()
+    updatecaja.execute(f"update caja set dinero ={final};")
+    nuevo=connection.cursor()
+    nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
+    HttpResponse('retiro exitoso')
 @login_required
 def estadisticas(request):
     group=group_iden(request)
@@ -1630,6 +1651,23 @@ def productocsem_api(request,fecha):
             datoss['producto'+str(i)]=(datos[i][0],datos[i][1])
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
+    return JsonResponse(datoss,safe=False)
+
+def trabajadorsem_api(request,fecha):
+    usuariosemanatra=connection.cursor()
+    if fecha=="0":
+        usuariosemanatra.execute("call usuariosemanatra('0','0',now());")
+    else:
+        x=fecha.split('-W')
+        print(x[1])
+        usuariosemanatra.execute(f"call usuariosemanatra('{x[0]}','{x[1]}',now());")
+    datos=usuariosemanatra.fetchall()
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['usuario'+str(i)]=(datos[i][0],datos[i][1])
+        except:
+            datoss['usuario'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
 #endregion
     

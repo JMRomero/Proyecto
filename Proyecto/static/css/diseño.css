@@ -7,6 +7,10 @@ body{
   box-sizing: border-box;
   font-family: "Segoe UI";
 }
+.active {
+  background-color: #f0f0f0;  /* Ejemplo de estilo para resaltar */
+  color: #000;  /* Cambia el color del texto, etc. */
+}
 :root{
   --primary-color: #0a75f0;
 }

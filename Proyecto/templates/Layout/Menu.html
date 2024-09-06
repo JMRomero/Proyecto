@@ -1,5 +1,4 @@
 {%load static%}
-
 <div class="sidebar close bsb-table-xl">
   <div class="logo-details">
     <i><img src="{%static 'img/logo2.png'%}" alt="profileImg" height="70px" width="70"></i>
@@ -27,13 +26,13 @@
         <li><a class="link_name" href="/">Menú</a></li>
       </ul>
     </li>
-    <li>
+    <li id="specialOrders">
       <a href="/Pedidos/lista">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
         <span class="link_name">Pedidos Especiales</span>
       </a>
       <ul class="sub-menu blank">
-        <li><a class="link_name" href="/Pedidos/lista">Pedidos Especiales</a></li>
+        <li ><a class="link_name" href="/Pedidos/lista">Pedidos Especiales</a></li>
       </ul>
     </li>
     {%if group == "Admin"%}
@@ -47,7 +46,7 @@
       </ul>
     </li>
 
-    <li>
+    <li >
       <a href="/Proveedor/lista">
         <i class="fa fa-users" aria-hidden="true"></i>
         <span class="link_name">Proveedores</span>
@@ -67,7 +66,7 @@
     </li>
     <li>
       <a href="/Notificacion">
-        <i class="fa fa-bell" aria-hidden="true"><!--<e style="color: red;">2</e>--></i>
+        <i class="fa fa-bell" aria-hidden="true" id="not"></i>
         <span class="link_name">Notificacion</span>
       </a>
       <ul class="sub-menu blank">
@@ -131,6 +130,17 @@
   </div>
   <script src="{%static 'js/sweetalert2.js' %}"></script>
   <script>
+    let url="/notificaciones_api";
+      fetch(url)
+      .then(num=>num.json())
+      .then(num=>{
+      console.log(num.Numero)
+      document.getElementById("not").innerHTML=`<span class="position-absolute top-1 start-5 badge rounded-pill bg-danger">
+    `+num.Numero+`
+    <span class="visually-hidden"></span>
+  </span>`;
+      })
+
     let arrow = document.querySelectorAll(".arrow");
     for (var i = 0; i < arrow.length; i++) {
       arrow[i].addEventListener("click", (e) => {
@@ -151,6 +161,8 @@
         dinero=parseInt("{{dinero}}");
         recomendacion=dinero-50000;
         Swal.fire({
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
             title: "¿Desea terminar la jornada?",
             text: "el total de la caja es: {{dinero}} Ingrese el dinero a retirar te recomendamos retirar "+recomendacion+" para que la base de la caja sea 50000",
             input: "number",
@@ -160,6 +172,7 @@
             }},
             showCancelButton: true,
             confirmButtonText: "Terminar",
+            confirmButtonColor: "#3085d6",
             showLoaderOnConfirm: true,
             preConfirm: async (valor) => {
               final=dinero-valor;
@@ -173,6 +186,8 @@
               Swal.fire({
                 title: 'Total en la caja',
                 text: `${final}`,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
                 confirmButtonText: 'Terminar jornada',
                 allowOutsideClick: false,
                 allowEnterKey: true}).then((result) => {
@@ -186,6 +201,7 @@
     {%else%}
     <script>
     function cerrar() {
+      final=parseInt("{{dinero}}");
       Swal.fire({
         title: "¿Desea terminar la jornada?",
         text: "el total de la caja es: {{dinero}}",
@@ -193,16 +209,58 @@
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: '<a class="link-offset-2 link-underline link-underline-opacity-0 link-light"href="/salir" > Aceptar</a> ',
-        cancelButtonText: "No, cancelar",
+        cancelButtonText: "Cancelar",
         width:'30%',
-      }).then((result) => {
+        showCancelButton: true,
+        confirmButtonText: "Terminar",
+        showLoaderOnConfirm: true,
+        preConfirm: async (valor) => {
+          let url="../../retiro/APIR/"+final;
+          fetch(url)
+          return final
+          },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((resultado) => {
+            if (resultado.isConfirmed) {
+              Swal.fire({
+                title: 'Total en la caja',
+                text: `${final}`,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: 'Terminar jornada',
+                allowOutsideClick: false,
+                allowEnterKey: true}).then((result) => {
           if (result.isConfirmed) {
-            location.href="/salir"
+            location.href="/salir";
           }})
-    }
+            }
+     
+          })};
     $(function () {
   $('[data-toggle="tooltip"]').tooltip()
+
 })
   </script>
+  <script>
+  // Obtener la URL actual
+  const currentURL = window.location.pathname;
+
+  // Agregar la clase de resaltado al elemento del menú correspondiente
+  switch (currentURL) {
+    case '/home':
+      document.getElementById('home').classList.add('highlight');
+      break;
+    case '/Pedidos/lista':
+      document.getElementById('specialOrders').classList.add('highlight');
+      break;
+    case '/about':
+      document.getElementById('about').classList.add('highlight');
+      break;
+    default:
+      break;
+  }
+
+  // Mostrar la URL actual en la consola
+  console.log("URL actual:", window.location.href);
+</script>
+
   {%endif%}

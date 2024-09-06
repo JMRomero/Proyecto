@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
   {%include "Layout/head.html" %}
-    <title>Lista Pedido Especial Terminados</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
+  <title>Lista Pedido Especial Terminados</title>
 </head>
 <body>
   {%include 'Layout/Menu.html' %}
@@ -16,7 +17,7 @@
           </nav>
           <br><br>
 <div class="d-grid gap-2 col-6 mx-auto">
-      <a href="lista" class="btn btn-primary" type="button">Listado de pedidos por pedir y realizados</a>
+      <a href="lista" class="btn btn-primary estilo" type="button">Listado de pedidos por pedir y realizados</a>
         <form class="d-flex" method="POST" action="">
           {% csrf_token %}
           {% if busqueda %}

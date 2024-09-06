@@ -167,7 +167,7 @@ set TotalV=0;
 set TotalVT=0;
 set idVenta=(select MAX(id_venta) from venta);
 repetir:LOOP
-select Cantidad,Loteid,precioV into cantidadLOTE,loteIDD,precioLOTE from lote where id_producto=codigo and Estado=True and Cantidad>0 order by max(timestampdiff(day,fechaCreate,now()));
+select Cantidad,Loteid,precioV into cantidadLOTE,loteIDD,precioLOTE from lote where id_producto=codigo and Estado=True and Cantidad>0 order by (timestampdiff(day,fechaCreate,now())) desc limit 1;
 if cantidadLOTE<cantidadregistrar THEN
 set TotalV= TotalV+(cantidadLOTE*precioLOTE);
 update lote set Cantidad=0 where Loteid=loteIDD;
@@ -1347,8 +1347,9 @@ ALTER TABLE `django_admin_log`
 -- Filtros para la tabla `historia_caja`
 --
 ALTER TABLE `historia_caja`
-  ADD CONSTRAINT `historia_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`),
-  ADD CONSTRAINT `historia_caja_ibfk_2` FOREIGN KEY (`cedula`) REFERENCES `auth_user` (`username`);
+  ADD CONSTRAINT `historia_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`);
+ALTER TABLE `historia_caja`
+  ADD CONSTRAINT `historia_caja_ibfk_2` FOREIGN KEY (`cedula`) REFERENCES `auth_user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `horas_trabajadas`

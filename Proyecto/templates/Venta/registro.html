@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   {%include "Layout/head.html" %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
     <title>Registro de Venta</title>
 </head>
 <body>
@@ -19,7 +20,7 @@
       <input type="hidden" id="Primer_registo" value="1">
       <input type="hidden" id="ID_Venta" value="0">
       <input type="hidden" id="cedula" value='{{user}}'>
-      <div class="table-responsive" style="width:1250px; height:600px;">
+      <div class="table-responsive" style="width:1250px; height:550px;">
     <table class="table table-fixed">
         <thead >
             <th>codigo</th>
@@ -53,7 +54,7 @@
     <e id="BotonCancelar2"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg" >Cancelar y Salir</a></e>
     <e  id="BotonTerminar"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg">Terminar y Nuevo</a></e>
     <e  id="BotonTerminar2"><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-secondary btn-lg">Terminar y Salir</a></e>
-    <e ><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-info btn-lg" href="../Venta/Dias">Ver Ventas</a></e>
+    <e ><a style="margin-left: 50px; margin-top: 0px;" class="btn btn-primary estilo btn-lg" href="../Venta/Dias">Ver Ventas</a></e>
   </div>
   {%include 'Layout/Validacion.html' %}
   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>

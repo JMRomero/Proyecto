@@ -25,7 +25,7 @@
                   {% csrf_token %}
                   <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                     <i class="fa fa-barcode" aria-hidden="true"></i>
-                      <label class="form-label is-required">Codigo de Barras</label>
+                      <label class="form-label is-required">Código de Barras</label>
                       <input type="number" class="form-control" name="codigo" required value="{{codigo}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Falta Codigo De Barras</h6></div><br>
@@ -57,14 +57,14 @@
                       </div>
                   <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4">
                     <i class="fa fa-hand-o-down" aria-hidden="true"></i>
-                      <label class="form-label is-required">Cantidad Minima</label> 
+                      <label class="form-label is-required">Cantidad Mínima</label> 
                       <input type='number' class="form-control" name='Min' required value="{{Min}}">
                       <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                       <div class="invalid-feedback"><h6>Ingrese Canatidad Minima</h6></div>
                       <br><br>
                     </div>
                     <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12 form-check text-center">
-                      <label class="form-label is-required">Producto de poca rotacion</label>br
+                      <label class="form-label is-required">Producto de poca rotación</label>br
                       <input type="checkbox" style="position:absolute; height: 25px; width: 25px; border-color: black ;" class="form-check-input" name="rotacion" {%if rotacion == 'on' %}checked{%endif%}><br>
                     </div><br>
                   <div class="d-grid gap-2 col-6 mx-auto">
@@ -83,7 +83,7 @@
             {% csrf_token %}
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-barcode" aria-hidden="true"></i>
-                <label class="form-label is-required">Codigo de Barras</label>
+                <label class="form-label is-required">Código de Barras</label>
                 <input type="text" class="form-control" name="codigo" required>
                 <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
                 <div class="invalid-feedback"><h6>Falta Código De Barras</h6></div>

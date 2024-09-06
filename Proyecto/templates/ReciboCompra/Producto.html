@@ -5,6 +5,7 @@
 <head>
     {%include 'Layout/ValidacionRol.html' %}
     {%include "Layout/head.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
     <title>Seleccionar Producto</title>
 </head>
 
@@ -28,7 +29,7 @@
                 NIT: {{p.3}} </h1>
             {%endfor%}
             <div class="d-grid gap-2 col-6 mx-auto">
-                <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary mb-2" type="button">Registrar y seleccionar nuevo producto</a>
+                <a href="/Compra/CProducto/{{RC}}" class="btn btn-primary estilo mb-2" type="button">Registrar y seleccionar nuevo producto</a>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <a href="/Compra/Lista/{{RC}}" type="button" class="btn btn-outline-danger mb-2">Cancelar</a>
