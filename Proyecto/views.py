@@ -858,6 +858,12 @@ def usuarioRolR(request,id):
 #endregion
 #region Notificaciones
 #Notificaciones
+def api_notificaciones(request):
+    notificaciones=connection.cursor()
+    notificaciones.execute("call notificacion_punto")
+    numero=notificaciones.fetchone()[0]
+    json=dict([('Numero',numero)])
+    return JsonResponse(json,safe=False) 
 @login_required
 def Notificacion(request):
     PROMin=connection.cursor()
@@ -1481,7 +1487,7 @@ def Recibos_Finalizar(request):
             update.execute(f"update lote set Cantidad={cantidadT}, PrecioC={lote[3]}, porcentaje={lote[4]},precioV={lote[5]} where id_producto={lote[0]} and Loteid='{lote[1]}' and fechaVenci='{lote[6]}';")
             delete=connection.cursor()
             delete.execute(f"delete from temp_lote_update where id_producto={lote[0]} and Loteid='{lote[1]}' and fechaVenci='{lote[6]}';")
-    
+    delete=connection.cursor()
     delete.execute("call Delete_Temp;")
     return redirect('/Compra/Recibos/1')
 @login_required
@@ -1497,26 +1503,31 @@ def registro_venta(request):
     dinero=caja_N(request)
     dinero=caja_N(request)
     return render(request, 'Venta/registro.html',{'dinero':dinero,'group':grupo_actual,'dinero':dinero})
+@login_required
 def venta_crear_factura(request,user):
     procedimiento=connection.cursor()
     procedimiento.execute(f"call Venta_id({str(user)});")
     datos=procedimiento.fetchone()[0]
     iDV=dict([('id_venta',datos)])
     return JsonResponse(iDV,safe=False)
+@login_required
 def registo_detalleVenta(request,idP,Cant,Posi):
     procedimiento=connection.cursor()
     procedimiento.execute(f"call Venta_Registo({str(idP)},{str(Cant)},{str(Posi)});")
     datos=procedimiento.fetchone()[0]
     subtotal=dict([('Subtotal',datos)])
     return JsonResponse(subtotal,safe=False)
+@login_required
 def venta_eliminar_API(request,idV,posi):
     procedimiento=connection.cursor()
     procedimiento.execute(f"call Borrar_producto_venta({str(idV)},{str(posi)})")
     HttpResponse('Se a Eliminado correctamente')
+@login_required
 def venta_Cancelar_API(request,idV):
     procedimiento=connection.cursor()
     procedimiento.execute(f"call Cancelar_venta({str(idV)})")
     HttpResponse('Se a cancelado Correctamente')
+@login_required
 def venta_DONE(request,idV,efectivo):
     with connection.cursor() as consulta:
         consulta.execute(f"select TotalCompra from venta where id_venta={str(idV)}")
@@ -1527,20 +1538,14 @@ def venta_DONE(request,idV,efectivo):
     entregado.execute(f"update venta set Efectivo_Entregado={str(devolver)}, Hora=Now(),Fecha=now() where id_venta={str(idV)};")
     json=dict([('Devolver',devolver)])
     return JsonResponse(json,safe=False)
-
-def api_notificaciones(request):
-    notificaciones=connection.cursor()
-    notificaciones.execute("call notificacion_punto")
-    numero=notificaciones.fetchone()[0]
-    json=dict([('Numero',numero)])
-    return JsonResponse(json,safe=False) 
-
+@login_required
 def venta_dias(request):
     dias=connection.cursor()
     dias.execute("call Dias_Venta()")
     group=group_iden(request)
     dinero=caja_N(request)
     return render(request, "Venta/Dias.html",{'dinero':dinero,'dias':dias,'group':group})
+@login_required
 def venta_Info(request,fecha):
     info=connection.cursor()
     info.execute(f"Select venta.* ,auth_user.first_name, auth_user.last_name from venta inner join auth_user on venta.Cedula=auth_user.username where Fecha='{fecha}' and TotalCompra>0;")
@@ -1549,7 +1554,27 @@ def venta_Info(request,fecha):
     group=group_iden(request)
     dinero=caja_N(request)
     return render(request, "Venta/Infor_Ventas.html",{'dinero':dinero,'info':info,'infoV':infoV,'group':group})
+@login_required
+def Informacion_Caja(request):
+    if request.method=='POST':
+        fecha=request.POST.get('week')
+        f=fecha.split("-W")
+        historia=connection.cursor()
+        historia.execute(f"CALL Historia_Caja('{f[1]}','{f[0]}',now())")
+        busqueda=True
+        group=group_iden(request)
+        dinero=caja_N(request)
+        return render(request,"venta/Historia_Caja.html",{'dinero':dinero,'group':group,'DH':historia,'busqueda':busqueda,'week':fecha})
+    else:
+        historia=connection.cursor()
+        historia.execute("CALL Historia_Caja('0','0',now())")
+        busqueda=False
+        fecha=0
+        group=group_iden(request)
+        dinero=caja_N(request)
+        return render(request,"venta/Historia_Caja.html",{'dinero':dinero,'group':group,'DH':historia,'busqueda':busqueda,'week':fecha})
 #endregion
+#region logout
 #logout
 def salir(request):
     username= nombredelusuario(request)
@@ -1558,6 +1583,7 @@ def salir(request):
         cursor.execute(f"call calcularHoras('{username}');")
     logout(request)
     return redirect('login')
+@login_required
 def retiro_api(request,retiro,final):
     id=connection.cursor()
     id.execute("select max(id) from historia_caja;")
@@ -1570,7 +1596,7 @@ def retiro_api(request,retiro,final):
     nuevo=connection.cursor()
     nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
     HttpResponse('retiro exitoso')
-
+@login_required
 def retiro_apiR(request,final):
     id=connection.cursor()
     id.execute("select max(id) from historia_caja;")
@@ -1583,11 +1609,14 @@ def retiro_apiR(request,final):
     nuevo=connection.cursor()
     nuevo.execute(f"insert into historia_caja (id_caja,inicio) values (1,{final});")
     HttpResponse('retiro exitoso')
+#endregion
+#region estadisticas
 @login_required
 def estadisticas(request):
+    dinero=caja_N(request)
     group=group_iden(request)
-    return render(request,'Estadisticas/estadisticas.html',{'group':group})
-
+    return render(request,'Estadisticas/estadisticas.html',{'group':group,'dinero':dinero})
+@login_required
 def productovmes_api(request,fecha):
     productovmes=connection.cursor()
     if fecha=="0":
@@ -1603,6 +1632,7 @@ def productovmes_api(request,fecha):
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
+@login_required
 def productovsem_api(request,fecha):
     productovsem=connection.cursor()
     if fecha=="0":
@@ -1619,7 +1649,7 @@ def productovsem_api(request,fecha):
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
-
+@login_required
 def productocmes_api(request,fecha):
     productovmes=connection.cursor()
     if fecha=="0":
@@ -1635,7 +1665,7 @@ def productocmes_api(request,fecha):
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
-
+@login_required
 def productocsem_api(request,fecha):
     productovsem=connection.cursor()
     if fecha=="0":
@@ -1652,22 +1682,37 @@ def productocsem_api(request,fecha):
         except:
             datoss['producto'+str(i)]=(0,'Sin registro')
     return JsonResponse(datoss,safe=False)
-
+@login_required
 def trabajadorsem_api(request,fecha):
-    usuariosemanatra=connection.cursor()
+    usuarios=connection.cursor()
     if fecha=="0":
-        usuariosemanatra.execute("call usuariosemanatra('0','0',now());")
+        usuarios.execute("call USemana('0','0',now());")
     else:
         x=fecha.split('-W')
-        print(x[1])
-        usuariosemanatra.execute(f"call usuariosemanatra('{x[0]}','{x[1]}',now());")
-    datos=usuariosemanatra.fetchall()
+        usuarios.execute(f"call USemana('{int(x[1])}','{x[0]}',now());")
+    datos=usuarios.fetchall()
     datoss=dict()
     for i in range(0,3,1):
         try :
-            datoss['usuario'+str(i)]=(datos[i][0],datos[i][1])
+            datoss['usuario'+str(i)]=(datos[i][3],datos[i][0],datos[i][1],datos[i][2])
         except:
-            datoss['usuario'+str(i)]=(0,'Sin registro')
+            datoss['usuario'+str(i)]=('0:0','Sin registro',' ',' ',)
+    return JsonResponse(datoss,safe=False)
+@login_required
+def trabajadormes_api(request,fecha):
+    usuarios=connection.cursor()
+    if fecha=="0":
+        usuarios.execute("call UMes(now());")
+    else:
+        fecha=fecha+str("-01")
+        usuarios.execute(f"call UMes('{fecha}');")
+    datos=usuarios.fetchall()
+    datoss=dict()
+    for i in range(0,3,1):
+        try :
+            datoss['usuario'+str(i)]=(datos[i][3],datos[i][0],datos[i][1],datos[i][2])
+        except:
+            datoss['usuario'+str(i)]=('0:0','Sin registro',' ',' ',)
     return JsonResponse(datoss,safe=False)
 #endregion
     

@@ -27,8 +27,8 @@
         {% csrf_token %}
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-cc" aria-hidden="true"></i>
-            <label class="form-label">No de cédula *</label>
-            <input type="number" class="form-control" name='cedula' required value="{{cedula}}">
+            <label class="form-label">N° de cédula *</label>
+            <input type="number"  class="form-control" name='cedula' required value="{{cedula}}">
             {%if cedulaR%}
             <div class="alert alert-danger" role="alert">La cédula "{{cedula}}" ya esta asignada al usuario '{{nombrerc}} {{apellidorc}}' .Por favor verifique los datos</div>
             {%endif%}

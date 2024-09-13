@@ -26,7 +26,7 @@
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
                     <label class="form-label is-required">NIT del proveedor</label>
-                    <input type="number" name='nit' class="form-control" required value="{{nit}}">
+                    <input type="number" max="99999999999" min="1" name='nit' class="form-control" required value="{{nit}}">
                     <div class="alert alert-danger" role="alert">el NIT "{{nit}}" ya esta registrado como el Proveedor "{{nombrepr}}"</div>
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
@@ -34,7 +34,7 @@
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
                   <label class="form-label is-required">Nombre del proveedor</label>
-                  <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
+                  <input type='text' maxlength="30" class="form-control" name='nombre' required value="{{nombre}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
               </div>
@@ -55,7 +55,7 @@
               <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 col-12">
                 <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Horario de atención</label>
-                <textarea type='text' class="form-control" name='horario_atencion' required>{{horario}}</textarea>
+                <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' required>{{horario}}</textarea>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
               </div>
@@ -73,14 +73,14 @@
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
                     <label class="form-label is-required">NIT del proveedor</label>
-                    <input type="number" name='nit' class="form-control" required>
+                    <input type="number" max="99999999999" min="1" name='nit' class="form-control" required>
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite NIT Del Proveedor</h6></div>
             </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
                 <label class="form-label is-required">Nombre del proveedor</label>
-                <input type='text' class="form-control" name='nombre' required>
+                <input type='text' maxlength="30" class="form-control" name='nombre' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
             </div>
@@ -101,7 +101,7 @@
             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12">
               <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
               <label class="form-label is-required">Horario de atención</label>
-              <textarea type='text' class="form-control" name='horario_atencion' required ></textarea>
+              <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' required ></textarea>
               <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
               <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
             </div>

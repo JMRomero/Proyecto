@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 17:40:11
+-- Tiempo de generación: 13-09-2024 a las 14:06:20
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.28
 
@@ -43,6 +43,10 @@ end if;
 end loop repetir;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Cajadinero_mes` (IN `mes` INT)   BEGIN
+select SUM(TotalCompra) as total from venta where month(Fecha)=mes;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `calcularHoras` (IN `usuario` VARCHAR(150))   insert into horas_trabajadas (usuario,fecha,horas)values(usuario,now(),(select timestampdiff(second,hora_login,hora_logout) from auth_user where username=usuario))$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Cancelar_venta` (IN `idVenta` INT)   begin  
@@ -64,13 +68,14 @@ end loop repetir;
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Datos_producto` (IN `codigo` BIGINT)   BEGIN
-select Nombre,GramoLitro,(select precioV from lote where id_producto=codigo and estado=True order by MAX(timestampdiff(hour, fechaCreate,now())))AS precio,(select sum(Cantidad) from lote where id_producto=codigo and estado=True)AS cantidad,estado from producto where id_producto=codigo; 
+select Nombre,GramoLitro,(select precioV from lote where id_producto=codigo and estado=True order by (timestampdiff(day,fechaCreate,now())) desc limit 1) AS precio,(select sum(Cantidad) from lote where id_producto=codigo and estado=True)AS cantidad,estado from producto where id_producto=codigo; 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Delete_Temp` ()   begin 
 DELETE FROM temp_proveedor;
 DELETE FROM temp_producto;
 DELETE FROM temp_lote;
+delete from temp_lote_update;
 DELETE FROM temp_compra;
 DELETE FROM temp_detalle_compra;
 END$$
@@ -91,6 +96,25 @@ GROUP BY v.fecha
 ORDER BY v.fecha;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Historia_caja` (IN `semanaSelect` INT, IN `yearSelect` INT, IN `fechas` DATE)   BEGIN
+if semanaSelect=0 and yearSelect=0 THEN
+select hc.*,au.first_name,au.last_name,(hc.final+hc.retiro) from historia_caja hc inner join auth_user au on hc.cedula=au.username where week(hc.fecha,1)=week(fechas,1) and year(hc.fecha)=year(fechas);
+ELSE
+select hc.*,au.first_name,au.last_name,(hc.final+hc.retiro) from historia_caja hc inner join auth_user au on hc.cedula=au.username where week(hc.fecha,1)=semanaSelect and year(hc.fecha)=yearSelect;
+end if;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Lotes_Compra` (IN `idc` INT)   begin 
+select temp_detalle_compra.*,temp_lote.fechaVenci,temp_lote.id_producto,(select nombre from producto where id_producto=temp_lote.id_producto union select nombre from temp_producto where id_producto=temp_lote.id_producto),(select max from producto where id_producto=temp_lote.id_producto union select max from temp_producto where id_producto=temp_lote.id_producto),((select SUM(CantidadProductos) from temp_detalle_compra where (select id_producto from producto where id_producto=temp_lote.id_producto union select id_producto from temp_producto where id_producto=temp_lote.id_producto)=(select id_producto from temp_lote where Loteid=temp_detalle_compra.Lote))+(CASE when (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True)>0 then (select SUM(Cantidad) from lote where id_producto=temp_lote.id_producto and Estado=True) else 0 end)) from temp_detalle_compra inner join temp_lote on temp_detalle_compra.Lote=temp_lote.loteid where temp_detalle_compra.id_compra=idc;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Lotes_update_Compra` (IN `idc` INT)   BEGIN
+select temp_detalle_compra.*,temp_lote_update.fechaVenci,temp_lote_update.id_producto,(select nombre from producto where id_producto=temp_lote_update.id_producto union select nombre from temp_producto where id_producto=temp_lote_update.id_producto)as Nombre,(select max from producto where id_producto=temp_lote_update.id_producto union select max from temp_producto where id_producto=temp_lote_update.id_producto) as Maximo,((select SUM(CantidadProductos) from temp_detalle_compra where (select id_producto from producto where id_producto=temp_lote_update.id_producto union select id_producto from temp_producto where id_producto=temp_lote_update.id_producto)=(select id_producto from temp_lote_update where temp_lote_update.Loteid=temp_detalle_compra.Lote))+(CASE when (select SUM(Cantidad) from lote where id_producto=temp_lote_update.id_producto and Estado=True)>0 then (select SUM(Cantidad) from lote where id_producto=temp_lote_update.id_producto and Estado=True) else 0 end)) as cantidad_Total
+from temp_detalle_compra inner join temp_lote_update 
+on temp_detalle_compra.Lote=temp_lote_update.loteid
+where temp_detalle_compra.id_compra=idc;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Lotes_vencer` ()   BEGIN
 select Lote.Loteid,Lote.id_producto,Producto.nombre,proveedor.Nombre from Lote inner join Producto on Lote.id_producto=Producto.id_producto inner join detalle_compra on lote.Loteid=detalle_compra.Lote inner join compra on detalle_compra.id_compra=compra.id_compra INNER join proveedor on compra.NIT=proveedor.NIT where TIMESTAMPDIFF(month, NOW(), fechaVenci)<proveedor.Politica_Devolucion and TIMESTAMPDIFF(DAY, NOW(), fechaVenci)>0;
 end$$
@@ -98,6 +122,20 @@ end$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Lotes_vencidos` ()   begin
 select Lote.Loteid,Lote.id_producto,Producto.nombre,proveedor.Nombre from Lote inner join Producto on Lote.id_producto=Producto.id_producto inner join detalle_compra on lote.Loteid=detalle_compra.Lote inner join compra on detalle_compra.id_compra=compra.id_compra INNER join proveedor on compra.NIT=proveedor.NIT where TIMESTAMPDIFF(DAY, NOW(), fechaVenci)<=0;
 end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `notificacion_punto` ()   begin 
+declare lotesV int;
+declare lotesaV int;
+declare pcero int;
+declare pacero int;
+declare total int;
+select count(Lote.Loteid) into lotesaV from Lote inner join Producto on Lote.id_producto=Producto.id_producto inner join detalle_compra on lote.Loteid=detalle_compra.Lote inner join compra on detalle_compra.id_compra=compra.id_compra INNER join proveedor on compra.NIT=proveedor.NIT where TIMESTAMPDIFF(month, NOW(), fechaVenci)<proveedor.Politica_Devolucion and TIMESTAMPDIFF(DAY, NOW(), fechaVenci)>0;
+select count(Lote.Loteid) into lotesV from Lote inner join Producto on Lote.id_producto=Producto.id_producto inner join detalle_compra on lote.Loteid=detalle_compra.Lote inner join compra on detalle_compra.id_compra=compra.id_compra INNER join proveedor on compra.NIT=proveedor.NIT where TIMESTAMPDIFF(DAY, NOW(), fechaVenci)<=0;
+select count(nombre) into pcero from producto where CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End=0 and Estado=True and rotacion="Normal";
+select count(nombre) into pacero from producto where CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End<Min and CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End>0 and estado=1 and rotacion="Normal";
+set total=lotesaV+lotesV+pcero+pacero;
+select total;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `precioAnterior` (IN `idP` INT)   begin 
 select case when(select count(Loteid) from lote where id_producto=idP)>0 then (SELECT precioV from lote where id_producto=idP order by fechaCreate limit 1)else 0 end;
@@ -129,17 +167,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Producto_cero` ()   select nombre f
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Producto_min` ()   select nombre from producto where CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End<Min and CASE when (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and lote.Estado=True )>0 THEN (select SUM(cantidad)  from Lote where producto.id_producto=Lote.id_producto and Lote.Estado=True ) else 0 End>0 and estado=1 and rotacion="Normal"$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UMes` (IN `fechas` DATE)   BEGIN
+SELECT au.first_name,au.last_name,usuario,sec_to_time(sum(horas)) as total_horas FROM horas_trabajadas ht INNER JOIN auth_user au ON ht.usuario = au.username 
+where month(ht.fecha)=month(fechas) and year(ht.fecha)=year(fechas) GROUP BY usuario ORDER BY total_horas DESC LIMIT 3;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `USemana` (IN `semanaSelect` INT, IN `yearSelect` INT, IN `fechas` DATE)   BEGIN
+IF semanaSelect=0 and yearSelect=0 THEN
+SELECT au.first_name,au.last_name,ht.usuario,sec_to_time(SUM(ht.horas)) AS total_horas FROM horas_trabajadas ht INNER JOIN auth_user au ON ht.usuario = au.username WHERE WEEK(ht.fecha,1) = WEEK(now(),1) 
+AND year(ht.fecha)=year(fechas) GROUP BY ht.usuario ORDER BY total_horas DESC LIMIT 3;
+ELSE 
+SELECT au.first_name,au.last_name,ht.usuario,sec_to_time(SUM(ht.horas)) AS total_horas FROM horas_trabajadas ht INNER JOIN auth_user au ON ht.usuario = au.username 
+WHERE week(ht.fecha,1)=semanaSelect and year(ht.fecha)=yearSelect GROUP BY ht.usuario ORDER BY total_horas DESC LIMIT 3;
+END IF;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `User_group` (IN `cedula` INT(10), IN `idG` INT(10), IN `telefono` VARCHAR(10), IN `fecha` DATE, IN `direccion` VARCHAR(150))   begin 
 INSERT INTO auth_user_groups (user_id,group_id) values((select id from auth_user where username=cedula),idG);
 update auth_user set Telefono=telefono, fechaNacimiento=fecha,Direccion=direccion where username=cedula;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Usuarios+trabajados` (IN `semana` TINYINT, IN `fechas` DATE)   BEGIN
-if semana then 
-SELECT usuario, month(fechas) as mes, year(fechas) as año,sec_to_time(sum(horas)) as total_horas FROM horas_trabajadas where week(fecha)=week(fechas) and month(fecha)=month(fechas) GROUP by usuario, week(fecha,1) ORDER BY week(fechas) DESC LIMIT 3;
-ELSE
-SELECT usuario,month(fechas) as mes, year(fechas) as año,sec_to_time(sum(horas)) as total_horas FROM horas_trabajadas where month(fecha)=month(fechas) GROUP by usuario, month(fechas), YEAR(fechas) ORDER BY mes, total_horas DESC LIMIT 3;
-end if;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Venta_id` (IN `cedula_usuario` INT)   BEGIN
@@ -308,8 +354,8 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `fechaNacimiento`, `Direccion`, `Telefono`, `hora_login`, `hora_logout`) VALUES
-(3, 'pbkdf2_sha256$720000$NjhwZWuCcQz0RODIC3ZBT5$fDnsKWR42Cp0pq0Rb2G/vEjeQ3KXXhw3tzT6OWGEj04=', '2024-08-26 11:28:04.337749', 0, '1017924962', 'jose', 'romero', 'rjosemiguel787@gmail.com', 0, 1, '2023-11-17 06:36:00.000000', '2005-05-05', 'CL 112 81-74', '3046803586', '2024-08-26 06:28:04', '2024-08-20 10:49:51'),
-(15, 'pbkdf2_sha256$720000$IrvJ9SuMxGICLRBxmXvLsD$oI5aKDExIn0MhTcU1700Z1KQu/RseMTnwtW0RBiw8tE=', '2024-08-20 15:49:55.139006', 0, '1025644878', 'Juan', 'Guerra', 'juanpguerra14@gmail.com', 0, 1, '2024-07-17 15:32:02.856608', '2000-08-22', 'cll23', '3144698932', '2024-08-20 10:49:55', '2024-08-12 07:00:09');
+(3, 'pbkdf2_sha256$720000$sgcIGtamYXsGNVZ9Y74T2A$ajS6LUV2O1YeuIYKGHfJWx9gr0cv65EjZMX13dLAzKc=', '2024-09-13 11:23:50.370452', 0, '1017924962', 'jose', 'romero', 'rjosemiguel787@gmail.com', 0, 1, '2023-11-17 06:36:00.000000', '2005-05-05', 'CL 112 81-74', '3046803586', '2024-09-13 06:23:50', '2024-09-09 10:21:52'),
+(15, 'pbkdf2_sha256$720000$IrvJ9SuMxGICLRBxmXvLsD$oI5aKDExIn0MhTcU1700Z1KQu/RseMTnwtW0RBiw8tE=', '2024-09-09 15:21:58.660059', 0, '1025644878', 'Juan', 'Guerra', 'juanpguerra14@gmail.com', 0, 1, '2024-07-17 15:32:02.856608', '2000-08-22', 'cll23', '3144698932', '2024-09-09 10:21:58', '2024-09-09 10:25:21');
 
 -- --------------------------------------------------------
 
@@ -359,7 +405,7 @@ CREATE TABLE `caja` (
 --
 
 INSERT INTO `caja` (`id`, `dinero`) VALUES
-(1, -3375345950);
+(1, 50500);
 
 -- --------------------------------------------------------
 
@@ -388,7 +434,14 @@ INSERT INTO `compra` (`id_compra`, `Total`, `Fecha_Llegada`, `NIT`) VALUES
 (7, 10000, '2024-08-12 11:34:04', 12121212),
 (8, 27890, '2024-08-26 06:28:21', 12121212),
 (9, 100800, '2024-08-26 07:36:45', 2147483647),
-(10, 58901, '2024-08-26 07:43:38', 12121212);
+(10, 58901, '2024-08-26 07:43:38', 12121212),
+(11, 90000, '2024-08-27 06:53:46', 12121212),
+(12, 23980, '2024-08-27 08:45:02', 2147483647),
+(13, 23980, '2024-09-01 21:33:30', 2147483647),
+(14, 22, '2024-09-06 16:04:42', 12121212),
+(15, 27890, '2024-09-09 10:28:17', 43212),
+(16, 20690, '2024-09-13 07:00:04', 2147483647),
+(17, 27980, '2024-09-13 07:03:12', 43212);
 
 -- --------------------------------------------------------
 
@@ -424,7 +477,15 @@ INSERT INTO `detalle_compra` (`Lote`, `Precio`, `procentaje`, `PrecioU`, `Cantid
 ('Ibu9922', 45000, 100, 300, 300, 9),
 ('JJJ8987', 27910, 78, 1700, 30, 9),
 ('JKSNa8989', 27890, 100, 200, 300, 9),
-('NSJAS990', 58901, 70, 3350, 30, 10);
+('NSJAS990', 58901, 70, 3350, 30, 10),
+('NSJAS991', 90000, 75, 2650, 60, 11),
+('NSJAS992', 23980, 100, 500, 100, 12),
+('NSJAS992O', 23980, 100, 1600, 30, 13),
+('yyyyyy', 10, 10, 50, 10, 14),
+('qqqqqqq2', 12, 12, 50, 12, 14),
+('4321', 27890, 10, 150, 300, 15),
+('JJH3i', 20690, 50, 150, 300, 16),
+('GHJKHJK', 27980, 50, 1400, 30, 17);
 
 --
 -- Disparadores `detalle_compra`
@@ -485,7 +546,27 @@ INSERT INTO `detalle_venta` (`id_Lote`, `PrecioU`, `TotalProducto`, `Cantidad`, 
 ('rrrrrrrrr', 70, 700, 10, 1, 89),
 ('nnnnasasa', 1700, 3400, 2, 2, 89),
 ('eeeeeee', 2000, 2000, 1, 3, 89),
-('jksajsa', 3200, 3200, 1, 4, 89);
+('jksajsa', 3200, 3200, 1, 4, 89),
+('yyyyyy', 2000, 4000, 2, 1, 92),
+('wwwwwwwww', 300, 90000, 300, 2, 92),
+('Ibu9922', 300, 45000, 150, 2, 92),
+('Ibu9922', 300, 45000, 150, 3, 92),
+('yyyyyy', 2000, 4000, 2, 4, 92),
+('jksajsa', 3200, 3200, 1, 5, 92),
+('nnnnasasa', 3350, 6700, 2, 1, 95),
+('yyyyyy', 50, 500, 10, 2, 95),
+('nnnnasasa', 3350, 63650, 19, 1, 96),
+('yyyyyy', 50, 50, 1, 1, 97),
+('qqqqqqq', 2000, 4000, 2, 1, 97),
+('jjajsaj', 50, 1000, 20, 1, 97),
+('JKSNa8989', 200, 4000, 20, 1, 97),
+('NSJAS992', 500, 6500, 13, 1, 97),
+('NSJAS992', 500, 5000, 10, 1, 99),
+('nnnnasasa', 3350, 3350, 1, 3, 99),
+('jksajsa', 3200, 3200, 1, 1, 100),
+('nnnnasasa', 3350, 3350, 1, 1, 101),
+('jksajsa', 3200, 3200, 1, 2, 101),
+('NSJAS992', 500, 500, 1, 1, 102);
 
 --
 -- Disparadores `detalle_venta`
@@ -611,7 +692,10 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('31kjxeqcgkvbtgdmdio5s37a6zeey5l9', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJCgJ:9EPEVu_FS54mMs2B0UZicCte6L4_2dvRM0iNXPw2f1A', '2024-06-17 21:45:59.417572'),
 ('78x0z2qpumhos8rke02yntufxbwntgbg', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sgbOq:OeSlrwfVoYpSxvxQZT0aFwK2QVOlYsVn3ve6Zub6lJ4', '2024-08-21 10:48:40.752029'),
 ('7zdq3dhy3vzncrp6w1tscn1ivgfpmap9', '.eJxVjEEOwiAQRe_C2hBwKIhL9z0DGZhBqgaS0q6Md7dNutDte-__twi4LiWsnecwkbiKszj9sojpyXUX9MB6bzK1usxTlHsiD9vl2Ihft6P9OyjYy7Y21hlk6w2pCHCJKg-RGEArp7SyfkNxQAM2Y3IZkdgmBCb0NjtkLT5f3KE4hA:1rd7zn:4pbBkMd99V9yWe6fJvhlQPXuacr1PVdg1zHieLYO7tg', '2024-03-07 12:16:11.132810'),
+('89gd6uii1n8iuo2vn8m63yjojv5ekm2a', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1smNI3:uG2G4g9nRPQ1xGEepnWTxgcYEvUe52WNzVcC4GuNtvA', '2024-09-06 08:57:31.523675'),
+('91iju0ik20ws0kq7ib3nimv8wc3rk8po', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1siuQF:RMAp0aQbLhmOcp47lzj5vI-gPoIYKcFaDTLHOiHO2fA', '2024-08-27 19:31:39.699411'),
 ('9ow5ww4pvw1rhmnvrtvgbmi4peo7jvvm', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sVjay:gwCWeU28HDdGFDbVzxgGjXP8fHTFdQ8KzD6hFpoZ4Ps', '2024-07-22 11:20:16.909912'),
+('ataor9y3426yl83dfjtcjyucez63wcvy', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1smiJc:Hzbiw2bCjFC1zgMez-veFH2qly0eoCgvXrnyDNlv9KM', '2024-09-07 07:24:32.431681'),
 ('cg4ymx6r8sa4nxtvhd1l0e9soagndh57', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s55rC:iIlGi1A2fwZZ_bwjAwSnn85f5q28bHZum36Su2Dspcc', '2024-05-09 23:38:54.830193'),
 ('chyooe62g6zwxcawg5ay7znr7pbekogr', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sLwFc:SujOw8L_pw82b8l71Hli8lERAN9is4aEjL4Sd2xI17s', '2024-06-25 10:49:44.436241'),
 ('d7zag99le2kmnj6hbhl7j435r2xjz4m7', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s2unE:tGWctmgSiVChI_lF9U37j5KOzT6_TW1Sh0bxHcG05Gg', '2024-05-03 23:25:48.318442'),
@@ -626,9 +710,12 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('hn0o6qq8rtxzidbr2z1ob0ivbcgjgxaa', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKfGI:2D4dw5cXVaY1JrUivvuhVHvU9qmzky7XNzv7nSpYkk0', '2024-06-21 22:29:10.479350'),
 ('ielf6q699i8vizx7utdi6og09lwrt75b', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKGe6:p7qxCCDrb0CYqSdTxhE1LYMIccAoFt18lY_v7us_SVU', '2024-06-20 20:12:06.502499'),
 ('inea3e07iwpssx3kpfdhxsqytx1y7yc0', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sQmKL:vgylAnyJxzhhBciUaZ0t795qQj4ybo8gNAbzNB3o_oo', '2024-07-08 19:14:37.955179'),
+('jeo9jz5sbthij88qewbdlq25rm93sj3z', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sl5DY:rhvRKbGAFcU-bPKoLrm31AujjkQ26XNSXho5N9SHXaQ', '2024-09-02 19:27:32.611656'),
 ('k3ppqmyhc2xwts6aykbbcqpcm77jwnh1', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sLVlM:j5lFvs-b_JqzSxw0g-LVoW2neIqjjBv5o00cDca9zVs', '2024-06-24 06:32:44.180204'),
 ('kjbdpge97ji9ark2ok2fqcj5q2ofkjvf', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sAAaW:ITOpSr_t2bE_IhUAP4G6UMkW9tI6hJ3h-bZnOS7Yjd4', '2024-05-23 23:42:40.700289'),
 ('klglvjofb1odcfcowdq5g5ip8a0h8r1d', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sLvae:-fVIYf9uqqiKwYJJjwdAR09wYX1TG9EEdQC4a7fIGxw', '2024-06-25 10:07:24.104964'),
+('kxrfqorh03pp8sv3jgn282ykwn7pmvo7', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1slpLc:sBjNlpMOH0KB5fXQzBEH8uh5_BpHIXKzQrRQgogzEtY', '2024-09-04 20:42:56.874696'),
+('m8wr7k3o6uemksdm0akglxr5wfw31ez5', '.eJxVjMsOgjAUBf-la9P0QoXWpXu-obkvLGpKQmFl_HclYaHbMzPnZRJua05b1SVNYi6mNaffjZAfWnYgdyy32fJc1mUiuyv2oNUOs-jzerh_Bxlr_tYsLTdnQBk71JGcAmkYWVkFm67rvQp44hApMjjxGgNSizFGkF4dmPcHNbE5gQ:1sngGc:Sb5dthZ_BpYPQgsESiOfhVQ3i6AawzukiI0LesRtcNw', '2024-09-09 23:25:26.896688'),
 ('mebrh7czld1cmnqf68us3qnroeqvu8pk', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s7dit:oeEBNhMuNRZ354FasIFcNlQ_RdDtfOjCGBVZC1DiBLY', '2024-05-17 00:12:51.562914'),
 ('mrwcoeudmnm7y3w30wcmiqbaieynhkoo', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1shU5b:h9zmsJYCQSuYDsXa1eFv9nskEQ4vRh9H-DIShh98FRE', '2024-08-23 21:12:27.011303'),
 ('muq3be3ljpvxe8fx7fl7fntp5s6jlnbj', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1s7wkl:iEVYmXl2fNiBEvN6RnDAzBtjvXvzk0znfFpX960494Y', '2024-05-17 20:32:03.041359'),
@@ -637,13 +724,17 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('nif8owffr5nm53vvvxm88ykn3akvftrg', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1saw17:X3y3oj5g2Fc2zacjCdB14HIOi3p16LzewEiryT42y_o', '2024-08-05 19:36:45.520686'),
 ('nvpjhfh5el8o6oesxchl3frxai0vop4a', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sKPoq:kAoBexzD4NT5igCZNpBQTNaOBPoEGkdq9c_P5HDSn8w', '2024-06-21 05:59:48.167616'),
 ('q2rx0gsnn49hsxgus1h9dcvizu73c6be', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sU6aU:7gCDkzdAuybjUPEhOZobvC5tYFWAeF0CqSHXqxur9KA', '2024-07-17 23:29:02.387769'),
+('qq8hijri3pdtssxcq3xyr96ffi20lh4w', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sn9Xa:o82DwwBCLwJ2aZQKz1RDgMl4gU78maZ0Qz8n69x9Q80', '2024-09-08 12:28:46.277243'),
 ('r84vdmy19hm0vyl92kgfp8swrcd1qvy1', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sbJrb:3Ed94hzG9dvqEmB68TilaudgnAQLyf8iPNEnBbBrv_w', '2024-08-06 21:04:31.856279'),
 ('rnqdnpcqrsskyidb5u5r1i6vkfxhf0d7', '.eJxVjjsOwjAQRO_iGlmx499S0nOGaO1d4wCypXwqxN3BUgpo570ZzUtMuG9l2ldeppnEWSgrTr9hxPTg2gndsd6aTK1uyxxlV-RBV3ltxM_L4f4NFFxLb9vBMHhrxhSC04pcjmCzxxFYe8gZFXgVONvoAvHoDBEOHjQbB-H76v0B--Y3qw:1sgR7L:3fyluFxsc9dVjlVGd24tUsMDxZ9QqVX9PuAbH4cPRKo', '2024-08-20 23:49:55.147004'),
 ('smmct7qge5xdj3wv8uro8mpyksi29vyl', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sThHq:5okwBOcPXP62Xfd1XI5C4yRRvqMtCcD1R4CN8tSychg', '2024-07-16 20:28:06.864350'),
 ('ujsce9v4tr5eps2bxwlegx3j7opxk1ya', '.eJxVjDsOwjAQBe_iGllr-RtKes5geddrHECOFCdVxN1JpBTQvpl5m4hpXWpcO89xzOIqtLj8bpjoxe0A-ZnaY5I0tWUeUR6KPGmX9ynz-3a6fwc19brX7MArj3pwRpFBRRaQHNGAOVAiwOJBaQPZ6GJAs2Xe5eJDAG-DA_H5AuOAN5s:1sTjYU:Smum9lOvluifwwSK9fGx4YRc5qv6GoSNkGPWzuzPYok', '2024-07-16 22:53:26.500247'),
 ('usbf9f4trkkdqgbzi2vwy9hkt4mos0aa', '.eJxVjDsOwjAQBe_iGln-J0tJzxms9XqNA8iR4qRC3B0ipYD2zcx7iYjbWuPWeYlTFmdhxel3S0gPbjvId2y3WdLc1mVKclfkQbu8zpmfl8P9O6jY67f2BDbQ6IIpSSvPVjmAVELxwINLjg0ab4Gz0t45KKAJiyXCIWAeWYn3B9KoN-I:1sJtFh:0OpGWsn_XWIRDIpUCCmJh9CkRo5JTAJ4ewH16_im_Mo', '2024-06-19 19:13:21.227605'),
 ('v8tl9cmzewf7ii5011di62p4v6np8xvz', '.eJxVjMEOwiAQRP-FsyECWygevfsNZGEXqRpISnsy_rtt0oMeZ96beYuA61LC2nkOE4mLUIM4_ZYR05PrTuiB9d5kanWZpyh3RR60y1sjfl0P9--gYC_bGrNjUNqgIlKj8Z4gWkjZ0DlndhAjIcMWBmKlkJzzCUedI2iwwFZ8vjE8OSQ:1scRrH:QVG4z985ypXmy4inXZtFl1SFthd4vzdKb2h8TWPAtl8', '2024-08-09 23:48:51.579214'),
+('v9rtzjbed3wl3uutucd8v7ay7kycvf7m', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1snMP2:1JVjOVW_4jHdVWx0VERvI_xZNjUjjt_QeBZeF4FQg5E', '2024-09-09 02:12:48.321332'),
+('w4r4ew6apwnj87rxa4uac6l8c0x4wa5t', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1smaUr:OvzFz0vIiNifIY9BHV25VcJBZefiWy_5FPgkBOlL3Sk', '2024-09-06 23:03:37.655390'),
 ('xcoracqb8c5x1k27spbuf6ijg37pihop', '.eJxVjEEOwiAQRe_C2pCOHWDGpXvPQGBAqRpISrsy3l2bdKHb_977L-XDuhS_9jz7KamTGtXhd4tBHrluIN1DvTUtrS7zFPWm6J12fWkpP8-7-3dQQi_fmgcwgYAsA2RLESCCC4KER2MZDV5HBMNDtI4lAVhCIU4WMwm6EdT7A50ENgk:1sgjup:vCRiN-oI0WlUcmlgpeB1SD2g7jQzX1NKZEPGq8OCQIs', '2024-08-21 19:54:15.022414'),
+('z63uuf11zcwyy1n0f6acqibg0sf7qir1', '.eJxVjMsOgjAUBf-la9P0QoXWpXu-obkvLGpKQmFl_HclYaHbMzPnZRJua05b1SVNYi6mNaffjZAfWnYgdyy32fJc1mUiuyv2oNUOs-jzerh_Bxlr_tYsLTdnQBk71JGcAmkYWVkFm67rvQp44hApMjjxGgNSizFGkF4dmPcHNbE5gQ:1sp4P0:8N7I3OEDxSCEAAgjHR1oIkJASpGn3iYKAy6391FYzSQ', '2024-09-13 19:23:50.375683'),
 ('z97y9w84xe499svmt10kj9zypyt1mcxo', '.eJxVzMsOwiAUBNB_YW0IeHt5uHTvNxAuD6kaSEq7Mv67NOlCt3Nm5s2c39bitp4WN0d2YRM7_WbkwzPVHeLD13vjodV1mYnvFX5o57cW0-t6dP8Oiu9lrG02EqW2Z68wkJYmg8AJyJo8iKI2hANjAsCgiSCoSYAZagmjEuzzBc3VN2w:1rY568:pwBOBLr5sXzIPjAIDdGdEiQJrcni-LnhXNv0TbhBkKA', '2024-02-22 14:09:52.270358');
 
 -- --------------------------------------------------------
@@ -667,17 +758,20 @@ CREATE TABLE `historia_caja` (
 --
 
 INSERT INTO `historia_caja` (`id`, `id_caja`, `cedula`, `inicio`, `final`, `retiro`, `fecha`) VALUES
-(1, 1, NULL, 50000, NULL, 0, NULL),
-(2, 1, '1025644878', 50000, 50000, 45000, NULL),
-(3, 1, '1025644878', 50000, 85000, 10000, NULL),
-(4, 1, '1017924962', 85000, 50000, 35000, NULL),
-(5, 1, '1017924962', 50000, 50000, 0, NULL),
-(6, 1, '1017924962', 50000, 50000, 0, NULL),
-(7, 1, '1017924962', 50000, 50000, 0, NULL),
-(8, 1, '1017924962', 50000, 50000, 2000, NULL),
 (9, 1, '1017924962', 50000, 49100, 10000, '2024-08-12 11:36:35'),
 (10, 1, '1017924962', 49100, 51100, 0, '2024-08-20 09:37:23'),
-(11, 1, NULL, 51100, NULL, 0, NULL);
+(11, 1, '1017924962', 51100, 141200, 100000, '2024-09-01 22:33:07'),
+(12, 1, '1017924962', 141200, 50000, 995000, '2024-09-05 19:57:09'),
+(13, 1, '1017924962', 50000, 50000, 11550, '2024-09-08 22:25:06'),
+(14, 1, '1017924962', 50000, 56550, 0, '2024-09-09 09:18:47'),
+(15, 1, '1025644878', 56550, 56550, 0, '2024-09-09 09:26:07'),
+(16, 1, '1017924962', 56550, 50000, 6550, '2024-09-09 09:34:09'),
+(17, 1, '1017924962', 50000, 50000, 0, '2024-09-09 09:58:06'),
+(18, 1, '1017924962', 50000, 50000, 0, '2024-09-09 10:04:02'),
+(19, 1, '1017924962', 50000, 50000, 0, '2024-09-09 10:07:04'),
+(20, 1, '1017924962', 50000, 50000, 0, '2024-09-09 10:21:50'),
+(21, 1, '1025644878', 50000, 50500, 0, '2024-09-09 10:25:16'),
+(22, 1, NULL, 50500, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -709,7 +803,22 @@ INSERT INTO `horas_trabajadas` (`id`, `usuario`, `fecha`, `horas`) VALUES
 (77, '1017924962', '2024-08-12', 42),
 (78, '1017924962', '2024-08-12', 15517),
 (79, '1017924962', '2024-08-20', 10421),
-(80, '1017924962', '2024-08-20', 4343);
+(80, '1017924962', '2024-08-20', 4343),
+(81, '1017924962', '2024-09-01', 4247),
+(82, '1025644878', '2024-09-01', 9),
+(83, '1017924962', '2024-09-01', 10),
+(84, '1017924962', '2024-09-05', 1109),
+(85, '1017924962', '2024-09-08', 2143),
+(86, '1017924962', '2024-09-09', 5412),
+(87, '1025644878', '2024-09-09', 433),
+(88, '1017924962', '2024-09-09', 477),
+(89, '1017924962', '2024-09-09', 1137),
+(90, '1017924962', '2024-09-09', 336),
+(91, '1017924962', '2024-09-09', 10),
+(92, '1017924962', '2024-09-09', 9),
+(93, '1017924962', '2024-09-09', 22),
+(94, '1017924962', '2024-09-09', 581),
+(95, '1025644878', '2024-09-09', 203);
 
 -- --------------------------------------------------------
 
@@ -736,20 +845,27 @@ CREATE TABLE `lote` (
 --
 
 INSERT INTO `lote` (`id_producto`, `Loteid`, `Cantidad`, `PrecioC`, `porcentaje`, `precioV`, `Estado`, `fechaVenci`, `fechaModify`, `fechaCreate`, `Notificacion_on`) VALUES
+(770123, '4321', 300, 27890, 10, 150, 1, '2025-02-01', '2024-09-09', '2024-09-09', 1),
 (770321, '888asas', 28, 34500, 70, 3200, 0, '2023-11-12', '2024-08-12', '2024-08-12', 1),
-(770123, 'eeeeeee', 0, 15000, 100, 2000, 0, '2030-03-22', '2024-07-21', '2024-07-21', 0),
-(7701234, 'Ibu9922', 300, 45000, 100, 300, 1, '2036-02-01', '2024-08-26', '2024-08-26', 1),
-(770123, 'jjajsaj', 1481239, 10000, 100, 2000, 1, '2026-09-01', '2024-08-12', '2024-08-12', 1),
+(770123, 'eeeeeee', 0, 15000, 100, 150, 0, '2030-03-22', '2024-07-21', '2024-07-21', 0),
+(770321, 'GHJKHJK', 30, 27980, 50, 1400, 1, '2039-09-01', '2024-09-13', '2024-09-13', 1),
+(7701234, 'Ibu9922', 0, 45000, 100, 300, 0, '2036-02-01', '2024-08-26', '2024-08-26', 1),
+(770123, 'jjajsaj', 0, 10, 10, 150, 0, '2026-09-01', '2024-08-12', '2024-08-12', 1),
+(770123456, 'JJH3i', 300, 20690, 50, 150, 1, '2039-02-01', '2024-09-13', '2024-09-13', 1),
 (770321, 'JJJ8987', 30, 27910, 78, 1700, 1, '2038-03-01', '2024-08-26', '2024-08-26', 1),
-(770321, 'jksajsa', 29, 60000, 60, 3200, 1, '2028-11-01', '2024-08-12', '2024-08-12', 1),
-(770123, 'JKSNa8989', 300, 27890, 100, 200, 1, '2038-02-01', '2024-08-26', '2024-08-26', 1),
-(77012345, 'nnnnasasa', 30, 57000, 75, 3350, 1, '2034-03-01', '2024-08-12', '2024-08-12', 1),
+(770321, 'jksajsa', 26, 60000, 60, 3200, 1, '2028-11-01', '2024-08-12', '2024-08-12', 1),
+(770123, 'JKSNa8989', 0, 27890, 100, 150, 0, '2038-02-01', '2024-08-26', '2024-08-26', 1),
+(77012345, 'nnnnasasa', 7, 57000, 75, 3350, 1, '2034-03-01', '2024-08-12', '2024-08-12', 1),
 (77012345, 'NSJAS990', 30, 58901, 70, 3350, 1, '2038-02-01', '2024-08-26', '2024-08-26', 1),
-(770123, 'qqqqqqq', 300, 6500, 100, 2000, 1, '2029-07-22', '2024-07-21', '2024-07-21', 0),
-(7701234, 'rrrrrrrrr', 230, 25890, 70, 300, 1, '2024-08-31', '2024-07-21', '2024-07-21', 0),
-(77012345, 'UJJS', 30, 27890, 65, 3350, 1, '2035-07-01', '2024-08-26', '2024-08-26', 1),
-(7701234, 'wwwwwwwww', 300, 26890, 70, 300, 1, '2030-09-22', '2024-07-21', '2024-07-21', 0),
-(770123, 'yyyyyy', 300, 20000, 100, 2000, 1, '2028-08-22', '2024-07-21', '2024-07-21', 1);
+(770321, 'NSJAS991', 60, 90000, 75, 2650, 1, '2034-02-01', '2024-08-27', '2024-08-27', 1),
+(770123, 'NSJAS992', 12, 23980, 100, 150, 1, '2035-02-01', '2024-08-27', '2024-08-27', 1),
+(770321, 'NSJAS992O', 30, 23980, 100, 1600, 1, '2038-09-22', '2024-09-01', '2024-09-01', 1),
+(770123, 'qqqqqqq', 0, 6500, 100, 150, 0, '2029-07-22', '2024-07-21', '2024-07-21', 0),
+(770123, 'qqqqqqq2', 12, 12, 12, 150, 1, '2030-07-21', '2024-09-06', '2024-09-06', 1),
+(7701234, 'rrrrrrrrr', 230, 25890, 70, 300, 0, '2024-08-31', '2024-07-21', '2024-07-21', 0),
+(77012345, 'UJJS', 50, 10, 10, 50, 1, '2035-07-01', '2024-08-26', '2024-08-26', 1),
+(7701234, 'wwwwwwwww', 0, 26890, 70, 300, 0, '2030-09-22', '2024-07-21', '2024-07-21', 0),
+(770123, 'yyyyyy', 0, 10, 10, 150, 0, '2028-08-22', '2024-07-21', '2024-07-21', 1);
 
 --
 -- Disparadores `lote`
@@ -760,7 +876,8 @@ if TIMESTAMPDIFF(day,now(),new.fechaVenci)<0 then
 SET new.Estado=False;
 elseif new.Cantidad<=0 then
 SET new.Estado=False;
-
+else 
+set new.Estado=True;
 end if;
 end
 $$
@@ -800,7 +917,9 @@ CREATE TABLE `pedidos_especiales` (
 --
 
 INSERT INTO `pedidos_especiales` (`id_pedido`, `Cedula`, `nombreClie`, `celularClie`, `descripcion`, `estadoPe`, `fechaP`, `Cantidad`, `fechaM`) VALUES
-(9, '1017924962', 'Sebas', '3015678990', 'crema para heridas ', 2, '2024-08-20', 2, '2024-08-20 10:05:13');
+(9, '1017924962', 'Sebas', '3015678990', 'crema para heridas ', 2, '2024-08-20', 2, '2024-08-20 10:05:13'),
+(10, '1017924962', 'Freddy', '3023118696', 'crema PTS', 2, '2024-09-09', 1, '2024-09-09 10:13:38'),
+(11, '1017924962', 'Guerra', '1234567890', 'a', 1, '2024-09-13', 1, '2024-09-13 06:30:13');
 
 -- --------------------------------------------------------
 
@@ -824,10 +943,11 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id_producto`, `Nombre`, `estado`, `GramoLitro`, `Fecha_Modificacion`, `Max`, `Min`, `rotacion`) VALUES
-(770123, 'Acetaminofen', 1, '30mg', '2024-07-21 22:31:57', 900, 100, 'Normal'),
+(770123, 'Acetaminofen', 1, '30mg', '2024-09-09 10:18:16', 900, 100, 'Normal'),
 (770321, 'Next gl', 1, '215 mg', '2024-08-12 07:46:37', 50, 15, 'Baja'),
-(7701234, 'Ibuprofeno', 1, '300mg', '2024-07-21 23:10:44', 600, 100, 'Normal'),
-(77012345, 'Advil Gripa', 1, '30 mg', '2024-08-20 07:06:21', 90, 20, 'Normal');
+(7701234, 'Ibuprofeno', 0, '300mg', '2024-07-21 23:10:44', 600, 100, 'Normal'),
+(77012345, 'Advil Gripa', 1, '30 mg', '2024-08-20 07:06:21', 90, 20, 'Normal'),
+(770123456, 'Aspirinaoooooooooooooooooooooo', 1, '20mg', '2024-09-09 10:15:38', 50, 10, 'Baja');
 
 --
 -- Disparadores `producto`
@@ -869,7 +989,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`NIT`, `Nombre`, `Estado`, `Telefono`, `Horario_Atencion`, `Politica_Devolucion`) VALUES
-(12121212, 'Hexon', 1, '3025469090', 'lunes-viernes 7am-1pm', '3'),
+(43212, 'sebas', 1, '3125260493', '8-5', '2'),
+(12121212, 'Hexon', 0, '3025469090', 'lunes-viernes 7am-1pm', '3'),
 (2147483647, 'Henfar', 1, '3214567890', 'lunes-viernes 8am-1pm', '5');
 
 -- --------------------------------------------------------
@@ -918,6 +1039,22 @@ CREATE TABLE `temp_lote` (
   `fechaModify` date NOT NULL,
   `fechaCreate` date NOT NULL,
   `Notificacion_on` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `temp_lote_update`
+--
+
+CREATE TABLE `temp_lote_update` (
+  `id_producto` bigint(20) NOT NULL,
+  `Loteid` varchar(15) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `PrecioC` int(11) NOT NULL,
+  `porcentaje` int(11) NOT NULL,
+  `precioV` int(11) NOT NULL,
+  `fechaVenci` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -991,7 +1128,17 @@ INSERT INTO `venta` (`id_venta`, `TotalCompra`, `Fecha`, `Hora`, `Efectivo_Recib
 (88, 700, '2024-08-23', '10:48:43', 1000, 300, '1017924962'),
 (89, 9300, '2024-08-26', '07:08:48', 10000, 700, '1017924962'),
 (90, -371364250, '2024-08-26', '08:58:45', 0, 0, '1017924962'),
-(91, 0, '2024-08-26', '09:13:40', 0, 0, '1017924962');
+(91, -2147483648, '2024-08-26', '09:13:40', 0, 0, '1017924962'),
+(92, 191200, '2024-09-01', '22:28:42', 200000, 8800, '1017924962'),
+(93, 903800, '2024-09-02', '06:47:35', 0, 0, '1017924962'),
+(94, -55400, '2024-09-05', '20:03:57', 0, 0, '1017924962'),
+(95, 7200, '2024-09-06', '17:39:34', 8000, 800, '1017924962'),
+(96, 63650, '2024-09-06', '17:40:17', 70000, 6350, '1017924962'),
+(97, 15550, '2024-09-06', '17:40:56', 16000, 450, '1017924962'),
+(99, 8350, '2024-09-08', '22:18:49', 9000, 650, '1017924962'),
+(100, 3200, '2024-09-08', '22:23:16', 4000, 800, '1017924962'),
+(101, 6550, '2024-09-09', '08:00:49', 7000, 450, '1017924962'),
+(102, 500, '2024-09-09', '10:24:40', 1000, 500, '1017924962');
 
 --
 -- Disparadores `venta`
@@ -1125,7 +1272,7 @@ ALTER TABLE `django_session`
 ALTER TABLE `historia_caja`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_caja` (`id_caja`),
-  ADD KEY `cedula` (`cedula`);
+  ADD KEY `historia_caja_ibfk_2` (`cedula`);
 
 --
 -- Indices de la tabla `horas_trabajadas`
@@ -1259,19 +1406,19 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT de la tabla `historia_caja`
 --
 ALTER TABLE `historia_caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `horas_trabajadas`
 --
 ALTER TABLE `horas_trabajadas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos_especiales`
 --
 ALTER TABLE `pedidos_especiales`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `temp_compra`
@@ -1283,7 +1430,7 @@ ALTER TABLE `temp_compra`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- Restricciones para tablas volcadas
@@ -1347,15 +1494,14 @@ ALTER TABLE `django_admin_log`
 -- Filtros para la tabla `historia_caja`
 --
 ALTER TABLE `historia_caja`
-  ADD CONSTRAINT `historia_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`);
-ALTER TABLE `historia_caja`
+  ADD CONSTRAINT `historia_caja_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`),
   ADD CONSTRAINT `historia_caja_ibfk_2` FOREIGN KEY (`cedula`) REFERENCES `auth_user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `horas_trabajadas`
 --
 ALTER TABLE `horas_trabajadas`
-  ADD CONSTRAINT `horas_trabajadas_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `auth_user` (`username`);
+  ADD CONSTRAINT `horas_trabajadas_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `auth_user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `lote`
@@ -1373,7 +1519,7 @@ ALTER TABLE `pedidos_especiales`
 -- Filtros para la tabla `venta`
 --
 ALTER TABLE `venta`
-  ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`Cedula`) REFERENCES `auth_user` (`username`);
+  ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`Cedula`) REFERENCES `auth_user` (`username`) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

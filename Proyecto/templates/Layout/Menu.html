@@ -167,7 +167,7 @@
             text: "el total de la caja es: {{dinero}} Ingrese el dinero a retirar te recomendamos retirar "+recomendacion+" para que la base de la caja sea 50000",
             input: "number",
             inputValidator: (valor) => {
-            if (!valor || valor>dinero) {
+            if (!valor || valor>dinero || valor<0) {
               return "¡Debes ingresar un valor valido!";
             }},
             showCancelButton: true,

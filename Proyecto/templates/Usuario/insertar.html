@@ -27,8 +27,8 @@
         {% csrf_token %}
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-cc" aria-hidden="true"></i>
-            <label class="form-label is-required">No de cédula</label>
-            <input type="number" class="form-control" name='cedula' required value="{{cedula}}">
+            <label class="form-label is-required">N° de cédula</label>
+            <input type="number" max="9999999999999" min="1" class="form-control" name='cedula' required value="{{cedula}}">
             {%if cedulaR%}
             <div class="alert alert-danger" role="alert">La cedula "{{cedula}}" ya esta asignada al usuario '{{nombrerc}} {{apellidorc}}' .Por favor verifique los datos</div>
             {%endif%}
@@ -38,14 +38,14 @@
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Nombre</label>
-            <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
+            <input type='text' maxlength="150" class="form-control" name='nombre' required value="{{nombre}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
         </div>
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Apellido</label>
-            <input type='text' class="form-control" name='apellido' required value="{{apellido}}">
+            <input type='text' maxlength="150" class="form-control" name='apellido' required value="{{apellido}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
         </div>
@@ -62,7 +62,7 @@
         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
           <i class="fa fa-envelope" aria-hidden="true"></i>
              <label class="form-label is-required">Correo electrónico</label>
-            <input type="text" class="form-control" name="correo" required value="{{correo}}">
+            <input type="email" maxlength="254" class="form-control" name="correo" required value="{{correo}}">
             {%if correoR%}
             <div class="alert alert-danger" role="alert">El correo electronico "{{correo}}" ya esta asignada al usuario '{{nombrerce}} {{apellidorce}}' .Por favor verifique los datos</div>
             {%endif%}
@@ -72,7 +72,7 @@
         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-4">
           <i class="fa fa-home" aria-hidden="true"></i>
             <label class="form-label is-required">Dirección</label> 
-            <input type='text' class="form-control" name='direccion' required value="{{direccion}}">
+            <input type='text' maxlength="250" class="form-control" name='direccion' required value="{{direccion}}">
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
             </div>
@@ -94,14 +94,14 @@
         <div class="col-6">
           <i class="fa fa-unlock-alt" aria-hidden="true"></i>
             <label class="form-label is-required">Contraseña</label>
-            <input type='password' class="form-control" id="contrasena" name='contrasena' required >
+            <input type='password' maxlength="128" class="form-control" id="contrasena" name='contrasena' required >
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite la contraseña</h6></div>
         </div>
         <div class="col-6">
           <i class="fa fa-unlock" aria-hidden="true"></i>
             <label class="form-label is-required">Confirmar contraseña</label>
-            <input type='password' class="form-control" id="confirmar_contrasena" name='confirmar_contrasena' required >
+            <input type='password' maxlength="128" class="form-control" id="confirmar_contrasena" name='confirmar_contrasena' required >
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite otra vez la contraseña</h6></div>
         </div>
@@ -118,21 +118,21 @@
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
               <i class="fa fa-cc" aria-hidden="true"></i>
                 <label class="form-label is-required">No de cédula</label>
-                <input type="number" class="form-control" name='cedula' required>
+                <input type="number" max="9999999999999" min="1" class="form-control" name='cedula' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Número De Cédula</h6></div>
             </div>
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4 p-4 col-4">
               <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <label class="form-label is-required">Nombre</label>
-                <input type='text' class="form-control" name='nombre' required>
+                <input type='text' maxlength="150" class="form-control" name='nombre' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Nombre </h6></div>
             </div>
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4 p-4 col-4">
               <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <label class="form-label is-required">Apellido</label>
-                <input type='text' class="form-control" name='apellido' required>
+                <input type='text' maxlength="150" class="form-control" name='apellido' required>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Apellido</h6></div>
             </div>
@@ -146,14 +146,14 @@
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 col-6 p-4 col-6">
               <i class="fa fa-envelope" aria-hidden="true"></i>
                  <label class="form-label is-required">Correo electrónico</label>
-                <input type="email" class="form-control" name="correo" required >
+                <input type="email" maxlength="254" class="form-control" name="correo" required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Correo Eletrónico</h6></div>
                 </div>
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 col-4 p-4 col-4">
               <i class="fa fa-home" aria-hidden="true"></i>
                 <label class="form-label is-required">Dirección</label> 
-                <input type='text' class="form-control" name='direccion' required >
+                <input type='text' maxlength="250" class="form-control" name='direccion' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Dirección</h6></div>
                 </div>
@@ -175,14 +175,14 @@
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 col-6 p-4 col-6">
               <i class="fa fa-unlock-alt" aria-hidden="true"></i>
                 <label class="form-label is-required">Contraseña</label>
-                <input type='password' class="form-control" id="contrasena" name='contrasena' required >
+                <input type='password' maxlength="128" class="form-control" id="contrasena" name='contrasena' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite la contraseña</h6></div>
             </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 col-6 p-4 col-6">
               <i class="fa fa-unlock" aria-hidden="true"></i>
                 <label class="form-label is-required">Confirmar contraseña</label>
-                <input type='password' class="form-control" id="confirmar_contrasena" name='confirmar_contrasena' required >
+                <input type='password' maxlength="128" class="form-control" id="confirmar_contrasena" name='confirmar_contrasena' required >
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite otra vez la contraseña</h6></div>
             </div>

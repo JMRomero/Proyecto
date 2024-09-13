@@ -30,7 +30,7 @@
           <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
             <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
               <label class="form-label is-required">Celular del Cliente</label>
-              <input type="number" class="form-control" max="9999999999" min="1000000000" name="celularClie" required value="{{p.3}}">
+              <input type="number" class="form-control" max="3999999999" min="3000000000" name="celularClie" required value="{{p.3}}">
               <div class="valid-feedback"><h6>Campo Validado Con Exito</h6></div>
               <div class="invalid-feedback"><h6>Falta Celular del cliente.(10 Numeros)</h6></div>
           </div>
@@ -44,7 +44,7 @@
           <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12">
             <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
             <label for="descripcion" class="form-label is-required">Nombre/Descripción del medicamento</label>
-            <textarea type="text" class="form-control" name="descripcion" rows="3" required >{{p.4}}</textarea>
+            <textarea type="text" class="form-control" name="descripcion" maxlength="250" rows="3" required >{{p.4}}</textarea>
             <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite Una Descripción</h6></div>
         </div>

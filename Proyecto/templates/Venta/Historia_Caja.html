@@ -1,0 +1,68 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {%include 'Layout/ValidacionRol.html' %}
+    {%include "Layout/head.html" %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/colorbotones.css' %}">
+    <title>Caja</title>
+</head>
+
+<body>
+    {%include 'Layout/Menu.html' %}
+    <nav class="navbar navbar-expand-lg " style="background-color: #0d6efd;" data-bs-theme="green">
+        <div class="container-fluid">
+            <a class="navbar-brand mx-auto text-white mb-2 h2 fs-2">Informacion de Caja</a>
+        </div>
+        <ul class="right hide-on-med-and-down">
+        </ul>
+    </nav>
+    <br>
+    <center><a href="../../Venta/registrar" class="btn btn-lg btn-primary estilo">Volver</a></center>
+    <div class="container">
+        <br><br>
+            <div class="table-responsive" style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
+                <br>
+                <p class="text-center fst-italic text-body fs-4">Dinero En Caja : {{dinero}}</p>
+                <p class="text-center fst-italic text-body fs-4">Movimientos de caja</p>
+                <form class="d-flex" method="POST" action="">
+                    {% csrf_token %}
+                    {% if busqueda %}
+                    <a href="/Venta/InfoCaja" class="btn"><i class="fa fa-history fa-lg" aria-hidden="true mb-5" ></i></a>
+                    {% endif %}
+                    <input class="form-control me-2" required type="week" name="week" {%if busqueda%}value="{{week}}" {%endif%}>
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form><br><br>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Cedula</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Fecha</th>
+                            <th>Inicio Día</th>
+                            <th>Final Día</th>
+                            <th>Retiro</th>
+                            <th>Caja final</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for h in DH%}
+                        <tr>
+                            <td>{{h.2}}</td>
+                            <td>{{h.7}}</td>
+                            <td>{{h.8}}</td>
+                            <td>{{h.6}}</td>
+                            <td>{{h.3}}</td>
+                            <td>{{h.9}}</td>
+                            <td>{{h.5}}</td>
+                            <td>{{h.4}}</td>
+                        {%endfor%}
+                        </tr>
+                    </tbody>
+                </table>
+            </div><br><br>
+        </div>
+</body>
+</html>
