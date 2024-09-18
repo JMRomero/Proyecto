@@ -22,7 +22,7 @@
         {%if repetido%}
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
         <br><br>
-        <form class="row g-3 needs-validation" novalidate method='POST'>
+        <form class="row g-3 needs-validation" novalidate method='POST' id="form">
               {% csrf_token %}
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                     <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
@@ -35,9 +35,10 @@
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                   <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
                   <label class="form-label is-required">Nombre del proveedor</label>
-                  <input type='text' maxlength="30" class="form-control" name='nombre' required value="{{nombre}}">
+                  <input type='text' maxlength="30" class="form-control" name='nombre' id="nombre" required value="{{nombre}}">
                   <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                   <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
+                  <e id="mensaje"></e>
               </div>
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                   <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
@@ -56,9 +57,10 @@
             <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12">
               <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
               <label class="form-label is-required">Horario de atención</label>
-              <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' required>{{horario}}</textarea>
+              <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' id="Hora" required>{{horario}}</textarea>
               <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
               <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
+              <e id="mensaje2"></e>
             </div>
               </div>
               <div class="d-grid gap-2 col-6 mx-auto">
@@ -71,7 +73,7 @@
         {% for p in datos %}
         <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
           <br><br>
-          <form class="row g-3 needs-validation" novalidate method='POST'>
+          <form class="row g-3 needs-validation" novalidate method='POST' id="form">
             {% csrf_token %}              
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>
@@ -83,9 +85,10 @@
                 <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                     <i class="fa fa-address-book fa-lg" aria-hidden="true"></i>
                     <label class="form-label is-required">Nombre</label>
-                    <input type='text' maxlength="30" class="form-control" name='nombre' required value="{{p.1}}">
+                    <input type='text' maxlength="30" class="form-control" name='nombre' id="nombre" required value="{{p.1}}">
                     <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                     <div class="invalid-feedback"><h6>Digite Nombre Del Proveedor</h6></div>
+                    <e id="mensaje"></e>
                 </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-phone fa-lg" aria-hidden="true"></i>
@@ -104,9 +107,10 @@
                 <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 p-4 col-12">
                     <i class="fa fa-clock-o fa-lg" aria-hidden="true"></i>
                 <label class="form-label is-required">Horario de atención</label>
-                <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' required>{{p.4}}</textarea><br>
+                <textarea type='text' maxlength="250" class="form-control" name='horario_atencion' id="Hora" required>{{p.4}}</textarea><br>
                 <div class="valid-feedback"><h6>Campo Validado Con Éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite Horario De Atención Del Proveedor</h6></div>
+                <e id="mensaje2"></e>
                 </div>
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <input type='submit' values='Subir' class="btn btn-primary" type="button">
@@ -120,8 +124,35 @@
     </section>  
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    
-
     {%include 'Layout/Validacion.html' %}
+    <script src="{%static 'js/jquery-3.7.1.min.js'%}"></script>
+    <script>
+      document.getElementById("form").addEventListener('submit',function(even){
+        even.preventDefault();
+        nombre=document.getElementById("nombre").value;
+        hora=document.getElementById("Hora").value;
+        letras=nombre.split(' ');
+        letrasH=hora.split(' ');
+        if ( letrasH[0]=='' || letras[0]==''){
+          if(letras[0]==''){
+            console.log("espacio en nombre")
+            document.getElementById("mensaje").innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>'
+          }else{
+            document.getElementById("mensaje").innerHTML='';
+          }
+          if(letrasH[0]==''){
+            console.log("espacio en horario")
+            document.getElementById("mensaje2").innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>'
+          }else{
+            document.getElementById("mensaje2").innerHTML='';
+          }
+        }else{
+          document.getElementById("mensaje").innerHTML='';
+          document.getElementById("mensaje2").innerHTML='';
+          console.log("normal");
+          even.currentTarget.submit();
+        }
+      })
+    </script>
 </body>
 </html>

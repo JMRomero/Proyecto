@@ -23,7 +23,7 @@
     <br>
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
       <br><br>
-      <form class="row g-3 needs-validation" novalidate method='POST'>
+      <form class="row g-3 needs-validation" novalidate method='POST' id="form">
         {% csrf_token %}
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-cc" aria-hidden="true"></i>
@@ -38,16 +38,18 @@
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Nombre</label>
-            <input type='text' class="form-control" name='nombre' required value="{{nombre}}">
+            <input type='text' class="form-control" name='nombre' id="nombre" required value="{{nombre}}">
             <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite nombre</h6></div>
+            <e id="mensajeN"></e>
         </div>
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
             <label class="form-label is-required">Apellido</label>
-            <input type='text' class="form-control" name='apellido' required value="{{apellido}}">
+            <input type='text' class="form-control" name='apellido' id="apellido" required value="{{apellido}}">
             <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite apellido</h6></div>
+            <e id="mensajeA"></e>
         </div>
         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-6">
           <i class="fa fa-phone" aria-hidden="true"></i>
@@ -72,9 +74,10 @@
         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
           <i class="fa fa-home" aria-hidden="true"></i>
             <label class="form-label is-required">Dirección</label> 
-            <input type='text' class="form-control" name='direccion' required value="{{direccion}}">
+            <input type='text' class="form-control" name='direccion' id="direccion" required value="{{direccion}}">
             <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
             <div class="invalid-feedback"><h6>Digite dirección</h6></div>
+            <e id="mensajeD"></e>
             </div>
         <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
           <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -92,7 +95,7 @@
     <div style="background-color:rgba(151, 218, 238, 0.212) ; border: 2px solid #fafafa10; margin: 0 auto; border-radius: 1rem; background: fafafa10; backdrop-filter:blur(0.4rem);">
       <br><br>
       {% for p in datos %}
-      <form class="row g-3 needs-validation" novalidate method='POST'>
+      <form class="row g-3 needs-validation" novalidate method='POST' id="form">
             {% csrf_token %}
            
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
@@ -105,16 +108,18 @@
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
                 <i class="fa fa-id-card-o" aria-hidden="true"></i>
                 <label class="form-label is-required">Nombre</label>
-                <input type='text' class="form-control" name='nombre' required value="{{p.5}}">
+                <input type='text' class="form-control" name='nombre' id="nombre" required value="{{p.5}}">
                 <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite nombre</h6></div>
+                <e id="mensajeN"></e>
             </div>
             <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-12 p-4 col-4">
                 <i class="fa fa-id-card" aria-hidden="true"></i>
                 <label class="form-label is-required">Apellido</label>
-                <input type='text' class="form-control" name='apellido' required value="{{p.6}}">
+                <input type='text' class="form-control" name='apellido' id="apellido" required value="{{p.6}}">
                 <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite apellido</h6></div>
+                <e id="mensajeA"></e>
             </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-mobile fa-lg" aria-hidden="true"></i>
@@ -133,9 +138,10 @@
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-home" aria-hidden="true"></i>
                 <label class="form-label is-required">Dirección</label> 
-                <input type='text' class="form-control" name='direccion' required value="{{p.12}}">
+                <input type='text' class="form-control" name='direccion' id="direccion" required value="{{p.12}}">
                 <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite dirección</h6></div>
+                <e id="mensajeD"></e>
                 </div>
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 p-4 col-6">
                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
@@ -156,5 +162,36 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     {%include 'Layout/Validacion.html' %}
+    <script src="{%static 'js/jquery-3.7.1.min.js'%}"></script>
+    <script>
+      document.getElementById("form").addEventListener('submit',function(even){
+        even.preventDefault();
+        nombre=document.getElementById("nombre").value;
+        apellido=document.getElementById("apellido").value;
+        direccion=document.getElementById("direccion").value;
+        splitN=nombre.split(' ');
+        splitA=apellido.split(' ');
+        splitD=direccion.split(' ');
+        if(splitN[0]=='' || splitA[0]=='' || splitD[0]==''){
+          if(splitN[0]==''){
+            document.getElementById('mensajeN').innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>';  
+          }else{
+            document.getElementById('mensajeN').innerHTML='';
+          }
+          if(splitA[0]==''){
+            document.getElementById('mensajeA').innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>';  
+          }else{
+            document.getElementById('mensajeA').innerHTML='';
+          }
+          if(splitD[0]==''){
+            document.getElementById('mensajeD').innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>';  
+          }else{
+            document.getElementById('mensajeD').innerHTML='';
+          }
+        }else{
+          even.currentTarget.submit();}
+      }
+      )
+    </script>
 </body>
 </html>

@@ -53,8 +53,8 @@
                     </tr>
                 </thead>
                 {%else%}
-                {%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir con el nombre o descripción de ese producto</p><hr style="border: 1px solid #000; width: 100%;">{%else%}
-                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir</p>{%endif%}
+                {%if busqueda%}<center> <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir con el nombre o descripción de ese producto</p><hr style="border: 1px solid #000; width: 100%;"></center>{%else%}
+                <center><p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido por pedir</p></center>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosA%}
@@ -67,8 +67,8 @@
                         <td>{{p.7}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.8}}</td>
-                        <td>Pedido por pedir <a href="#"><i class="fa fa-calendar-plus-o fa-lg" aria-hidden="true" onclick="estadoA('{{p.0}}','{{p.2}}')"></i></a></td>
-                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></td>
+                        <td>Pedido por pedir <br><a href="#"><i class="fa fa-calendar-plus-o fa-lg" aria-hidden="true" onclick="estadoA('{{p.0}}','{{p.2}}')"></i></a></td>
+                        <td><center> <a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></center></td>
                     {%endfor%}
                     </tr>
                 </tbody>
@@ -91,8 +91,8 @@
                         <th>Editar pedido</th>
                     </tr>
                 </thead>
-                {%else%}{%if busqueda%}<p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado con el nombre o descripción de ese producto</p>{%else%}
-                <p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado</p>{%endif%}
+                {%else%}{%if busqueda%} <center><p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado con el nombre o descripción de ese producto</p></center>{%else%}
+                <center><p class="fs-5 p-3 fw-semibold fst-italic">No hay ningun pedido realizado</p></center>{%endif%}
                 {%endif%}
                 <tbody>
                     {% for p in pedidosI%}
@@ -105,8 +105,8 @@
                         <td>{{p.7}}</td>
                         <td>{{p.6}}</td>
                         <td>{{p.8}}</td>
-                        <td>Pedido Realizado<a  href="#"><i class="fa fa-undo fa-lg ms-2" aria-hidden="true" onclick="estadoI('{{p.0}}','{{p.2}}')"></i></a><a href="#"> <i class="fa fa-check fa-lg" aria-hidden="true" onclick="estadoC('{{p.0}}','{{p.2}}')"></i></a></td>
-                        <td><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></td>
+                        <td>Pedido Realizado<br><a  href="#"><i class="fa fa-undo fa-lg ms-2" aria-hidden="true" onclick="estadoI('{{p.0}}','{{p.2}}')"></i></a><a href="#"> <i class="fa fa-check fa-lg" aria-hidden="true" onclick="estadoC('{{p.0}}','{{p.2}}')"></i></a></td>
+                        <td><center><a href="/Pedidos/actualizar/{{p.0}}"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a></center></td>
                     {%endfor%}
                     </tr>
                 </tbody>

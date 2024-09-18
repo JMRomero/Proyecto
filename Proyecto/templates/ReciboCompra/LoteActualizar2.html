@@ -26,14 +26,15 @@
         <h1 class="text-center fst-italic text-body fs-3 mb-4">Compra asociada al proveedor {{pr.0}}, con NIT: {{p.3}} </h1>
         {%endfor%}
         {%if repetido%}
-        <form class="row g-3 needs-validation" novalidate method='POST'>
+        <form class="row g-3 needs-validation" novalidate method='POST' id="form">
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Código del lote</label>
-                <input type="text" class="form-control" name="Lote" required value="{{codigoO}}">
+                <input type="text" class="form-control" name="Lote" id="codigo" required value="{{codigoO}}">
                 <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Falta código del lote</h6></div>
+                <e id="mensaje"></e>
                 {%if not loteR%}
                 <div class="alert alert-danger" role="alert">el Lote "{{codigor}}" ya esta registrado. Por favor corrobore la información</div>{%endif%}
             </div>
@@ -81,15 +82,16 @@
                 {%endfor%}
         </form>
     {%else%}
-      <form class="row g-3 needs-validation" novalidate method='POST'>
+      <form class="row g-3 needs-validation" novalidate method='POST' id="form">
         {%for p in lote%}
             {% csrf_token %}
             <div class="col-6">
                 <i class="fa fa-barcode fa-lg" aria-hidden="true"></i>
                 <label class="form-label">Código del lote</label>
-                <input type="text" class="form-control" name="Lote" required value="{{p.1}}">
+                <input type="text" class="form-control" name="Lote" id="codigo" required value="{{p.1}}">
                 <div class="valid-feedback"><h6>Campo validado con éxito</h6></div>
                 <div class="invalid-feedback"><h6>Digite código del lote</h6></div>
+                <e id="mensaje"></e>
             </div>
             <div class="col-6">
                 <i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i>
@@ -133,5 +135,19 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     {%include 'Layout/Validacion.html' %}
+    <script src="{%static 'js/jquery-3.7.1.min.js'%}"></script>
+    <script>
+        document.getElementById("form").addEventListener('submit',function(even){
+            even.preventDefault();
+            codigo=document.getElementById('codigo').value;
+            splitC=codigo.split(' ');
+            if (splitC[0]==''){
+                document.getElementById('mensaje').innerHTML='<div class="alert alert-danger" role="alert" >No puede Iniciar con espacio</div>';
+            }else{
+                document.getElementById('mensaje').innerHTML='';
+                even.currentTarget.submit();
+            }
+        })
+    </script>
 </body>
 </html>
